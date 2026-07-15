@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV sunday long-distance compensatory leave and scheduled-end overtime -->
+<!-- latest: DEV fare selection auto-fills times and Monday early-departure overtime -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -483,10 +483,21 @@ function calcClockOvertimeHours(actualEnd,scheduledEnd){
   return Math.max(0,Math.floor(diff/15)*0.25);
 }
 function calcLongDistanceOvertimeHours(r){
-  if(!isLongDistanceRecord(r)||!r.endTime)return 0;
+  if(!isLongDistanceRecord(r))return 0;
   var fare=findFareForRecord(r);
-  if(!fare||!fare.end)return 0;
-  return calcClockOvertimeHours(r.endTime,fare.end);
+  if(!fare)return 0;
+  var total=0;
+  if(r.endTime&&fare.end)total+=calcClockOvertimeHours(r.endTime,fare.end);
+  if(r.date&&new Date(r.date).getDay()===1&&fare.start)total+=calcMondayEarlyDepartureOvertime(fare.start);
+  return Math.round(total*4)/4;
+}
+function calcMondayEarlyDepartureOvertime(startTime){
+  if(!startTime)return 0;
+  var p=startTime.split(':');
+  var start=parseInt(p[0],10)*60+parseInt(p[1],10);
+  var standard=16*60+15;
+  if(isNaN(start)||start>=standard)return 0;
+  return Math.floor((standard-start)/15)*0.25;
 }
 function getLongDistanceScheduledEnd(r){
   var fare=findFareForRecord(r);
@@ -963,7 +974,25 @@ function closeFareTable(e){if(e.target===document.getElementById('fareOverlay'))
 function closeFareTableDirect(){document.getElementById('fareOverlay').classList.remove('open');}
 function renderFareCategoryBtns(){var cats=[...new Set(FARE_DATA.map(function(d){return d.cat}))];document.getElementById('fareCategoryBtns').innerHTML='<button onclick="fareSelectedCat=\'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===''?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===''?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===''?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">すべて</button>'+cats.map(function(c){return '<button onclick="fareSelectedCat=\''+escapeJs(c)+'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===c?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===c?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===c?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">'+escapeHtml(c)+'</button>'}).join('');}
 function renderFareTable(){var sw=document.getElementById('fareSearch').value.trim().toLowerCase();var data=FARE_DATA.filter(function(d){return(!fareSelectedCat||d.cat===fareSelectedCat)&&(!sw||d.name.toLowerCase().includes(sw)||d.cat.toLowerCase().includes(sw))});if(!data.length){document.getElementById('fareList').innerHTML='<div class="empty" style="padding:20px;font-size:13px;">該当なし</div>';return}document.getElementById('fareList').innerHTML=data.map(function(d){var safeName=escapeJs(d.name);return '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;" onclick="selectFare('+d.pay+',\''+safeName+'\')"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">'+escapeHtml(d.cat)+'</div><div style="font-size:14px;font-weight:600;margin-bottom:6px;">'+escapeHtml(d.name)+'</div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);gap:8px;"><span>出発 '+escapeHtml(d.start||'-')+'　到着 '+escapeHtml(d.end||'-')+'</span>'+(d.pay>0?'<span style="color:var(--accent);font-family:\'Oswald\',sans-serif;font-size:16px;white-space:nowrap;">'+d.pay.toLocaleString()+'円</span>':'<span style="color:var(--muted);">要確認</span>')+'</div></div>'}).join('');}
-function selectFare(pay,name){if(fareMode==='memo'){addMemo(name);if(pay>0){document.getElementById('longDistancePay').value=pay;updateInputProgress();}autoCalcOvertime();closeFareTableDirect();showToast('📝 '+name+(pay>0?' / '+pay.toLocaleString()+'円':''))}else{if(pay>0){document.getElementById('longDistancePay').value=pay;updateInputProgress();autoCalcOvertime();closeFareTableDirect();showToast('💰 '+pay.toLocaleString()+'円をセットしました')}}}
+function selectFare(pay,name){
+  var fare=FARE_DATA.find(function(f){return f.name===name;})||null;
+  if(fare){
+    if(fare.start)setTimePicker('start',fare.start);
+    if(fare.end)setTimePicker('end',fare.end);
+    if(fare.pay>0)document.getElementById('longDistancePay').value=fare.pay;
+  }else if(pay>0){
+    document.getElementById('longDistancePay').value=pay;
+  }
+  if(fareMode==='memo')addMemo(name);
+  updateInputProgress();
+  autoCalcOvertime();
+  closeFareTableDirect();
+  var details=[];
+  if(fare&&fare.start)details.push('出勤 '+fare.start);
+  if(fare&&fare.end)details.push('退勤 '+fare.end);
+  if((fare&&fare.pay>0)||pay>0)details.push(((fare&&fare.pay)||pay).toLocaleString()+'円');
+  showToast((fareMode==='memo'?'📝 ':'💰 ')+name+(details.length?' / '+details.join(' / '):''));
+}
 function openSettings(){document.getElementById('settingOTRate').value=devGetItem('otRate')||'';document.getElementById('settingHolidayRate').value=devGetItem('holRate')||'';updateBackupStatus();document.getElementById('settingsOverlay').classList.add('open');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))closeSettingsDirect();}
 function closeSettingsDirect(){document.getElementById('settingsOverlay').classList.remove('open');}
