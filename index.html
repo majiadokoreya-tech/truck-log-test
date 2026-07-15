@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV fully clears stale input data when selecting a new date -->
+<!-- latest: DEV clears progress summary and all stale input values on new date -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -745,19 +745,24 @@ function clearFormForNewDate(date){
   selectedJobs=[];
   toxicCount=0;
   trailerOn=false;
+  editingId=null;
 
   document.querySelectorAll('.job-btn').forEach(function(btn){
     btn.classList.remove('selected');
+    btn.style.opacity='';
+    btn.style.pointerEvents='';
+  });
+  document.querySelectorAll('.allow-btn').forEach(function(btn){
+    btn.classList.remove('selected');
   });
 
-  var memo=document.getElementById('jobMemo');
-  if(memo)memo.value='';
+  ['jobMemo','longDistancePay','distance','distance1','distance2','distance3'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.value='';
+  });
 
-  var distance=document.getElementById('distance');
-  if(distance)distance.value='';
-
-  var longPay=document.getElementById('longDistancePay');
-  if(longPay)longPay.value='';
+  var distanceTotal=document.getElementById('distanceTotal');
+  if(distanceTotal)distanceTotal.innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';
 
   clearTimePicker('start');
   clearTimePicker('end');
@@ -773,12 +778,24 @@ function clearFormForNewDate(date){
   var trailerBtn=document.getElementById('trailerBtn');
   var trailerStatus=document.getElementById('trailerStatus');
   if(trailerBtn)trailerBtn.classList.remove('selected');
-  if(trailerStatus)trailerStatus.textContent='タップでON';
+  if(trailerStatus){
+    trailerStatus.textContent='タップでON';
+    trailerStatus.style.color='var(--muted)';
+  }
 
   var dateInput=document.getElementById('inputDate');
   if(dateInput)dateInput.value=date;
 
-  editingId=null;
+  var chips=document.getElementById('inputProgressChips');
+  var summary=document.getElementById('inputSummaryList');
+  var badge=document.getElementById('inputCompleteBadge');
+  if(chips)chips.innerHTML='';
+  if(summary)summary.innerHTML='';
+  if(badge){
+    badge.textContent='未入力あり';
+    badge.style.color='var(--muted)';
+  }
+
   var saveBtn=document.getElementById('saveBtn');
   if(saveBtn)saveBtn.textContent='💾 保存する';
 
