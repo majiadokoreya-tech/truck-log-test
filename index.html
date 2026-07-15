@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV overtime in month header, no leave stats, clean new-date input -->
+<!-- latest: DEV fully clears stale input data when selecting a new date -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -740,16 +740,59 @@ function saveRecord(){var date=document.getElementById('inputDate').value;if(!da
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function resetForm(resetDate){editingId=null;selectedJobs=[];toxicCount=0;trailerOn=false;document.querySelectorAll('.job-btn').forEach(function(b){b.style.opacity='';b.style.pointerEvents='';b.classList.remove('selected')});document.querySelectorAll('.allow-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('toxicDisplay').textContent='未選択';document.getElementById('trailerStatus').textContent='タップでON';document.getElementById('trailerStatus').style.color='var(--muted)';['longDistancePay','jobMemo','distance1','distance2','distance3'].forEach(function(id){document.getElementById(id).value=''});document.getElementById('distance').value='';document.getElementById('distanceTotal').innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';clearTimePicker('start');clearTimePicker('end');clearOvertimePicker();if(resetDate){var di=document.getElementById('inputDate');di.removeEventListener('change',onDateChange);di.value=getLocalDateStr();di.addEventListener('change',onDateChange);var todayEx=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayEx)loadRecordToForm(todayEx);updateInputProgress();}}
+
+function clearFormForNewDate(date){
+  selectedJobs=[];
+  toxicCount=0;
+  trailerOn=false;
+
+  document.querySelectorAll('.job-btn').forEach(function(btn){
+    btn.classList.remove('selected');
+  });
+
+  var memo=document.getElementById('jobMemo');
+  if(memo)memo.value='';
+
+  var distance=document.getElementById('distance');
+  if(distance)distance.value='';
+
+  var longPay=document.getElementById('longDistancePay');
+  if(longPay)longPay.value='';
+
+  clearTimePicker('start');
+  clearTimePicker('end');
+  clearOvertimePicker();
+
+  var toxic1=document.getElementById('toxicBtn1');
+  var toxic2=document.getElementById('toxicBtn2');
+  var toxicDisplay=document.getElementById('toxicDisplay');
+  if(toxic1)toxic1.classList.remove('selected');
+  if(toxic2)toxic2.classList.remove('selected');
+  if(toxicDisplay)toxicDisplay.textContent='未選択';
+
+  var trailerBtn=document.getElementById('trailerBtn');
+  var trailerStatus=document.getElementById('trailerStatus');
+  if(trailerBtn)trailerBtn.classList.remove('selected');
+  if(trailerStatus)trailerStatus.textContent='タップでON';
+
+  var dateInput=document.getElementById('inputDate');
+  if(dateInput)dateInput.value=date;
+
+  editingId=null;
+  var saveBtn=document.getElementById('saveBtn');
+  if(saveBtn)saveBtn.textContent='💾 保存する';
+
+  updateInputProgress();
+  openOnlyNextRequiredAccordion();
+}
+
 function onDateChange(){
   var date=this.value;
   var ex=getRecords().find(function(r){return r.date===date});
   if(ex){
     loadRecordToForm(ex);
   }else{
-    resetForm(false);
-    document.getElementById('inputDate').value=date;
-    updateInputProgress();
-    openOnlyNextRequiredAccordion();
+    clearFormForNewDate(date);
     window.scrollTo({top:0,behavior:'smooth'});
   }
 }
@@ -1187,8 +1230,7 @@ function changeInputDateBy(days){
   if(ex){
     loadRecordToForm(ex);
   }else{
-    resetForm(false);
-    di.value=next;
+    clearFormForNewDate(next);
   }
   updateInputProgress();
   openOnlyNextRequiredAccordion();
