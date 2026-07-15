@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV readability minor adjustments -->
+<!-- latest: DEV overtime in month header, no leave stats, clean new-date input -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -224,10 +224,12 @@ input[type=number]{-moz-appearance:textfield}
 
 <div class="page" id="page-records">
   <div style="position:sticky;top:108px;z-index:90;background:var(--bg);padding-bottom:8px;">
-    <div class="month-selector" style="margin-bottom:0;"><button class="month-btn" onclick="changeMonth(-1)">&#8249;</button><div class="month-label" id="recordsMonthLabel" style="font-size:22px;"></div><button class="month-btn" onclick="changeMonth(1)">&#8250;</button></div>
-  </div>
-  <div id="monthOvertimeSummary" class="section" style="padding:12px;margin-top:10px;margin-bottom:10px;text-align:center;">
-    <div id="monthOvertimeSummaryText" style="font-family:'Oswald',sans-serif;font-size:20px;color:var(--accent);"></div>
+    <div class="month-selector" style="margin-bottom:0;display:grid;grid-template-columns:40px 1fr auto 40px;align-items:center;gap:4px;">
+      <button class="month-btn" onclick="changeMonth(-1)">&#8249;</button>
+      <div class="month-label" id="recordsMonthLabel" style="font-size:22px;text-align:center;"></div>
+      <div id="monthOvertimeSummaryText" style="font-family:'Oswald',sans-serif;font-size:15px;color:var(--accent);white-space:nowrap;text-align:right;"></div>
+      <button class="month-btn" onclick="changeMonth(1)">&#8250;</button>
+    </div>
   </div>
   <div id="recordsList"></div>
   <div style="padding:12px 0 0;"><input class="input-field" type="text" id="searchBox" placeholder="🔍 仕事内容を検索..." oninput="renderRecords()" style="font-size:14px;font-family:'Noto Sans JP',sans-serif;"></div>
@@ -738,7 +740,19 @@ function saveRecord(){var date=document.getElementById('inputDate').value;if(!da
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function resetForm(resetDate){editingId=null;selectedJobs=[];toxicCount=0;trailerOn=false;document.querySelectorAll('.job-btn').forEach(function(b){b.style.opacity='';b.style.pointerEvents='';b.classList.remove('selected')});document.querySelectorAll('.allow-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('toxicDisplay').textContent='未選択';document.getElementById('trailerStatus').textContent='タップでON';document.getElementById('trailerStatus').style.color='var(--muted)';['longDistancePay','jobMemo','distance1','distance2','distance3'].forEach(function(id){document.getElementById(id).value=''});document.getElementById('distance').value='';document.getElementById('distanceTotal').innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';clearTimePicker('start');clearTimePicker('end');clearOvertimePicker();if(resetDate){var di=document.getElementById('inputDate');di.removeEventListener('change',onDateChange);di.value=getLocalDateStr();di.addEventListener('change',onDateChange);var todayEx=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayEx)loadRecordToForm(todayEx);updateInputProgress();}}
-function onDateChange(){var date=this.value;var ex=getRecords().find(function(r){return r.date===date});if(ex)loadRecordToForm(ex);else resetForm(false);}
+function onDateChange(){
+  var date=this.value;
+  var ex=getRecords().find(function(r){return r.date===date});
+  if(ex){
+    loadRecordToForm(ex);
+  }else{
+    resetForm(false);
+    document.getElementById('inputDate').value=date;
+    updateInputProgress();
+    openOnlyNextRequiredAccordion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
 function loadRecordToForm(r){editingId=r.id;selectedJobs=(r.jobs||[]).slice();document.querySelectorAll('.job-btn').forEach(function(b){b.classList.toggle('selected',selectedJobs.includes(b.dataset.job))});setTimePicker('start',r.startTime||'');setTimePicker('end',r.endTime||'');setOvertimePicker(r.overtime||0);document.getElementById('distance1').value=r.distance||'';document.getElementById('distance2').value='';document.getElementById('distance3').value='';document.getElementById('distance').value=r.distance||'';document.getElementById('distanceTotal').innerHTML=(r.distance||0).toLocaleString()+' <span style="font-size:12px;color:var(--muted);">km</span>';document.getElementById('longDistancePay').value=r.longDistancePay||'';toxicCount=r.toxicCount||0;document.getElementById('toxicBtn1').classList.toggle('selected',toxicCount===1);document.getElementById('toxicBtn2').classList.toggle('selected',toxicCount===2);document.getElementById('toxicDisplay').textContent=toxicCount>0?'☠️×'+toxicCount+' = '+(toxicCount*2500).toLocaleString()+'円':'未選択';trailerOn=r.trailerOn||false;document.getElementById('trailerBtn').classList.toggle('selected',trailerOn);document.getElementById('trailerStatus').textContent=trailerOn?'✅ 3,000円':'タップでON';document.getElementById('trailerStatus').style.color=trailerOn?'var(--accent)':'var(--muted)';document.getElementById('jobMemo').value=normalizeJobMemoText(r.jobMemo||'');showToast('📋 入力済みデータを読み込みました');updateInputProgress();openOnlyNextRequiredAccordion();}
 function renderRecords(){var monthStr=currentYear+'-'+String(currentMonth+1).padStart(2,'0');document.getElementById('recordsMonthLabel').textContent=currentYear+'年'+(currentMonth+1)+'月';renderLeavePanel();var sw=document.getElementById('searchBox')?document.getElementById('searchBox').value.trim().toLowerCase():'';var list=document.getElementById('recordsList');if(sw){var res=getRecords().filter(function(r){return(r.jobMemo||'').toLowerCase().includes(sw)||(r.jobs||[]).join('').toLowerCase().includes(sw)}).sort(function(a,b){return b.date.localeCompare(a.date)});if(!res.length){list.innerHTML='<div class="empty"><div class="empty-icon">🔍</div>「'+sw+'」の記録はありません</div>';return}list.innerHTML=res.map(recordCardHtml).join('');return}var all=getRecords().filter(function(r){return r.date&&r.date.startsWith(monthStr)}),rm={};renderMonthOvertimeSummary(all);all.forEach(function(r){rm[r.date]=r});var firstDay=new Date(currentYear,currentMonth,1).getDay(),dim=new Date(currentYear,currentMonth+1,0).getDate(),html='<div class="cal-grid">';['日','月','火','水','木','金','土'].forEach(function(d,i){var c=i===0?'color:#e74c3c':i===6?'color:#3498db':'color:var(--muted)';html+='<div class="cal-head" style="'+c+'">'+d+'</div>'});for(var i=0;i<firstDay;i++)html+='<div class="cal-cell empty"></div>';for(var day=1;day<=dim;day++){var ds=currentYear+'-'+String(currentMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),dow=new Date(currentYear,currentMonth,day).getDay(),r=rm[ds],hd=!!r,jobs=r?(r.jobs||[]):[],je=r?jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''):'';var dc=getDateColor(ds,dow),ih=HOLIDAYS.has(ds),dayCls='cal-cell '+(hd?'has-data ':'')+(jobs.includes('休み')?'rest-day ':jobs.includes('半日有給')?'half-paid-day ':'');var isToday=ds===getLocalDateStr();html+='<div '+(isToday?'id="cal-today"':'')+' class="'+dayCls+'" onclick="'+(hd?'showModal('+r.id+')':"goToInput('"+ds+"')")+'" style="'+(isToday?'outline:2px solid #3498db;outline-offset:-2px;':'')+'"><div class="cal-day" style="'+dc+'">'+day+(ih?'🎌':'')+'</div>'+(hd?('<div class="cal-emoji">'+(je||'—')+'</div>'+(r.startTime?'<div class="cal-time">出 '+r.startTime+'</div>':'')+(r.endTime?'<div class="cal-time">退 '+r.endTime+'</div>':'')+(r.overtime>0?'<div class="cal-time">残 '+r.overtime+'h</div>':'')+(r.jobMemo?'<div class="cal-memo">'+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')):'')+'</div>'}list.innerHTML=html+'</div>';}
 
@@ -751,7 +765,7 @@ function renderMonthOvertimeSummary(monthRecords){
     totalOt+=ot||0;
   });
   totalOt=Math.round(totalOt*100)/100;
-  el.textContent=currentYear+'年'+(currentMonth+1)+'月　残業 '+formatHour(totalOt)+'H';
+  el.textContent='残業 '+formatHour(totalOt)+'H';
 }
 
 function recordCardHtml(r){var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()],dc=getDateColor(r.date,d.getDay()),jobs=r.jobs||[],je=jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''),cardCls='record-card'+(jobs.includes('休み')?' rest-day':jobs.includes('半日有給')?' half-paid-day':'');var tp=r.toxicPay||((r.toxicCount||0)*2500),dp=calcDistPay(r.distance),total=tp+(r.trailerPay||0)+dp;return '<div class="'+cardCls+'" onclick="showModal('+r.id+')"><div class="record-top"><div class="record-date" style="'+dc+'">'+r.date.replace(/-/g,'/')+'（'+wd+'）</div><div>'+je+'</div></div>'+(jobs.includes('休み')?'<div style="font-size:13px;color:var(--green);font-weight:700;margin-top:4px;">🏠 休み</div>':'')+(jobs.includes('半日有給')?'<div style="font-size:13px;color:#6b9b00;font-weight:700;margin-top:4px;">🌴 半日有給</div>':'')+(r.jobMemo?'<div style="font-size:12px;color:var(--muted);margin-top:4px;">📝 '+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')+(total>0?'<div style="margin-top:6px;"><span class="badge">💰 '+total.toLocaleString()+'円</span></div>':'')+'</div>'}
@@ -763,22 +777,31 @@ function enhanceStatsLayout(){
   var grid=document.getElementById('statsGrid');
   if(!grid)return;
   Array.from(grid.querySelectorAll('.stats-group-title,.generated-leave-card')).forEach(function(el){el.remove();});
+
   var cards=Array.from(grid.children);
   var attendanceCard=cards.find(function(c){return c.textContent.indexOf('出勤日数')>=0;});
   if(attendanceCard)attendanceCard.remove();
+
   cards=Array.from(grid.children);
   var distanceCard=cards.find(function(c){return c.textContent.indexOf('総走行距離')>=0;});
   var otCard=cards.find(function(c){return c.textContent.indexOf('残業時間')>=0;});
   var ldCard=cards.find(function(c){return c.textContent.indexOf('長距離手当合計')>=0;});
   var wmCard=cards.find(function(c){return c.textContent.indexOf('ワンマン手当')>=0;});
-  cards.forEach(function(c){c.style.order='';c.style.gridColumn='';c.style.background='';c.style.borderColor='';});
-  if(distanceCard){distanceCard.style.gridColumn='span 2';distanceCard.style.order='5';}
+
+  cards.forEach(function(c){
+    c.style.order='';
+    c.style.gridColumn='';
+    c.style.background='';
+    c.style.borderColor='';
+  });
+
   var timeTitle=document.createElement('div');
   timeTitle.className='stats-group-title section-title';
   timeTitle.style.cssText='grid-column:span 2;order:0;margin:4px 0 0;';
   timeTitle.textContent='⏰ 時間';
   grid.appendChild(timeTitle);
   if(otCard)otCard.style.order='1';
+
   var payTitle=document.createElement('div');
   payTitle.className='stats-group-title section-title';
   payTitle.style.cssText='grid-column:span 2;order:2;margin:8px 0 0;';
@@ -786,22 +809,11 @@ function enhanceStatsLayout(){
   grid.appendChild(payTitle);
   if(ldCard)ldCard.style.order='3';
   if(wmCard)wmCard.style.order='4';
-  var leaveTitle=document.createElement('div');
-  leaveTitle.className='stats-group-title section-title';
-  leaveTitle.style.cssText='grid-column:span 2;order:6;margin:8px 0 0;';
-  leaveTitle.textContent='🌴 休暇';
-  grid.appendChild(leaveTitle);
-  var leave=calcLeaveMonth();
-  var leaveY=document.createElement('div');
-  leaveY.className='stat-card generated-leave-card';
-  leaveY.style.order='7';
-  leaveY.innerHTML='<div class="stat-label">有給残</div><div class="stat-value">'+fmtLeave(leave.currentYukyu)+'<span class="stat-unit"> 日</span></div>';
-  grid.appendChild(leaveY);
-  var leaveD=document.createElement('div');
-  leaveD.className='stat-card generated-leave-card';
-  leaveD.style.order='8';
-  leaveD.innerHTML='<div class="stat-label">代休残</div><div class="stat-value" style="color:var(--green);">'+fmtLeave(leave.currentDaikyu)+'<span class="stat-unit"> 日</span></div>';
-  grid.appendChild(leaveD);
+
+  if(distanceCard){
+    distanceCard.style.order='5';
+    distanceCard.style.gridColumn='';
+  }
 }
 
 function formatHour(n){return n%1===0?String(n):n.toFixed(2).replace(/\.?0+$/,'');}
@@ -1172,8 +1184,12 @@ function changeInputDateBy(days){
   var next=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   di.value=next;
   var ex=getRecords().find(function(r){return r.date===next;});
-  if(ex)loadRecordToForm(ex);
-  else resetForm(false);
+  if(ex){
+    loadRecordToForm(ex);
+  }else{
+    resetForm(false);
+    di.value=next;
+  }
   updateInputProgress();
   openOnlyNextRequiredAccordion();
   showToast('📅 '+next.replace(/-/g,'/'));
