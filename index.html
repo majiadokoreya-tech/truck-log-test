@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV clears progress when opening a new date from calendar -->
+<!-- latest: DEV long-distance dedicated summary panel -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -93,6 +93,17 @@ input[type=number]{-moz-appearance:textfield}
 .backup-preview-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
 .backup-preview-label{font-size:10px;color:var(--muted);margin-bottom:4px}
 .backup-preview-value{font-family:'Oswald',sans-serif;font-size:18px;color:var(--accent)}
+
+.long-distance-panel{display:none;margin:12px 0;background:linear-gradient(135deg,rgba(108,92,231,.10),rgba(52,152,219,.08));border:1.5px solid var(--accent);border-radius:14px;padding:12px}
+.long-distance-panel.show{display:block}
+.long-distance-panel-title{font-weight:700;color:var(--accent);font-size:15px;margin-bottom:10px}
+.long-distance-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.long-distance-panel-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:left;color:var(--text)}
+.long-distance-panel-label{font-size:10px;color:var(--muted);margin-bottom:4px}
+.long-distance-panel-value{font-size:14px;font-weight:700;word-break:break-word}
+.long-distance-panel-wide{grid-column:span 2}
+.long-distance-panel-hint{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
+
 </style>
 </head>
 <body>
@@ -119,6 +130,36 @@ input[type=number]{-moz-appearance:textfield}
       <div id="inputCompleteBadge" style="font-size:12px;color:var(--muted);">未入力あり</div>
     </div>
     <div id="inputProgressChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;"></div><div id="inputSummaryList" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
+      <div id="longDistancePanel" class="long-distance-panel">
+        <div class="long-distance-panel-title">🚛 長距離入力まとめ</div>
+        <div class="long-distance-panel-grid">
+          <button type="button" class="long-distance-panel-card long-distance-panel-wide" onclick="openFareTable('memo')">
+            <div class="long-distance-panel-label">📍 客先</div>
+            <div class="long-distance-panel-value" id="ldPanelCustomer">未選択</div>
+          </button>
+          <button type="button" class="long-distance-panel-card" onclick="jumpToInputSection('inputTimeAccordion')">
+            <div class="long-distance-panel-label">🕒 出勤</div>
+            <div class="long-distance-panel-value" id="ldPanelStart">--:--</div>
+          </button>
+          <button type="button" class="long-distance-panel-card" onclick="jumpToInputSection('inputTimeAccordion')">
+            <div class="long-distance-panel-label">🕒 退勤</div>
+            <div class="long-distance-panel-value" id="ldPanelEnd">--:--</div>
+          </button>
+          <button type="button" class="long-distance-panel-card" onclick="jumpToInputSection('inputPayAccordion')">
+            <div class="long-distance-panel-label">💰 長距離手当</div>
+            <div class="long-distance-panel-value" id="ldPanelPay">0円</div>
+          </button>
+          <button type="button" class="long-distance-panel-card" onclick="jumpToInputSection('inputJobAccordion')">
+            <div class="long-distance-panel-label">☠️ 毒手当</div>
+            <div class="long-distance-panel-value" id="ldPanelToxic">未選択</div>
+          </button>
+          <button type="button" class="long-distance-panel-card long-distance-panel-wide" onclick="jumpToInputSection('inputTimeAccordion')">
+            <div class="long-distance-panel-label">⏰ 残業時間</div>
+            <div class="long-distance-panel-value" id="ldPanelOvertime">0H</div>
+          </button>
+        </div>
+        <div class="long-distance-panel-hint">長距離を選んだ時だけ表示されます。各項目を押すと元の入力欄へ移動します。</div>
+      </div>
   </div>
   <div class="section">
     <div class="accordion-toggle" id="inputJobAccordionToggle" onclick="toggleAccordion(this)" data-id="inputJobAccordion">
@@ -401,6 +442,30 @@ function updateInputProgress(){
   if(next){badge.textContent='未入力あり';badge.style.color='var(--muted)';}
   else{badge.textContent='🎉 入力完了';badge.style.color='var(--green)';}
   renderInputSummary();
+  renderLongDistancePanel();
+}
+
+
+function renderLongDistancePanel(){
+  var panel=document.getElementById('longDistancePanel');
+  if(!panel)return;
+  var active=selectedJobs.includes('長距離');
+  panel.classList.toggle('show',active);
+  if(!active)return;
+
+  var memo=document.getElementById('jobMemo');
+  var customer=(memo&&memo.value.trim())?memo.value.trim():'未選択';
+  var start=document.getElementById('startTime').value||'--:--';
+  var end=document.getElementById('endTime').value||'--:--';
+  var pay=parseInt(document.getElementById('longDistancePay').value)||0;
+  var overtime=parseFloat(document.getElementById('overtime').value)||0;
+
+  document.getElementById('ldPanelCustomer').textContent=customer;
+  document.getElementById('ldPanelStart').textContent=start;
+  document.getElementById('ldPanelEnd').textContent=end;
+  document.getElementById('ldPanelPay').textContent=pay.toLocaleString()+'円';
+  document.getElementById('ldPanelToxic').textContent=toxicCount>0?'×'+toxicCount+'（'+(toxicCount*2500).toLocaleString()+'円）':'未選択';
+  document.getElementById('ldPanelOvertime').textContent=formatHour(overtime)+'H';
 }
 
 function renderInputSummary(){
@@ -816,6 +881,7 @@ function clearFormForNewDate(date){
 
   updateInputProgress();
   openOnlyNextRequiredAccordion();
+  renderLongDistancePanel();
 }
 
 function onDateChange(){
