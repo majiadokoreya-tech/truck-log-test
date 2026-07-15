@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV long-distance sulfuric-acid or chlorine fare auto-sets toxic allowance x1 -->
+<!-- latest: DEV Kaneka 8000 allowance and toxic job auto-selection -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -607,9 +607,10 @@ function addMemo(text){
     if(kanekaFare){
       if(kanekaFare.start)setTimePicker('start',kanekaFare.start);
       if(kanekaFare.end)setTimePicker('end',kanekaFare.end);
+      document.getElementById('longDistancePay').value=8000;
       autoCalcOvertime();
       updateInputProgress();
-      showToast('🏭 カネカ大阪の出勤・退勤時間をセットしました');
+      showToast('🏭 カネカ大阪の時間と長距離手当8,000円をセットしました');
     }
   }
 }
@@ -983,12 +984,24 @@ function renderFareTable(){var sw=document.getElementById('fareSearch').value.tr
 
 function shouldAutoSetToxicOneForFare(fare){
   if(!fare||!selectedJobs.includes('長距離'))return false;
-  return fare.cat==='濃硫酸'||fare.cat==='塩素'||fare.cat==='液塩';
+  return fare.cat==='濃硫酸'||fare.cat==='液塩'||fare.cat==='液安';
 }
 function autoSetToxicOneForFare(fare){
   if(!shouldAutoSetToxicOneForFare(fare))return;
   if(toxicCount===2)return;
-  if(toxicCount!==1)selectToxic(1);
+
+  toxicCount=1;
+  selectedJobs=selectedJobs.filter(function(j){return j!=='毒×2';});
+  if(!selectedJobs.includes('毒手当'))selectedJobs.push('毒手当');
+
+  document.querySelectorAll('.job-btn').forEach(function(btn){
+    if(btn.dataset.job==='毒手当')btn.classList.add('selected');
+    if(btn.dataset.job==='毒×2')btn.classList.remove('selected');
+  });
+
+  document.getElementById('toxicBtn1').classList.add('selected');
+  document.getElementById('toxicBtn2').classList.remove('selected');
+  document.getElementById('toxicDisplay').textContent='☠️×1 = 2,500円';
 }
 
 function selectFare(pay,name){
