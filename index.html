@@ -827,8 +827,9 @@ function toggleJob(el){
     if(j==='毒×2')selectToxic(2);
     if(j==='トレーラー'&&!trailerOn)toggleTrailer();
     if(j==='半日有給'){
+      setTimePicker('end','12:00');
       addMemo('半日有給');
-      showToast('🌴 半日有給を設定しました（出退勤時刻はそのまま）');
+      showToast('🌴 半日有給を設定しました（終業時刻 12:00）');
     }
   }
   if(timeState.start.h!==null&&timeState.start.m!==null)autoCalcOvertime();
@@ -1484,6 +1485,8 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 半日有給を選択したとき、終業時刻を自動で12:00に設定するよう変更
+- 5:30出勤の場合の残業2.5時間計算は維持
 - 半日有給を後から選択した際、土曜・祝日判定より半日有給計算を優先するよう修正
 - 半日有給の残業を「8:00より前の早出時間」で15分単位計算（5:30出勤は2.5時間）
 - 半日有給の選択・解除時に、入力済みの終業時刻を勝手に変更・消去しないよう修正
