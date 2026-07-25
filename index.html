@@ -783,7 +783,55 @@ function addMemo(text){
     }
   }
 }
-function toggleJob(el){var j=el.dataset.job;if(selectedJobs.includes(j)){selectedJobs=selectedJobs.filter(function(x){return x!==j});el.classList.remove('selected');if(j==='毒手当'&&toxicCount===1)selectToxic(1);if(j==='毒×2'&&toxicCount===2)selectToxic(2);if(j==='トレーラー'&&trailerOn)toggleTrailer();if(j==='半日有給'){clearTimePicker('end');clearOvertimePicker();removeMemo('半日有給')}if(j==='休み')removeMemo('休み');}else{if(j==='休み'){selectedJobs=[];document.querySelectorAll('.job-btn').forEach(function(b){b.classList.remove('selected')});toxicCount=0;trailerOn=false;document.getElementById('toxicBtn1').classList.remove('selected');document.getElementById('toxicBtn2').classList.remove('selected');document.getElementById('toxicDisplay').textContent='未選択';document.getElementById('trailerBtn').classList.remove('selected');document.getElementById('trailerStatus').textContent='タップでON';clearTimePicker('start');clearTimePicker('end');clearOvertimePicker();selectedJobs.push(j);el.classList.add('selected');addMemo('休み');updateInputProgress();['inputJobAccordion','inputTimeAccordion','inputDistanceAccordion','inputPayAccordion'].forEach(function(id){closeInputAccordion(id);});return;}if(selectedJobs.includes('休み')){selectedJobs=selectedJobs.filter(function(x){return x!=='休み'});document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='休み')b.classList.remove('selected')});removeMemo('休み')}if(j==='毒手当'&&selectedJobs.includes('毒×2'))return;if(j==='毒×2'&&selectedJobs.includes('毒手当'))return;selectedJobs.push(j);el.classList.add('selected');if(j==='毒手当')selectToxic(1);if(j==='毒×2')selectToxic(2);if(j==='トレーラー'&&!trailerOn)toggleTrailer();if(j==='半日有給'){setTimePicker('end','12:00');addMemo('半日有給')}}if(timeState.start.h!==null&&timeState.start.m!==null)autoCalcOvertime();
+function toggleJob(el){
+  var j=el.dataset.job;
+  if(selectedJobs.includes(j)){
+    selectedJobs=selectedJobs.filter(function(x){return x!==j});
+    el.classList.remove('selected');
+    if(j==='毒手当'&&toxicCount===1)selectToxic(1);
+    if(j==='毒×2'&&toxicCount===2)selectToxic(2);
+    if(j==='トレーラー'&&trailerOn)toggleTrailer();
+    if(j==='半日有給')removeMemo('半日有給');
+    if(j==='休み')removeMemo('休み');
+  }else{
+    if(j==='休み'){
+      selectedJobs=[];
+      document.querySelectorAll('.job-btn').forEach(function(b){b.classList.remove('selected')});
+      toxicCount=0;
+      trailerOn=false;
+      document.getElementById('toxicBtn1').classList.remove('selected');
+      document.getElementById('toxicBtn2').classList.remove('selected');
+      document.getElementById('toxicDisplay').textContent='未選択';
+      document.getElementById('trailerBtn').classList.remove('selected');
+      document.getElementById('trailerStatus').textContent='タップでON';
+      clearTimePicker('start');
+      clearTimePicker('end');
+      clearOvertimePicker();
+      selectedJobs.push(j);
+      el.classList.add('selected');
+      addMemo('休み');
+      updateInputProgress();
+      ['inputJobAccordion','inputTimeAccordion','inputDistanceAccordion','inputPayAccordion'].forEach(function(id){closeInputAccordion(id);});
+      return;
+    }
+    if(selectedJobs.includes('休み')){
+      selectedJobs=selectedJobs.filter(function(x){return x!=='休み'});
+      document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='休み')b.classList.remove('selected')});
+      removeMemo('休み');
+    }
+    if(j==='毒手当'&&selectedJobs.includes('毒×2'))return;
+    if(j==='毒×2'&&selectedJobs.includes('毒手当'))return;
+    selectedJobs.push(j);
+    el.classList.add('selected');
+    if(j==='毒手当')selectToxic(1);
+    if(j==='毒×2')selectToxic(2);
+    if(j==='トレーラー'&&!trailerOn)toggleTrailer();
+    if(j==='半日有給'){
+      addMemo('半日有給');
+      showToast('🌴 半日有給を設定しました（出退勤時刻はそのまま）');
+    }
+  }
+  if(timeState.start.h!==null&&timeState.start.m!==null)autoCalcOvertime();
   updateInputProgress();
   if(hasLongDistanceJob()&&!isPayInputDone())openInputAccordion('inputPayAccordion');
   if(!hasLongDistanceJob())closeInputAccordion('inputPayAccordion');
@@ -795,6 +843,14 @@ function setHour(which,h){if(timeState[which].h===h){clearTimePicker(which);retu
 function setMin(which,m){if(timeState[which].m===m){timeState[which].m=null;document.getElementById(which+'MinBtns').querySelectorAll('.time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById(which+'TimeDisplay').textContent=timeState[which].h!==null?String(timeState[which].h).padStart(2,'0')+':--':'--:--';document.getElementById(which+'Time').value='';return}timeState[which].m=m;var btns=document.getElementById(which+'MinBtns').querySelectorAll('.time-btn');btns.forEach(function(b){b.classList.remove('selected')});var opts=which==='start'?[0,30]:[0,15,30,45];var idx=opts.indexOf(m);if(idx>=0&&btns[idx])btns[idx].classList.add('selected');updateTimeValue(which);}
 function updateTimeValue(which){var s=timeState[which];if(s.h!==null&&s.m!==null){var v=String(s.h).padStart(2,'0')+':'+String(s.m).padStart(2,'0');document.getElementById(which+'Time').value=v;document.getElementById(which+'TimeDisplay').textContent=v;updateInputProgress()}else if(s.h!==null){document.getElementById(which+'TimeDisplay').textContent=String(s.h).padStart(2,'0')+':--'}if(timeState.start.h!==null&&timeState.start.m!==null&&timeState.end.h!==null&&timeState.end.m!==null)autoCalcOvertime();}
 var OT_TABLE={};
+function calcHalfLeaveOvertimeHours(){
+  var sh=timeState.start.h,sm=timeState.start.m;
+  if(sh===null||sm===null)return 0;
+  var startMins=sh*60+sm;
+  var halfLeaveStart=8*60;
+  return Math.max(0,Math.floor((halfLeaveStart-startMins)/15)*0.25);
+}
+
 function autoCalcOvertime(){
   var dateStr=document.getElementById('inputDate').value;
   var currentRecord={
@@ -804,6 +860,13 @@ function autoCalcOvertime(){
     endTime:document.getElementById('endTime').value,
     jobMemo:document.getElementById('jobMemo').value
   };
+
+  // 半日有給は曜日・会社休日より優先して、8:00より前の早出分だけを残業にする。
+  // 例：5:30出勤 → 2.5時間。終業時刻は実績として保持する。
+  if(selectedJobs.includes('半日有給')){
+    setOvertimePicker(calcHalfLeaveOvertimeHours());
+    return;
+  }
 
   if(dateStr&&new Date(dateStr).getDay()===0&&selectedJobs.includes('長距離')){
     setOvertimePicker(calcLongDistanceOvertimeHours(currentRecord));
@@ -832,7 +895,6 @@ function autoCalcOvertime(){
   var workH=(endMins-startMins)/60;
   var kyukei=workH<=4?0:workH<=5.75?.5:1;
   var ot=Math.max(0,Math.floor((workH-kyukei-7.25)*4)/4);
-  if(selectedJobs.includes('半日有給'))ot=Math.max(0,Math.floor((8*60-startMins)/15)*15/60);
   setOvertimePicker(ot);
 }
 function setTimePicker(which,val){if(!val){clearTimePicker(which);return}var p=val.split(':'),hh=parseInt(p[0]),mm=parseInt(p[1]);timeState[which]={h:hh,m:mm};document.querySelectorAll('#'+which+'HourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});var hb=document.getElementById(which+'H'+hh);if(hb)hb.classList.add('selected');var opts=which==='start'?[0,30]:[0,15,30,45],btns=document.getElementById(which+'MinBtns').querySelectorAll('.time-btn');btns.forEach(function(b){b.classList.remove('selected')});var idx=opts.indexOf(mm);if(idx>=0&&btns[idx])btns[idx].classList.add('selected');updateTimeValue(which);}
@@ -1422,6 +1484,9 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 半日有給を後から選択した際、土曜・祝日判定より半日有給計算を優先するよう修正
+- 半日有給の残業を「8:00より前の早出時間」で15分単位計算（5:30出勤は2.5時間）
+- 半日有給の選択・解除時に、入力済みの終業時刻を勝手に変更・消去しないよう修正
 - 会社休日管理を設定画面に追加
 - お盆休み・年末年始・GWなどの会社休日を日付と名称で登録可能
 - 登録済み会社休日の編集・削除に対応
