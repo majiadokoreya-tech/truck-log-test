@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報 DEV">
 <title>🧪 運転日報 DEV</title>
-<!-- latest: DEV payroll-rule audit: holiday short work, daikyu, overtime, distance -->
+<!-- latest: DEV holiday work threshold corrected to 8.25h -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -683,12 +683,12 @@ function isSaturdayOrHolidayRecordDate(dateStr){
 function calcHolidayShortBreakHours(workH){
   workH=parseFloat(workH)||0;
   if(workH<=4)return 0;
-  if(workH<=5)return 0.5;
-  return 0;
+  if(workH<=5.75)return 0.5;
+  return 1;
 }
 function calcHolidayShortAllowanceHours(r){
   var workH=getWorkHoursNum(r);
-  if(workH<=0||workH>5)return 0;
+  if(workH<=0||workH>=8.25)return 0;
   var breakH=calcHolidayShortBreakHours(workH);
   return Math.max(0,Math.floor((workH-breakH)*4)/4);
 }
@@ -698,11 +698,11 @@ function calcSaturdayHolidayOvertimeHours(r){
   if(workH<=0)return 0;
 
   // 青土曜・祝日・会社休日
-  // 5時間以下：実働すべてを休日手当（4h超なら0.5h休憩）
-  if(workH<=5)return calcHolidayShortAllowanceHours(r);
+  // 8.25h未満：必要休憩を引いた実働すべてを休日手当。
+  if(workH<8.25)return calcHolidayShortAllowanceHours(r);
 
-  // 5時間超：実運用では必ず8.25h以上勤務。
-  // 通常出勤日と同じ残業計算を行い、その残業を休日単価で支給。
+  // 8.25h以上：通常勤務と同じ残業計算。
+  // 残業分は休日単価、代休+1。
   return calcNormalOvertimeHoursFromRecord(r);
 }
 
@@ -735,10 +735,11 @@ function calcEffectiveOvertimeHours(r){
   // 長距離は客先設定時間基準。日曜長距離は代休特例を別途維持。
   if(isLongDistanceRecord(r))return calcLongDistanceOvertimeHours(r);
 
-  // 日曜：5h以下は実働すべて休日手当、5h超は通常残業計算＋休日単価
+  // 日曜：8.25h未満は必要休憩を引いた実働すべて休日手当。
+  // 8.25h以上は通常残業計算＋休日単価。
   if(isSundayRecord(r)){
     var sundayWork=getWorkHoursNum(r);
-    if(sundayWork<=5)return calcHolidayShortAllowanceHours(r);
+    if(sundayWork<8.25)return calcHolidayShortAllowanceHours(r);
     return calcNormalOvertimeHoursFromRecord(r);
   }
 
@@ -763,8 +764,8 @@ function earnsDaikyuRecord(r){
   if(dow===0&&isLongDistanceRecord(r))return true;
 
   // 青土曜・祝日・会社休日・日曜：
-  // 5時間以下は代休なし。5時間を超えた勤務は代休+1。
-  if(isHolidayWorkDate(r.date))return getWorkHoursNum(r)>5;
+  // 8.25h未満は代休なし。8.25h以上で代休+1。
+  if(isHolidayWorkDate(r.date))return getWorkHoursNum(r)>=8.25;
 
   return false;
 }
@@ -775,7 +776,7 @@ function calcLeaveMonthByKey(ms,st){
     if(isRestRecord(r))restDays+=1;
     if(isHalfLeaveRecord(r)){halfCount+=1;halfDays+=0.5;}
     if(earnsDaikyuRecord(r))earned+=1;
-    else if(r&&!isRestRecord(r)&&!isHalfLeaveRecord(r)&&isHolidayLike(r.date)&&r.startTime&&r.endTime&&getWorkHoursNum(r)<=5)shortHoliday+=1;
+    else if(r&&!isRestRecord(r)&&!isHalfLeaveRecord(r)&&isHolidayLike(r.date)&&r.startTime&&r.endTime&&getWorkHoursNum(r)<8.25)shortHoliday+=1;
   });
   var availableDaikyu=st.daikyu+earned;
   var usedDaikyu=Math.min(restDays,availableDaikyu);
@@ -827,7 +828,7 @@ function loadLeaveStart(){
 function calcHalfLeaveYear(){var y=String(currentYear);var records=getRecords().filter(function(r){return r.date&&r.date.indexOf(y+'-')===0&&isHalfLeaveRecord(r);});var used=records.length;var remain=12-used;if(remain<0)remain=0;return {appUsed:records.length,used:used,remain:remain};}
 function calcLeaveMonth(){var ms=getLeaveMonthKey();var st=getLeaveStart(ms);return calcLeaveMonthByKey(ms,st);}
 
-function renderLeavePanel(){if(!document.getElementById('leaveCurrentYukyu'))return;loadLeaveStart();var c=calcLeaveMonth();var hy=calcHalfLeaveYear();document.getElementById('leaveCurrentYukyu').innerHTML=fmtLeave(c.currentYukyu)+'<span class="stat-unit"> 日</span>';document.getElementById('leaveCurrentDaikyu').innerHTML=fmtLeave(c.currentDaikyu)+'<span class="stat-unit"> 日</span>';document.getElementById('halfLeaveUsedYear').innerHTML=hy.used+'<span class="stat-unit"> / 12回</span>';document.getElementById('halfLeaveUsedDetail').textContent='アプリ記録 '+hy.appUsed+'回';document.getElementById('halfLeaveRemainYear').innerHTML=hy.remain+'<span class="stat-unit"> 回</span>';var warn=hy.remain<=0?' <span style="color:var(--red);font-weight:700;">上限です</span>':'';var html='📋 今月内訳<br>🏠 休み '+fmtLeave(c.restDays)+'日（代休消化 '+fmtLeave(c.usedDaikyu)+'日 / 有給消化 '+fmtLeave(c.usedYukyu)+'日）<br>🌴 半日有給 '+c.halfCount+'回 = '+fmtLeave(c.halfDays)+'日<br>🔄 代休発生 '+fmtLeave(c.earned)+'日（青土曜・祝日・会社休日・日曜で5h超／日曜長距離）';if(c.shortHoliday>0)html+='<br>⏰ 休日短時間出勤 '+c.shortHoliday+'日（5h以下・代休なし・休憩控除後を休日手当）';html+='<br><br>📅 '+currentYear+'年 半日有給：アプリ記録 '+hy.appUsed+'回 = '+hy.used+' / 12回　残り '+hy.remain+'回'+warn;html+='<br><br>計算：有給 '+fmtLeave(c.startYukyu)+' - '+fmtLeave(c.usedYukyu)+' - '+fmtLeave(c.halfDays)+' = '+fmtLeave(c.currentYukyu)+' / 代休 '+fmtLeave(c.startDaikyu)+' + '+fmtLeave(c.earned)+' - '+fmtLeave(c.usedDaikyu)+' = '+fmtLeave(c.currentDaikyu);document.getElementById('leaveBreakdown').innerHTML=html;}
+function renderLeavePanel(){if(!document.getElementById('leaveCurrentYukyu'))return;loadLeaveStart();var c=calcLeaveMonth();var hy=calcHalfLeaveYear();document.getElementById('leaveCurrentYukyu').innerHTML=fmtLeave(c.currentYukyu)+'<span class="stat-unit"> 日</span>';document.getElementById('leaveCurrentDaikyu').innerHTML=fmtLeave(c.currentDaikyu)+'<span class="stat-unit"> 日</span>';document.getElementById('halfLeaveUsedYear').innerHTML=hy.used+'<span class="stat-unit"> / 12回</span>';document.getElementById('halfLeaveUsedDetail').textContent='アプリ記録 '+hy.appUsed+'回';document.getElementById('halfLeaveRemainYear').innerHTML=hy.remain+'<span class="stat-unit"> 回</span>';var warn=hy.remain<=0?' <span style="color:var(--red);font-weight:700;">上限です</span>':'';var html='📋 今月内訳<br>🏠 休み '+fmtLeave(c.restDays)+'日（代休消化 '+fmtLeave(c.usedDaikyu)+'日 / 有給消化 '+fmtLeave(c.usedYukyu)+'日）<br>🌴 半日有給 '+c.halfCount+'回 = '+fmtLeave(c.halfDays)+'日<br>🔄 代休発生 '+fmtLeave(c.earned)+'日（青土曜・祝日・会社休日・日曜で8.25h以上／日曜長距離）';if(c.shortHoliday>0)html+='<br>⏰ 休日短時間出勤 '+c.shortHoliday+'日（8.25h未満・代休なし・休憩控除後を休日手当）';html+='<br><br>📅 '+currentYear+'年 半日有給：アプリ記録 '+hy.appUsed+'回 = '+hy.used+' / 12回　残り '+hy.remain+'回'+warn;html+='<br><br>計算：有給 '+fmtLeave(c.startYukyu)+' - '+fmtLeave(c.usedYukyu)+' - '+fmtLeave(c.halfDays)+' = '+fmtLeave(c.currentYukyu)+' / 代休 '+fmtLeave(c.startDaikyu)+' + '+fmtLeave(c.earned)+' - '+fmtLeave(c.usedDaikyu)+' = '+fmtLeave(c.currentDaikyu);document.getElementById('leaveBreakdown').innerHTML=html;}
 function showTab(tab){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});document.getElementById('page-'+tab).classList.add('active');var idx=['input','records','stats'].indexOf(tab);document.querySelectorAll('.tab')[idx].classList.add('active');if(tab==='records')renderRecords();if(tab==='stats')renderStats();}
 function updateTotalDistance(){var d1=parseFloat(document.getElementById('distance1').value)||0,d2=parseFloat(document.getElementById('distance2').value)||0,d3=parseFloat(document.getElementById('distance3').value)||0,total=d1+d2+d3;document.getElementById('distance').value=total||'';document.getElementById('distanceTotal').innerHTML=total.toLocaleString()+' <span style="font-size:12px;color:var(--muted);">km</span>';updateInputProgress();}
 function addMemoAndToxic2(){addMemo('PM搭載');selectedJobs=selectedJobs.filter(function(j){return j!=='毒手当'&&j!=='毒×2'});selectedJobs.push('毒×2');document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='毒×2')b.classList.add('selected');if(b.dataset.job==='毒手当')b.classList.remove('selected')});selectToxic(2);}
@@ -1534,6 +1535,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 休日勤務の分岐を5h基準から8.25h基準へ修正
+- 休日8.25h未満は休憩控除後の実働すべてを休日手当
+- 休日8.25h以上は通常残業計算＋休日単価＋代休1日
+- 休日休憩：4hまで0、4h超〜5.75hは0.5h、5.75h超は1h
+- 2026/07/05 6:00〜13:15 を休日6.25hとして再現確認
 - 青土曜・祝日・会社休日・日曜の休日勤務ルールを再点検・統一
 - 休日勤務5h以下：4hまでは休憩なし、4h超〜5hは0.5h休憩を控除し残り全て休日手当
 - 休日勤務5h超：通常出勤日と同じ残業計算、残業分は休日単価、代休+1
