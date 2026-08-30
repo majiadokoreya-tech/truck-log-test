@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#0f1923">
 <title>🧪 TEST 運転日報</title>
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}#appFrame{border:0;width:100%;height:100%;display:block;background:#f5f5f5}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
+#appFrame{border:0;width:100%;height:100%;display:block;background:#f5f5f5}
 </style>
 </head>
 <body>
@@ -19,38 +20,73 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}#ap
     if(!d||d.getElementById('overtimeReferenceBtn'))return;
 
     var style=d.createElement('style');
-    style.textContent='\n.ot-ref-btn{width:100%;background:rgba(52,152,219,.12);border:1.5px solid var(--blue);border-radius:10px;padding:11px 12px;color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}.ot-ref-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1200;align-items:flex-end;justify-content:center}.ot-ref-overlay.open{display:flex}.ot-ref-modal{background:var(--surface);width:100%;height:94vh;border-radius:18px 18px 0 0;overflow:hidden;display:flex;flex-direction:column;border-top:2px solid var(--blue)}.ot-ref-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex:none}.ot-ref-head-title{font-weight:700;color:var(--blue);font-size:16px}.ot-ref-close{border:0;background:var(--surface2);border-radius:9px;padding:8px 12px;font-size:16px;color:var(--text)}.ot-ref-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}.ot-ref-note{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px}.ot-ref-group{margin-bottom:18px}.ot-ref-group-title{font-size:13px;font-weight:700;margin-bottom:7px;color:var(--text)}.ot-ref-scroll{overflow:auto;border:1px solid var(--border);border-radius:10px;background:#fff}.ot-ref-table{border-collapse:collapse;min-width:760px;width:max-content;font-size:10px;color:#111;background:#fff}.ot-ref-table th,.ot-ref-table td{border:1px solid #aaa;padding:4px 5px;text-align:center;white-space:nowrap}.ot-ref-table thead th{background:#f1f3f5;font-weight:700}.ot-ref-table .start{position:sticky;left:0;background:#fff;font-weight:700;z-index:1}.ot-ref-table .break{background:#fff3cd}.ot-ref-table .limit{background:#fff3cd;font-weight:700}.ot-ref-legend{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5}\n';
+    style.textContent='\
+.ot-ref-btn{width:100%;background:rgba(52,152,219,.12);border:1.5px solid var(--blue);border-radius:10px;padding:11px 12px;color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}.ot-ref-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1200;align-items:flex-end;justify-content:center}.ot-ref-overlay.open{display:flex}.ot-ref-modal{background:var(--surface);width:100%;height:94vh;border-radius:18px 18px 0 0;overflow:hidden;display:flex;flex-direction:column;border-top:2px solid var(--blue)}.ot-ref-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex:none}.ot-ref-head-title{font-weight:700;color:var(--blue);font-size:16px}.ot-ref-close{border:0;background:var(--surface2);border-radius:9px;padding:8px 12px;font-size:16px;color:var(--text)}.ot-ref-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}.ot-ref-note{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px}.ot-ref-group{margin-bottom:18px}.ot-ref-group-title{font-size:13px;font-weight:700;margin-bottom:7px;color:var(--text)}.ot-ref-scroll{overflow:auto;border:1px solid var(--border);border-radius:10px;background:#fff}.ot-ref-table{border-collapse:collapse;min-width:760px;width:max-content;font-size:10px;color:#111;background:#fff}.ot-ref-table th,.ot-ref-table td{border:1px solid #aaa;padding:4px 5px;text-align:center;white-space:nowrap}.ot-ref-table thead th{background:#f1f3f5;font-weight:700}.ot-ref-table .start{position:sticky;left:0;background:#fff;font-weight:700;z-index:1}.ot-ref-table .break{background:#fff3cd}.ot-ref-table .limit{background:#fff3cd;font-weight:700}.ot-ref-legend{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5}\
+';
     d.head.appendChild(style);
 
     var otCard=d.querySelector('.time-card-ot');
     if(!otCard)return;
     var btn=d.createElement('button');
-    btn.type='button';btn.id='overtimeReferenceBtn';btn.className='ot-ref-btn';btn.textContent='📋 会社の時間外早見表を見る';
+    btn.type='button';
+    btn.id='overtimeReferenceBtn';
+    btn.className='ot-ref-btn';
+    btn.textContent='📋 会社の時間外早見表を見る';
     var note=d.getElementById('overtimeModeNote');
     otCard.insertBefore(btn,note||null);
 
     var overlay=d.createElement('div');
-    overlay.id='overtimeReferenceOverlay';overlay.className='ot-ref-overlay';
+    overlay.id='overtimeReferenceOverlay';
+    overlay.className='ot-ref-overlay';
     overlay.innerHTML='<div class="ot-ref-modal" onclick="event.stopPropagation()"><div class="ot-ref-head"><div class="ot-ref-head-title">📋 会社公式 時間外早見表</div><button type="button" class="ot-ref-close" id="overtimeReferenceClose">✕ 閉じる</button></div><div class="ot-ref-body"><div class="ot-ref-note">会社資料の4区分をスマホで見やすい表にしています。横にスクロールできます。</div><div id="overtimeReferenceTables"></div></div></div>';
     d.body.appendChild(overlay);
 
-    function mins(v){var p=v.split(':');return parseInt(p[0],10)*60+parseInt(p[1],10)}
-    function fmt(m){m=(m+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
+    function mins(v){
+      var p=v.split(':');
+      return parseInt(p[0],10)*60+parseInt(p[1],10);
+    }
+    function fmt(m){
+      m=(m+1440)%1440;
+      return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+    }
     function otHours(start,baseStart,stdEnd,end){
-      var s=mins(start),b=mins(baseStart),std=mins(stdEnd),e=mins(end);if(e<s)e+=1440;
-      var early=Math.max(0,b-s),post=Math.max(0,e-std);early=Math.floor(early/15)*15;post=Math.floor(post/15)*15;
-      var credited=post;if(post>240&&post<=270)credited=240;else if(post>270)credited=post-30;
+      var s=mins(start),b=mins(baseStart),std=mins(stdEnd),e=mins(end);
+      if(e<s)e+=1440;
+      var early=Math.max(0,b-s),post=Math.max(0,e-std);
+      early=Math.floor(early/15)*15;
+      post=Math.floor(post/15)*15;
+      var credited=post;
+      if(post>240&&post<=270)credited=240;
+      else if(post>270)credited=post-30;
       return Math.max(0,Math.round(((early+credited)/60)*4)/4);
     }
-    function num(v){return v%1===0?String(v):String(v.toFixed(2)).replace(/0+$/,'').replace(/\.$/,'')}
+    function num(v){
+      return v%1===0?String(v):String(v.toFixed(2)).replace(/0+$/,'').replace(/\.$/,'');
+    }
     function buildGroup(title,starts,baseStart,stdEnd,endStart,endFinish){
-      var ends=[],m=mins(endStart),last=mins(endFinish);if(last<m)last+=1440;for(;m<=last;m+=15)ends.push(fmt(m));
+      var ends=[],m=mins(endStart),last=mins(endFinish);
+      if(last<m)last+=1440;
+      for(;m<=last;m+=15)ends.push(fmt(m));
+
       var html='<div class="ot-ref-group"><div class="ot-ref-group-title">'+title+' 【定時の退勤時間は'+stdEnd+'】</div><div class="ot-ref-scroll"><table class="ot-ref-table"><thead><tr><th class="start">出勤\\退勤</th>';
-      ends.forEach(function(e){html+='<th>'+e+'</th>'});html+='</tr></thead><tbody>';
-      starts.forEach(function(s){html+='<tr><th class="start">'+s+'</th>';ends.forEach(function(e){var post=Math.max(0,mins(e)-mins(stdEnd));if(mins(e)<mins(s))post+=1440;var cls=(post>240&&post<=270)?'break':(post===900?'limit':'');html+='<td class="'+cls+'">'+num(otHours(s,baseStart,stdEnd,e))+'</td>'});html+='</tr>'});
+      ends.forEach(function(e){html+='<th>'+e+'</th>'});
+      html+='</tr></thead><tbody>';
+
+      starts.forEach(function(s){
+        html+='<tr><th class="start">'+s+'</th>';
+        ends.forEach(function(e){
+          var post=Math.max(0,mins(e)-mins(stdEnd));
+          if(mins(e)<mins(s))post+=1440;
+          var cls=(post>240&&post<=270)?'break':(post===900?'limit':'');
+          html+='<td class="'+cls+'">'+num(otHours(s,baseStart,stdEnd,e))+'</td>';
+        });
+        html+='</tr>';
+      });
+
       html+='</tbody></table></div><div class="ot-ref-legend">黄色：定時後4時間を超えた30分休憩帯、または出勤から15時間の目安。早出は定時後4時間の休憩判定には含めません。</div></div>';
       return html;
     }
+
     var html='';
     html+=buildGroup('4:30〜6:00出勤の時間外早見表',['4:30','5:00','5:30','6:00'],'6:00','14:15','14:15','21:00');
     html+=buildGroup('7:00〜8:00出勤の時間外早見表',['7:00','7:30','8:00'],'8:00','16:15','16:15','23:00');
@@ -58,17 +94,31 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}#ap
     html+=buildGroup('12:00〜13:00出勤の時間外早見表',['12:00','13:00'],'13:00','21:15','21:15','04:00');
     d.getElementById('overtimeReferenceTables').innerHTML=html;
 
-    function openRef(){overlay.classList.add('open');d.body.style.overflow='hidden'}
-    function closeRef(){overlay.classList.remove('open');d.body.style.overflow=''}
-    btn.addEventListener('click',openRef);d.getElementById('overtimeReferenceClose').addEventListener('click',closeRef);overlay.addEventListener('click',function(e){if(e.target===overlay)closeRef()});
+    function openRef(){
+      overlay.classList.add('open');
+      d.body.style.overflow='hidden';
+    }
+    function closeRef(){
+      overlay.classList.remove('open');
+      d.body.style.overflow='';
+    }
+
+    btn.addEventListener('click',openRef);
+    d.getElementById('overtimeReferenceClose').addEventListener('click',closeRef);
+    overlay.addEventListener('click',function(e){
+      if(e.target===overlay)closeRef();
+    });
 
     var oldBackup=w.backupData;
     if(typeof oldBackup==='function'){
-      w.backupData=function(){return oldBackup.apply(w,arguments)};
+      w.backupData=function(){
+        return oldBackup.apply(w,arguments);
+      };
     }
   });
 })();
 </script>
+
 <!--
 変更履歴
 - 2026/08/31 TEST：残業時間欄に「会社の時間外早見表を見る」ボタンを追加
