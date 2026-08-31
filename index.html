@@ -82,6 +82,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         if(typeof w.autoCalcOvertime==='function')w.autoCalcOvertime();
         if(typeof w.updateInputProgress==='function')w.updateInputProgress();
         refresh();
+        setTimeout(function(){
+          refresh();
+          syncAutoToxic();
+        },0);
       }
       function getCurrentToxic(){
         var b1=d.getElementById('toxicBtn1');
@@ -90,10 +94,16 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         if(b1&&b1.classList.contains('selected'))return 1;
         return 0;
       }
+
       function forceToxic(n){
+        n=Math.max(0,Math.min(2,Number(n)||0));
         var current=getCurrentToxic();
         if(current===n)return;
 
+        /*
+          selectToxic() は「同じ数を押すと解除」のトグル関数。
+          そのため一度現在値を確実に解除してから、必要値を選択する。
+        */
         if(current===1&&typeof w.selectToxic==='function')w.selectToxic(1);
         else if(current===2&&typeof w.selectToxic==='function')w.selectToxic(2);
 
@@ -101,6 +111,45 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         else if(n===2&&typeof w.selectToxic==='function')w.selectToxic(2);
 
         if(typeof w.updateInputProgress==='function')w.updateInputProgress();
+      }
+
+      function memoText(){
+        var el=d.getElementById('jobMemo');
+        return el?String(el.value||''):'';
+      }
+
+      function isKanekaOn(){
+        var txt=memoText();
+        return !!(
+          (kaneka&&kaneka.classList.contains('memo-selected')) ||
+          txt.indexOf('㈱カネカ 大阪')>=0 ||
+          txt.indexOf('カネカ 大阪')>=0
+        );
+      }
+
+      function isPmOn(){
+        var txt=memoText();
+        return !!(
+          (pm&&pm.classList.contains('memo-selected')) ||
+          txt.indexOf('PM搭載')>=0
+        );
+      }
+
+      function syncAutoToxic(){
+        var k=isKanekaOn();
+        var p=isPmOn();
+
+        if(k||p){
+          w.__memoAutoToxicActive=true;
+          forceToxic((k?1:0)+(p?1:0));
+        }else if(w.__memoAutoToxicActive){
+          /*
+            カネカ/PMによって自動付与した毒手当だけを解除する。
+            これにより、カネカ解除時に毒×1が残らない。
+          */
+          forceToxic(0);
+          w.__memoAutoToxicActive=false;
+        }
       }
 
       function toggleSimple(btn,parts,onFn,offFn){
@@ -191,16 +240,19 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         toggleSimple(pm,['PM搭載'],
           function(){
             w.addMemo('PM搭載');
-            var hasKaneka=hasMemo(['㈱カネカ 大阪']);
+            pm.classList.add('memo-selected');
             setTimeout(function(){
-              forceToxic(hasKaneka?2:1);
               refresh();
+              syncAutoToxic();
             },0);
           },
           function(){
             w.removeMemo('PM搭載');
-            var hasKaneka=hasMemo(['㈱カネカ 大阪']);
-            forceToxic(hasKaneka?1:0);
+            pm.classList.remove('memo-selected');
+            setTimeout(function(){
+              refresh();
+              syncAutoToxic();
+            },0);
           }
         );
       }
@@ -211,16 +263,20 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         toggleSimple(kaneka,['㈱カネカ 大阪'],
           function(){
             w.addMemo('㈱カネカ 大阪');
-            var hasPm=hasMemo(['PM搭載']);
+            kaneka.classList.add('memo-selected');
             setTimeout(function(){
-              forceToxic(hasPm?2:1);
               refresh();
+              syncAutoToxic();
             },0);
           },
           function(){
             w.removeMemo('㈱カネカ 大阪');
-            var hasPm=hasMemo(['PM搭載']);
-            forceToxic(hasPm?1:0);
+            w.removeMemo('カネカ 大阪');
+            kaneka.classList.remove('memo-selected');
+            setTimeout(function(){
+              refresh();
+              syncAutoToxic();
+            },0);
           }
         );
       }
@@ -239,7 +295,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
         memo.addEventListener('input',refresh);
         memo.addEventListener('change',refresh);
       }
-      setTimeout(refresh,0);
+      setTimeout(function(){
+        refresh();
+        if(isKanekaOn()||isPmOn()){
+          syncAutoToxic();
+        }
+      },0);
     }
 
     /* ===== 会社公式 時間外早見表 ===== */
@@ -320,6 +381,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f5}
 
 <!--
 変更履歴
+- 2026/09/01 TEST v4：カネカ/PM搭載の毒手当連動を中央再計算方式へ変更
+- カネカON＝毒×1、PM搭載ON＝毒×1、両方ON＝毒×2として毎回再計算
+- 長距離＋カネカ＋PM搭載で毒×2にならない不具合を修正
+- カネカ解除時、PM搭載もOFFなら自動付与した毒×1を確実に解除
+- カネカ解除時にPM搭載が残っていれば毒×1を維持
+- PM搭載解除時にカネカが残っていれば毒×1へ戻す
+- 本体selectToxic()の「同じ値を再選択すると解除される」トグル仕様を考慮し、現在値を確認してから確実に目的値へ変更
+- 手動で付けた毒手当を不用意に消さないよう、自動付与中フラグを追加
 - 2026/09/01 TEST再修正：カネカ・PM搭載の毒手当連動を根本修正
 - 原因：カネカ長距離では本体側で毒×1が先に付くため、その直後にselectToxic(1)を呼ぶとトグル動作で逆に解除されていた
 - 現在の毒手当選択状態を確認してから必要な値へ強制設定するforceToxic()を追加
