@@ -2,14 +2,15 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f1923">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="application-name" content="щБЛш╗вцЧеха▒ DEV">
-<title>ЁЯзк щБЛш╗вцЧеха▒ DEV</title>
-<!-- latest: DEV spreadsheet export sorted oldest to newest -->
+<meta name="application-name" content="運転日報 TEST">
+<title>🧪 TEST 運転日報</title>
+<!-- latest: TEST complete integrated UTF-8 safe build 2026-09-01 -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -107,15 +108,15 @@ input[type=number]{-moz-appearance:textfield}
 <body>
 <div class="header">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h1>ЁЯзк щБЛш╗вцЧеха▒ <span style="font-size:11px;background:rgba(108,92,231,.15);color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:3px 8px;vertical-align:middle;">TEST</span></h1>
-    <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;">тЪЩя╕П</button>
+    <h1>🧪 運転日報 <span style="font-size:11px;background:rgba(108,92,231,.15);color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:3px 8px;vertical-align:middle;">TEST</span></h1>
+    <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;">⚙️</button>
   </div>
   <div class="header-date" id="headerDate"></div>
 </div>
 <div class="tabs">
-  <div class="tab active" onclick="showTab('input')">ЁЯУЭ хЕехКЫ</div>
-  <div class="tab" onclick="showTab('records')">ЁЯУЛ шиШщМ▓</div>
-  <div class="tab" onclick="showTab('stats')">ЁЯУК щЫЖшиИ</div>
+  <div class="tab active" onclick="showTab('input')">📝 入力</div>
+  <div class="tab" onclick="showTab('records')">📋 記録</div>
+  <div class="tab" onclick="showTab('stats')">📊 集計</div>
 </div>
 
 <div class="page active" id="page-input">
@@ -124,62 +125,62 @@ input[type=number]{-moz-appearance:textfield}
   </div>
   <div class="section" id="inputProgressSection" style="padding:12px;margin-bottom:10px;">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-      <div class="section-title" style="margin-bottom:0;">хЕехКЫщА▓цНЧ</div>
-      <div id="inputCompleteBadge" style="font-size:12px;color:var(--muted);">цЬкхЕехКЫуБВуВК</div>
+      <div class="section-title" style="margin-bottom:0;">入力進捗</div>
+      <div id="inputCompleteBadge" style="font-size:12px;color:var(--muted);">未入力あり</div>
     </div>
     <div id="inputProgressChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;"></div><div id="inputSummaryList" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
   </div>
   <div class="section">
     <div class="accordion-toggle" id="inputJobAccordionToggle" onclick="toggleAccordion(this)" data-id="inputJobAccordion">
-      <div class="section-title" style="margin-bottom:0;">ф╗Хф║ЛуБочиощбЮя╝ИшдЗцХ░щБ╕цКЮOKя╝Й</div><span class="arrow">тЦ╝</span>
+      <div class="section-title" style="margin-bottom:0;">仕事の種類（複数選択OK）</div><span class="arrow">▼</span>
     </div>
     <div class="accordion-body open" id="inputJobAccordion" onclick="event.stopPropagation();">
       <div class="job-grid">
-        <div class="job-btn" data-job="хЬ░ха┤" onclick="toggleJob(this)"><span class="emoji">ЁЯЪЫ</span>хЬ░ха┤</div>
-        <div class="job-btn" data-job="щХ╖ш╖ЭщЫв" onclick="toggleJob(this)"><span class="emoji">ЁЯЫМ</span>щХ╖ш╖ЭщЫв</div>
-        <div class="job-btn" data-job="цпТцЙЛх╜У" onclick="toggleJob(this)"><span class="emoji">тШая╕П</span>цпТ</div>
-        <div class="job-btn" data-job="цпТ├Ч2" onclick="toggleJob(this)"><span class="emoji">тШая╕ПтШая╕П</span>цпТ├Ч2</div>
-        <div class="job-btn" data-job="уГИуГмуГ╝уГйуГ╝" onclick="toggleJob(this)"><span class="emoji">ЁЯЪЬ</span>уГИуГмуГ╝уГйуГ╝</div>
-        <div class="job-btn" data-job="хНКцЧецЬЙч╡ж" onclick="toggleJob(this)"><span class="emoji">ЁЯМ┤</span>хНКцЧецЬЙч╡ж</div>
-        <div class="job-btn" data-job="ф╝СуБ┐" onclick="toggleJob(this)"><span class="emoji">ЁЯПа</span>ф╝СуБ┐</div>
+        <div class="job-btn" data-job="地場" onclick="toggleJob(this)"><span class="emoji">🚛</span>地場</div>
+        <div class="job-btn" data-job="長距離" onclick="toggleJob(this)"><span class="emoji">🛌</span>長距離</div>
+        <div class="job-btn" data-job="毒手当" onclick="toggleJob(this)"><span class="emoji">☠️</span>毒</div>
+        <div class="job-btn" data-job="毒×2" onclick="toggleJob(this)"><span class="emoji">☠️☠️</span>毒×2</div>
+        <div class="job-btn" data-job="トレーラー" onclick="toggleJob(this)"><span class="emoji">🚜</span>トレーラー</div>
+        <div class="job-btn" data-job="半日有給" onclick="toggleJob(this)"><span class="emoji">🌴</span>半日有給</div>
+        <div class="job-btn" data-job="休み" onclick="toggleJob(this)"><span class="emoji">🏠</span>休み</div>
       </div>
       <div style="margin-top:12px;">
-        <div class="input-label" style="margin-bottom:6px;">ф╗Хф║ЛхЖЕхо╣уГбуГв</div>
+        <div class="input-label" style="margin-bottom:6px;">仕事内容メモ</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
-          <div class="memo-btn" id="memoBtnGas" onclick="toggleSimpleMemoButton('уВмуВ╣','memoBtnGas')">тЫ╜ уВмуВ╣</div>
-          <div class="memo-btn" id="memoBtnEster" onclick="toggleEsterMemo()">ЁЯзк уВиуВ╣уГЖуГлцРнш╝Й</div>
-          <div class="memo-btn" id="memoBtnChlorine" onclick="toggleChlorineOnlyTask()">тЪЧя╕П хбйч┤ацРнш╝Й</div>
-          <div class="memo-btn" id="memoBtnChlorineDelivery" onclick="toggleChlorineDeliveryTask()">ЁЯЪЫ хбйч┤ацРнш╝Йя╝ЛщЕНщАБ</div>
-          <div class="memo-btn" id="memoBtnEnvironment" onclick="toggleEnvironmentTask()">ЁЯз╣ чТ░хвГцХ┤хВЩ</div>
-          <div class="memo-btn" id="memoBtnPm" onclick="togglePmMemo()">тШая╕П PMцРнш╝Й</div>
-          <div class="memo-btn" id="memoBtnKaneka" onclick="toggleKanekaMemo()">ЁЯПн уВлуГНуВл</div>
-          <div class="memo-btn" onclick="openFareTableForMemo()" style="background:rgba(52,152,219,.15);border-color:var(--blue);color:var(--blue);">ЁЯУЛ ховхЕИ</div>
+          <div class="memo-btn" id="memoBtnGas" onclick="toggleSimpleMemoButton('ガス','memoBtnGas')">⛽ ガス</div>
+          <div class="memo-btn" id="memoBtnEster" onclick="toggleEsterMemo()">🧪 エステル搭載</div>
+          <div class="memo-btn" id="memoBtnChlorine" onclick="toggleChlorineOnlyTask()">⚗️ 塩素搭載</div>
+          <div class="memo-btn" id="memoBtnChlorineDelivery" onclick="toggleChlorineDeliveryTask()">🚛 塩素搭載＋配送</div>
+          <div class="memo-btn" id="memoBtnEnvironment" onclick="toggleEnvironmentTask()">🧹 環境整備</div>
+          <div class="memo-btn" id="memoBtnPm" onclick="togglePmMemo()">☠️ PM搭載</div>
+          <div class="memo-btn" id="memoBtnKaneka" onclick="toggleKanekaMemo()">🏭 カネカ</div>
+          <div class="memo-btn" onclick="openFareTableForMemo()" style="background:rgba(52,152,219,.15);border-color:var(--blue);color:var(--blue);">📋 客先</div>
         </div>
-        <button onclick="saveRecordAndMoveNext('inputJobAccordion')" class="time-save-btn" style="width:100%;margin-bottom:8px;">ЁЯТ╛ ф┐ЭхнШ</button>
-        <textarea class="input-field" id="jobMemo" rows="2" placeholder="ф╛Ля╝ЪтЧЛтЧЛх╖еха┤тЖТтЦ│тЦ│хАЙх║л уБкуБй"></textarea>
+        <button onclick="saveRecordAndMoveNext('inputJobAccordion')" class="time-save-btn" style="width:100%;margin-bottom:8px;">💾 保存</button>
+        <textarea class="input-field" id="jobMemo" rows="2" placeholder="例：○○工場→△△倉庫 など"></textarea>
       </div>
     </div>
   </div>
 
   <div class="section">
     <div class="accordion-toggle" id="inputTimeAccordionToggle" onclick="toggleAccordion(this)" data-id="inputTimeAccordion">
-      <div class="section-title" style="margin-bottom:0;">ЁЯХР цЩВщЦУ</div><span class="arrow">тЦ╝</span>
+      <div class="section-title" style="margin-bottom:0;">🕐 時間</div><span class="arrow">▼</span>
     </div>
     <div class="accordion-body open" id="inputTimeAccordion" onclick="event.stopPropagation();">
       <div class="time-card time-card-start">
-        <div class="time-card-header"><div class="time-card-title">ЁЯЪЪ хЗ║хЛдцЩВщЦУ</div><div class="time-card-value" id="startTimeDisplay">--:--</div><button class="time-save-btn" onclick="saveRecordAndMoveNext('inputTimeAccordion')">ЁЯТ╛ ф┐ЭхнШ</button></div>
-        <div class="time-subtitle">цЩВщЦУ</div><div class="time-btn-row" id="startHourBtns"></div>
-        <div class="time-subtitle">хИЖ</div><div class="time-btn-row" id="startMinBtns"><div class="time-btn" onclick="setMin('start',0)">00</div><div class="time-btn" onclick="setMin('start',30)">30</div></div>
+        <div class="time-card-header"><div class="time-card-title">🚚 出勤時間</div><div class="time-card-value" id="startTimeDisplay">--:--</div><button class="time-save-btn" onclick="saveRecordAndMoveNext('inputTimeAccordion')">💾 保存</button></div>
+        <div class="time-subtitle">時間</div><div class="time-btn-row" id="startHourBtns"></div>
+        <div class="time-subtitle">分</div><div class="time-btn-row" id="startMinBtns"><div class="time-btn" onclick="setMin('start',0)">00</div><div class="time-btn" onclick="setMin('start',30)">30</div></div>
       </div>
       <div class="time-card time-card-end">
-        <div class="time-card-header"><div class="time-card-title">ЁЯПБ щААхЛдцЩВщЦУ</div><div class="time-card-value" id="endTimeDisplay">--:--</div></div>
-        <div class="time-subtitle">цЩВщЦУ</div><div class="time-btn-row" id="endHourBtns"></div>
-        <div class="time-subtitle">хИЖ</div><div class="time-btn-row" id="endMinBtns"><div class="time-btn" onclick="setMin('end',0)">00</div><div class="time-btn" onclick="setMin('end',15)">15</div><div class="time-btn" onclick="setMin('end',30)">30</div><div class="time-btn" onclick="setMin('end',45)">45</div></div>
+        <div class="time-card-header"><div class="time-card-title">🏁 退勤時間</div><div class="time-card-value" id="endTimeDisplay">--:--</div></div>
+        <div class="time-subtitle">時間</div><div class="time-btn-row" id="endHourBtns"></div>
+        <div class="time-subtitle">分</div><div class="time-btn-row" id="endMinBtns"><div class="time-btn" onclick="setMin('end',0)">00</div><div class="time-btn" onclick="setMin('end',15)">15</div><div class="time-btn" onclick="setMin('end',30)">30</div><div class="time-btn" onclick="setMin('end',45)">45</div></div>
       </div>
       <div class="time-card time-card-ot">
-        <div class="time-card-header"><div class="time-card-title">тП░ цоЛценцЩВщЦУ</div><div class="time-card-value" id="overtimeDisplay">уБкуБЧ</div><button class="time-save-btn" onclick="saveRecordAndMoveNext('inputTimeAccordion')">ЁЯТ╛ ф┐ЭхнШ</button></div>
-        <div class="time-subtitle">цЩВщЦУя╝И0=цоЛценуБкуБЧя╝Й</div><div class="time-btn-row" id="overtimeHourBtns"></div>
-        <div class="time-subtitle">хИЖ</div><div class="time-btn-row" id="overtimeMinBtns"><div class="time-btn" onclick="setOvertimeMin(0)">0</div><div class="time-btn" onclick="setOvertimeMin(15)">.25</div><div class="time-btn" onclick="setOvertimeMin(30)">.5</div><div class="time-btn" onclick="setOvertimeMin(45)">.75</div></div>
+        <div class="time-card-header"><div class="time-card-title">⏰ 残業時間</div><div class="time-card-value" id="overtimeDisplay">なし</div><button class="time-save-btn" onclick="saveRecordAndMoveNext('inputTimeAccordion')">💾 保存</button></div>
+        <div class="time-subtitle">時間（0=残業なし）</div><div class="time-btn-row" id="overtimeHourBtns"></div>
+        <div class="time-subtitle">分</div><div class="time-btn-row" id="overtimeMinBtns"><div class="time-btn" onclick="setOvertimeMin(0)">0</div><div class="time-btn" onclick="setOvertimeMin(15)">.25</div><div class="time-btn" onclick="setOvertimeMin(30)">.5</div><div class="time-btn" onclick="setOvertimeMin(45)">.75</div></div>
       </div>
       <input type="hidden" id="startTime"><input type="hidden" id="endTime">
     </div>
@@ -187,15 +188,15 @@ input[type=number]{-moz-appearance:textfield}
 
   <div class="section">
     <div class="accordion-toggle" id="inputDistanceAccordionToggle" onclick="toggleAccordion(this)" data-id="inputDistanceAccordion">
-      <div class="section-title" style="margin-bottom:0;">ЁЯЫгя╕П ш╡░шбМш╖ЭщЫв</div><span class="arrow">тЦ╝</span>
+      <div class="section-title" style="margin-bottom:0;">🛣️ 走行距離</div><span class="arrow">▼</span>
     </div>
     <div class="accordion-body" id="inputDistanceAccordion" onclick="event.stopPropagation();">
-      <button onclick="saveRecordAndMoveNext('inputDistanceAccordion')" class="time-save-btn" style="width:100%;margin-bottom:8px;">ЁЯТ╛ ф┐ЭхнШ</button>
+      <button onclick="saveRecordAndMoveNext('inputDistanceAccordion')" class="time-save-btn" style="width:100%;margin-bottom:8px;">💾 保存</button>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">1хП░чЫо</div><input class="input-field" type="number" id="distance1" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">2хП░чЫо</div><input class="input-field" type="number" id="distance2" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
-        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">3хП░чЫо</div><input class="input-field" type="number" id="distance3" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);"><div style="font-size:13px;color:var(--muted);">хРИшиИ</div><div style="font-family:'Oswald',sans-serif;font-size:18px;color:var(--accent);" id="distanceTotal">0 <span style="font-size:12px;color:var(--muted);">km</span></div></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">1台目</div><input class="input-field" type="number" id="distance1" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">2台目</div><input class="input-field" type="number" id="distance2" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div style="font-size:11px;color:var(--muted);min-width:36px;">3台目</div><input class="input-field" type="number" id="distance3" placeholder="0" oninput="updateTotalDistance()" style="flex:1;"><div style="font-size:11px;color:var(--muted);">km</div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);"><div style="font-size:13px;color:var(--muted);">合計</div><div style="font-family:'Oswald',sans-serif;font-size:18px;color:var(--accent);" id="distanceTotal">0 <span style="font-size:12px;color:var(--muted);">km</span></div></div>
       </div>
       <input type="hidden" id="distance">
     </div>
@@ -203,28 +204,28 @@ input[type=number]{-moz-appearance:textfield}
 
   <div class="section">
     <div class="accordion-toggle" id="inputPayAccordionToggle" onclick="toggleAccordion(this)" data-id="inputPayAccordion">
-      <div class="section-title" style="margin-bottom:0;">ЁЯТ░ щЗСщбНуГ╗цЙЛх╜У</div><span class="arrow">тЦ╝</span>
+      <div class="section-title" style="margin-bottom:0;">💰 金額・手当</div><span class="arrow">▼</span>
     </div>
     <div class="accordion-body" id="inputPayAccordion" onclick="event.stopPropagation();">
       <div style="display:flex;flex-direction:column;gap:14px;">
         <div class="input-group">
-          <div class="input-label">ЁЯЫМ щХ╖ш╖ЭщЫвцЙЛх╜Уя╝ИхЖЖя╝Й</div>
-          <div class="money-input-wrap"><input class="input-field" type="number" id="longDistancePay" placeholder="0" style="padding-right:32px;"><span class="yen">хЖЖ</span></div>
-          <button onclick="openFareTable()" class="copy-btn" style="background:rgba(52,152,219,.15);border-color:var(--blue);color:var(--blue);">ЁЯУЛ щБЛшбМцЦЩщЗСшбиуВТшжЛуВЛ</button>
-          <button onclick="saveRecordAndMoveNext('inputPayAccordion')" class="copy-btn" style="background:rgba(232,96,28,.15);border-color:var(--accent);color:var(--accent);">ЁЯТ╛ ф┐ЭхнШ</button>
+          <div class="input-label">🛌 長距離手当（円）</div>
+          <div class="money-input-wrap"><input class="input-field" type="number" id="longDistancePay" placeholder="0" style="padding-right:32px;"><span class="yen">円</span></div>
+          <button onclick="openFareTable()" class="copy-btn" style="background:rgba(52,152,219,.15);border-color:var(--blue);color:var(--blue);">📋 運行料金表を見る</button>
+          <button onclick="saveRecordAndMoveNext('inputPayAccordion')" class="copy-btn" style="background:rgba(232,96,28,.15);border-color:var(--accent);color:var(--accent);">💾 保存</button>
         </div>
         <div>
-          <div class="input-label" style="margin-bottom:8px;">тШая╕П цпТцЙЛх╜Уя╝И1хЫЮ 2,500хЖЖя╝Й</div>
+          <div class="input-label" style="margin-bottom:8px;">☠️ 毒手当（1回 2,500円）</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <div class="allow-btn" id="toxicBtn1" onclick="selectToxic(1)"><span style="font-size:20px;">тШая╕П</span><div style="font-size:13px;font-weight:600;margin-top:4px;">├Ч1</div><div style="font-size:11px;color:var(--muted);">2,500хЖЖ</div></div>
-            <div class="allow-btn" id="toxicBtn2" onclick="selectToxic(2)"><span style="font-size:20px;">тШая╕ПтШая╕П</span><div style="font-size:13px;font-weight:600;margin-top:4px;">├Ч2</div><div style="font-size:11px;color:var(--muted);">5,000хЖЖ</div></div>
+            <div class="allow-btn" id="toxicBtn1" onclick="selectToxic(1)"><span style="font-size:20px;">☠️</span><div style="font-size:13px;font-weight:600;margin-top:4px;">×1</div><div style="font-size:11px;color:var(--muted);">2,500円</div></div>
+            <div class="allow-btn" id="toxicBtn2" onclick="selectToxic(2)"><span style="font-size:20px;">☠️☠️</span><div style="font-size:13px;font-weight:600;margin-top:4px;">×2</div><div style="font-size:11px;color:var(--muted);">5,000円</div></div>
           </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:right;" id="toxicDisplay">цЬкщБ╕цКЮ</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:right;" id="toxicDisplay">未選択</div>
         </div>
         <div>
-          <div class="input-label" style="margin-bottom:8px;">ЁЯЪЬ уГИуГмуГ╝уГйуГ╝цЙЛх╜Уя╝И3,000хЖЖя╝Й</div>
+          <div class="input-label" style="margin-bottom:8px;">🚜 トレーラー手当（3,000円）</div>
           <div class="allow-btn" id="trailerBtn" onclick="toggleTrailer()" style="display:flex;align-items:center;gap:12px;text-align:left;padding:12px 16px;">
-            <span style="font-size:24px;">ЁЯЪЬ</span><div><div style="font-size:13px;font-weight:600;">уГИуГмуГ╝уГйуГ╝цЙЛх╜У</div><div style="font-size:11px;color:var(--muted);">3,000хЖЖ</div></div><div style="margin-left:auto;font-size:11px;" id="trailerStatus">уВ┐уГГуГЧуБзON</div>
+            <span style="font-size:24px;">🚜</span><div><div style="font-size:13px;font-weight:600;">トレーラー手当</div><div style="font-size:11px;color:var(--muted);">3,000円</div></div><div style="margin-left:auto;font-size:11px;" id="trailerStatus">タップでON</div>
           </div>
         </div>
       </div>
@@ -242,22 +243,22 @@ input[type=number]{-moz-appearance:textfield}
     </div>
   </div>
   <div id="recordsList"></div>
-  <div style="padding:12px 0 0;"><input class="input-field" type="text" id="searchBox" placeholder="ЁЯФН ф╗Хф║ЛхЖЕхо╣уВТцдЬч┤в..." oninput="renderRecords()" style="font-size:14px;font-family:'Noto Sans JP',sans-serif;"></div>
+  <div style="padding:12px 0 0;"><input class="input-field" type="text" id="searchBox" placeholder="🔍 仕事内容を検索..." oninput="renderRecords()" style="font-size:14px;font-family:'Noto Sans JP',sans-serif;"></div>
   <div class="section" style="margin-top:10px;" id="leaveSection">
-    <div class="section-title">ЁЯУЕ цоЛцЧецХ░чобчРЖ</div>
+    <div class="section-title">📅 残日数管理</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-      <div><div class="input-label" style="margin-bottom:6px;">ЁЯМ┤ цЬИхИЭцЬЙч╡жцоЛя╝ИцЧея╝Й</div><input class="input-field" type="number" id="leaveStartYukyu" placeholder="0" step="0.5" style="font-size:20px;text-align:center;" oninput="saveLeaveStart()" min="0"></div>
-      <div><div class="input-label" style="margin-bottom:6px;">ЁЯФД цЬИхИЭф╗гф╝СцоЛя╝ИцЧея╝Й</div><input class="input-field" type="number" id="leaveStartDaikyu" placeholder="0" step="1" style="font-size:20px;text-align:center;" oninput="saveLeaveStart()" min="0"></div>
+      <div><div class="input-label" style="margin-bottom:6px;">🌴 月初有給残（日）</div><input class="input-field" type="number" id="leaveStartYukyu" placeholder="0" step="0.5" style="font-size:20px;text-align:center;" oninput="saveLeaveStart()" min="0"></div>
+      <div><div class="input-label" style="margin-bottom:6px;">🔄 月初代休残（日）</div><input class="input-field" type="number" id="leaveStartDaikyu" placeholder="0" step="1" style="font-size:20px;text-align:center;" oninput="saveLeaveStart()" min="0"></div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="stat-card" style="padding:12px;background:rgba(232,96,28,.08);border-color:var(--accent);"><div class="stat-label">ЁЯМ┤ чП╛хЬицЬЙч╡жцоЛ</div><div class="stat-value" id="leaveCurrentYukyu">0<span class="stat-unit"> цЧе</span></div></div>
-      <div class="stat-card" style="padding:12px;background:rgba(46,204,113,.08);border-color:var(--green);"><div class="stat-label">ЁЯФД чП╛хЬиф╗гф╝СцоЛ</div><div class="stat-value" id="leaveCurrentDaikyu" style="color:var(--green);">0<span class="stat-unit"> цЧе</span></div></div>
+      <div class="stat-card" style="padding:12px;background:rgba(232,96,28,.08);border-color:var(--accent);"><div class="stat-label">🌴 現在有給残</div><div class="stat-value" id="leaveCurrentYukyu">0<span class="stat-unit"> 日</span></div></div>
+      <div class="stat-card" style="padding:12px;background:rgba(46,204,113,.08);border-color:var(--green);"><div class="stat-label">🔄 現在代休残</div><div class="stat-value" id="leaveCurrentDaikyu" style="color:var(--green);">0<span class="stat-unit"> 日</span></div></div>
     </div>
     <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="stat-card" style="padding:12px;background:rgba(154,205,50,.10);border-color:#9acd32;"><div class="stat-label">ЁЯМ┤ хНКцЧецЬЙч╡ж ф╜┐чФихРИшиИ</div><div class="stat-value" id="halfLeaveUsedYear" style="color:#6b9b00;">0<span class="stat-unit"> / 12хЫЮ</span></div><div id="halfLeaveUsedDetail" style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5;">уВвуГЧуГкшиШщМ▓ 0хЫЮ</div></div>
-      <div class="stat-card" style="padding:12px;background:rgba(52,152,219,.08);border-color:var(--blue);"><div class="stat-label">ЁЯУЕ хНКцЧецЬЙч╡ж цоЛуВК</div><div class="stat-value" id="halfLeaveRemainYear" style="color:var(--blue);">12<span class="stat-unit"> хЫЮ</span></div></div>
+      <div class="stat-card" style="padding:12px;background:rgba(154,205,50,.10);border-color:#9acd32;"><div class="stat-label">🌴 半日有給 使用合計</div><div class="stat-value" id="halfLeaveUsedYear" style="color:#6b9b00;">0<span class="stat-unit"> / 12回</span></div><div id="halfLeaveUsedDetail" style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5;">アプリ記録 0回</div></div>
+      <div class="stat-card" style="padding:12px;background:rgba(52,152,219,.08);border-color:var(--blue);"><div class="stat-label">📅 半日有給 残り</div><div class="stat-value" id="halfLeaveRemainYear" style="color:var(--blue);">12<span class="stat-unit"> 回</span></div></div>
     </div>
-    <button onclick="clearLeaveStartManualThisMonth()" class="copy-btn" style="background:rgba(52,152,219,.12);border-color:var(--blue);color:var(--blue);margin-top:10px;">ЁЯФД уБУуБоцЬИуВТхЙНцЬИцЬлцоЛуБЛуВЙшЗкхЛХшиИчоЧуБлцИ╗уБЩ</button>
+    <button onclick="clearLeaveStartManualThisMonth()" class="copy-btn" style="background:rgba(52,152,219,.12);border-color:var(--blue);color:var(--blue);margin-top:10px;">🔄 この月を前月末残から自動計算に戻す</button>
     <div id="leaveBreakdown" style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;"></div>
   </div>
 </div>
@@ -268,51 +269,51 @@ input[type=number]{-moz-appearance:textfield}
   </div>
   <div class="stats-grid" id="statsGrid"></div>
   <div class="export-section">
-    <div class="accordion-toggle" id="exportAccordionToggle" onclick="toggleAccordion(this)" data-id="exportAccordion"><div class="export-title" style="margin-bottom:0;">ЁЯУЛ уВ╣уГЧуГмуГГуГЙуВ╖уГ╝уГИчФиуВ│уГФуГ╝я╝ИуВ┐уГЦхМ║хИЗуВКя╝Й</div><span class="arrow">тЦ╝</span></div>
-    <div class="accordion-body" id="exportAccordion" onclick="event.stopPropagation();"><div class="export-text" id="exportText"></div><button class="copy-btn" onclick="copyExport()">ЁЯУЛ уВпуГкуГГуГЧуГЬуГ╝уГЙуБлуВ│уГФуГ╝</button></div>
+    <div class="accordion-toggle" id="exportAccordionToggle" onclick="toggleAccordion(this)" data-id="exportAccordion"><div class="export-title" style="margin-bottom:0;">📋 スプレッドシート用コピー（タブ区切り）</div><span class="arrow">▼</span></div>
+    <div class="accordion-body" id="exportAccordion" onclick="event.stopPropagation();"><div class="export-text" id="exportText"></div><button class="copy-btn" onclick="copyExport()">📋 クリップボードにコピー</button></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"><div class="modal"><div class="modal-title" id="modalTitle"></div><div id="modalContent"></div><div class="modal-btns"><button class="modal-close" onclick="closeModalDirect()">щЦЙуБШуВЛ</button><button class="modal-edit" onclick="editFromModal()">тЬПя╕П ч╖ищЫЖ</button><button class="modal-delete" onclick="deleteRecord()">ЁЯЧСя╕П хЙКщЩд</button></div></div></div>
-<div class="modal-overlay" id="fareOverlay" onclick="closeFareTable(event)"><div class="modal" style="max-height:90vh;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="modal-title" style="margin-bottom:0;">ЁЯУЛ щБЛшбМцЦЩщЗСшби</div><button onclick="closeFareTableDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">тЬХ</button></div><input class="input-field" type="text" id="fareSearch" placeholder="ЁЯФН ховхЕИхРНуВТцдЬч┤в..." oninput="renderFareTable()" style="font-size:14px;font-family:'Noto Sans JP',sans-serif;margin-bottom:12px;"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="fareCategoryBtns"></div><div id="fareList" style="max-height:55vh;overflow-y:auto;"></div></div></div>
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"><div class="modal"><div class="modal-title" id="modalTitle"></div><div id="modalContent"></div><div class="modal-btns"><button class="modal-close" onclick="closeModalDirect()">閉じる</button><button class="modal-edit" onclick="editFromModal()">✏️ 編集</button><button class="modal-delete" onclick="deleteRecord()">🗑️ 削除</button></div></div></div>
+<div class="modal-overlay" id="fareOverlay" onclick="closeFareTable(event)"><div class="modal" style="max-height:90vh;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="modal-title" style="margin-bottom:0;">📋 運行料金表</div><button onclick="closeFareTableDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button></div><input class="input-field" type="text" id="fareSearch" placeholder="🔍 客先名を検索..." oninput="renderFareTable()" style="font-size:14px;font-family:'Noto Sans JP',sans-serif;margin-bottom:12px;"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="fareCategoryBtns"></div><div id="fareList" style="max-height:55vh;overflow-y:auto;"></div></div></div>
 <div class="modal-overlay" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="modal-title" style="margin-bottom:0;">тЪЩя╕П шинхоЪ</div><button onclick="closeSettingsDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">тЬХ</button></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="modal-title" style="margin-bottom:0;">⚙️ 設定</div><button onclick="closeSettingsDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button></div>
     <div style="display:flex;flex-direction:column;gap:16px;">
-      <div class="section-title">ЁЯТ░ хНШф╛бшинхоЪ</div><div class="rate-note">хНШф╛буБпуАМф┐ЭхнШуБЧуБЯцЧеуБошиШщМ▓уАНуБлхЫ║хоЪуБХуВМуБ╛уБЩуАВцЭех╣┤1цЬИуБлхНШф╛буВТхдЙцЫ┤уБЧуБжуВВуАБф╗Кх╣┤ф┐ЭхнШц╕ИуБ┐уБоцоЛценф╗гуГ╗ф╝СцЧеф╗гуБпхдЙуВПуВКуБ╛уБЫуВУуАВ</div>
-      <div><div class="input-label" style="margin-bottom:6px;">тП░ цЩВщЦУхдЦхНШф╛бя╝ИхЖЖ/hя╝Й</div><input class="input-field" type="number" id="settingOTRate" placeholder="1938"></div>
-      <div><div class="input-label" style="margin-bottom:6px;">ЁЯМЕ ф╝СцЧехНШф╛бя╝ИхЖЖ/hя╝Й</div><input class="input-field" type="number" id="settingHolidayRate" placeholder="2060"></div>
-      <button onclick="saveSettings()" class="main-btn accent">ЁЯТ╛ хНШф╛буВТф┐ЭхнШ</button>
+      <div class="section-title">💰 単価設定</div><div class="rate-note">単価は「保存した日の記録」に固定されます。来年1月に単価を変更しても、今年保存済みの残業代・休日代は変わりません。</div>
+      <div><div class="input-label" style="margin-bottom:6px;">⏰ 時間外単価（円/h）</div><input class="input-field" type="number" id="settingOTRate" placeholder="1938"></div>
+      <div><div class="input-label" style="margin-bottom:6px;">🌅 休日単価（円/h）</div><input class="input-field" type="number" id="settingHolidayRate" placeholder="2060"></div>
+      <button onclick="saveSettings()" class="main-btn accent">💾 単価を保存</button>
       <hr style="border:none;border-top:1px solid var(--border);">
-      <div class="section-title" style="margin-bottom:0;">ЁЯПв ф╝Ъчд╛ф╝СцЧечобчРЖ</div>
-      <div class="rate-note">уБКчЫЖф╝СуБ┐уГ╗х╣┤цЬлх╣┤хзЛуГ╗GWуБкуБйуАБф╝Ъчд╛чЛмшЗкуБоф╝СцЧеуВТчЩ╗щМ▓уБзуБНуБ╛уБЩуАВчЩ╗щМ▓цЧеуБпф╝СцЧецЙЛх╜УуГ╗ф╗гф╝СхИдхоЪуБохп╛ш▒буБлуБкуВКуАБцЬкхЕехКЫуБоцЧеуВТщЦЛуБПуБиуАМф╝СуБ┐уАНуБиф╝СцЧехРНуБМшЗкхЛХхЕехКЫуБХуВМуБ╛уБЩуАВ</div>
+      <div class="section-title" style="margin-bottom:0;">🏢 会社休日管理</div>
+      <div class="rate-note">お盆休み・年末年始・GWなど、会社独自の休日を登録できます。登録日は休日手当・代休判定の対象になり、未入力の日を開くと「休み」と休日名が自動入力されます。</div>
       <div style="display:grid;grid-template-columns:1fr;gap:8px;">
-        <div><div class="input-label" style="margin-bottom:6px;">цЧеф╗Ш</div><input class="input-field" type="date" id="companyHolidayDate"></div>
-        <div><div class="input-label" style="margin-bottom:6px;">ф╝СцЧехРН</div><input class="input-field" type="text" id="companyHolidayName" placeholder="ф╛Ля╝ЪуБКчЫЖф╝СуБ┐"></div>
+        <div><div class="input-label" style="margin-bottom:6px;">日付</div><input class="input-field" type="date" id="companyHolidayDate"></div>
+        <div><div class="input-label" style="margin-bottom:6px;">休日名</div><input class="input-field" type="text" id="companyHolidayName" placeholder="例：お盆休み"></div>
       </div>
       <input type="hidden" id="companyHolidayEditingDate">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="clearCompanyHolidayEditor()" class="copy-btn" style="margin-top:10px;">хЕехКЫуВТуВпуГкуВв</button>
-        <button onclick="saveCompanyHoliday()" class="main-btn accent" style="margin-top:10px;">я╝Л ф╝СцЧеуВТф┐ЭхнШ</button>
+        <button onclick="clearCompanyHolidayEditor()" class="copy-btn" style="margin-top:10px;">入力をクリア</button>
+        <button onclick="saveCompanyHoliday()" class="main-btn accent" style="margin-top:10px;">＋ 休日を保存</button>
       </div>
       <div id="companyHolidayList" class="company-holiday-list"></div>
 
       <hr style="border:none;border-top:1px solid var(--border);">
-      <div class="section-title" style="margin-bottom:0;">ЁЯТ╛ уГРуГГуВпуВвуГГуГЧ</div>
-      <div class="backup-info">цЧеха▒уГ╗хНШф╛буГ╗цЬЙч╡жуГ╗ф╗гф╝СуГ╗хЕехКЫчК╢цЕЛуБкуБйуАБцЬмчХкчЙИуБоф┐ЭхнШуГЗуГ╝уВ┐уВТуБ╛уБиуВБуБжф┐ЭхнШуБЧуБ╛уБЩуАВх╛йхЕГхЙНуБлхЖЕхо╣уВТчв║шкНуБзуБНуБ╛уБЩуАВ</div>
-      <button onclick="backupData()" class="copy-btn" style="background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);">ЁЯТ╛ хоМхЕиуГРуГГуВпуВвуГГуГЧуВТф╜ЬцИР</button>
-      <label style="width:100%;display:block;text-align:center;background:rgba(52,152,219,.15);border:1.5px solid var(--blue);border-radius:10px;padding:12px;color:var(--blue);font-size:14px;cursor:pointer;">ЁЯУВ уГРуГГуВпуВвуГГуГЧуВТщБ╕уВУуБзхЖЕхо╣чв║шкН<input type="file" id="settingsRestoreFile" accept=".json,application/json" style="display:none;" onchange="previewBackupFile(this)"></label>
+      <div class="section-title" style="margin-bottom:0;">💾 バックアップ</div>
+      <div class="backup-info">日報・単価・有給・代休・入力状態など、本番版の保存データをまとめて保存します。復元前に内容を確認できます。</div>
+      <button onclick="backupData()" class="copy-btn" style="background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);">💾 完全バックアップを作成</button>
+      <label style="width:100%;display:block;text-align:center;background:rgba(52,152,219,.15);border:1.5px solid var(--blue);border-radius:10px;padding:12px;color:var(--blue);font-size:14px;cursor:pointer;">📂 バックアップを選んで内容確認<input type="file" id="settingsRestoreFile" accept=".json,application/json" style="display:none;" onchange="previewBackupFile(this)"></label>
       <div id="backupLastStatus" style="font-size:11px;color:var(--muted);line-height:1.6;"></div>
-      <hr style="border:none;border-top:1px solid var(--border);"><div class="section-title" style="margin-bottom:0;">ЁЯФз уГЗуГ╝уВ┐чобчРЖ</div><div class="rate-note" style="color:var(--red);">щАЪх╕╕уБпшзжуВЙуБкуБПуБжхдзф╕ИхдлуБзуБЩуАВ</div><button onclick="fixAllRecords()" class="copy-btn" style="background:rgba(231,76,60,.10);border-color:var(--red);color:var(--red);">ЁЯФз хЕиуГЗуГ╝уВ┐уВТф┐оцнгуБЩуВЛ</button>
+      <hr style="border:none;border-top:1px solid var(--border);"><div class="section-title" style="margin-bottom:0;">🔧 データ管理</div><div class="rate-note" style="color:var(--red);">通常は触らなくて大丈夫です。</div><button onclick="fixAllRecords()" class="copy-btn" style="background:rgba(231,76,60,.10);border-color:var(--red);color:var(--red);">🔧 全データを修正する</button>
     </div>
   </div>
 </div>
 <div class="modal-overlay" id="backupPreviewOverlay" onclick="closeBackupPreview(event)">
   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="modal-title" style="margin-bottom:0;">ЁЯСА уГРуГГуВпуВвуГГуГЧхЖЕхо╣чв║шкН</div><button onclick="closeBackupPreviewDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">тЬХ</button></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="modal-title" style="margin-bottom:0;">👀 バックアップ内容確認</div><button onclick="closeBackupPreviewDirect()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button></div>
     <div id="backupPreviewContent"></div>
-    <div class="rate-note" style="margin-top:12px;color:var(--red);">х╛йхЕГуБЩуВЛуБичП╛хЬиуБоуГЖуВ╣уГИчЙИуГЗуГ╝уВ┐уБпщБ╕цКЮуБЧуБЯхЖЕхо╣уБлч╜оуБНцПЫуВПуВКуБ╛уБЩуАВ</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;"><button onclick="closeBackupPreviewDirect()" class="copy-btn" style="margin-top:0;">уВнуГгуГ│уВ╗уГл</button><button onclick="confirmRestoreBackup()" class="main-btn accent" style="margin-top:0;">уБУуБохЖЕхо╣уБзх╛йхЕГ</button></div>
+    <div class="rate-note" style="margin-top:12px;color:var(--red);">復元すると現在のテスト版データは選択した内容に置き換わります。</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;"><button onclick="closeBackupPreviewDirect()" class="copy-btn" style="margin-top:0;">キャンセル</button><button onclick="confirmRestoreBackup()" class="main-btn accent" style="margin-top:0;">この内容で復元</button></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -327,7 +328,7 @@ function devRemoveItem(key){return localStorage.removeItem(devKey(key));}
 function devStorageKeys(){return Object.keys(localStorage).filter(function(k){return k.indexOf(STORAGE_PREFIX)===0;}).map(function(k){return k.slice(STORAGE_PREFIX.length);});}
 
 
-var JOB_EMOJI={'хЬ░ха┤':'ЁЯЪЫ','щХ╖ш╖ЭщЫв':'ЁЯЫМ','цпТцЙЛх╜У':'тШая╕П','цпТ├Ч2':'тШая╕ПтШая╕П','уГИуГмуГ╝уГйуГ╝':'ЁЯЪЬ','хНКцЧецЬЙч╡ж':'ЁЯМ┤','ф╝СуБ┐':'ЁЯПа'};
+var JOB_EMOJI={'地場':'🚛','長距離':'🛌','毒手当':'☠️','毒×2':'☠️☠️','トレーラー':'🚜','半日有給':'🌴','休み':'🏠'};
 var HOLIDAYS=new Set([
 '2024-01-01','2024-01-08','2024-02-11','2024-02-12','2024-02-23','2024-03-20','2024-04-29','2024-05-03','2024-05-04','2024-05-05','2024-05-06','2024-07-15','2024-08-11','2024-08-12','2024-09-16','2024-09-22','2024-09-23','2024-10-14','2024-11-03','2024-11-04','2024-11-23',
 '2025-01-01','2025-01-13','2025-02-11','2025-02-23','2025-02-24','2025-03-20','2025-04-29','2025-05-03','2025-05-04','2025-05-05','2025-05-06','2025-07-21','2025-08-11','2025-09-15','2025-09-22','2025-09-23','2025-10-13','2025-11-03','2025-11-23','2025-11-24',
@@ -372,8 +373,8 @@ function saveCompanyHoliday(){
   var editEl=document.getElementById('companyHolidayEditingDate');
   var date=dateEl?dateEl.value:'';
   var name=nameEl?nameEl.value.trim():'';
-  if(!date){showToast('тЭЧ ф╝СцЧеуБоцЧеф╗ШуВТщБ╕уВУуБзуБПуБауБХуБД',true);return;}
-  if(!name){showToast('тЭЧ ф╝СцЧехРНуВТхЕехКЫуБЧуБжуБПуБауБХуБД',true);return;}
+  if(!date){showToast('❗ 休日の日付を選んでください',true);return;}
+  if(!name){showToast('❗ 休日名を入力してください',true);return;}
   var data=getCompanyHolidays();
   var oldDate=editEl?editEl.value:'';
   if(oldDate&&oldDate!==date)delete data[oldDate];
@@ -383,7 +384,7 @@ function saveCompanyHoliday(){
   renderCompanyHolidayList();
   renderRecords();
   if(document.getElementById('page-stats').classList.contains('active'))renderStats();
-  showToast('тЬЕ ф╝Ъчд╛ф╝СцЧеуВТф┐ЭхнШуБЧуБ╛уБЧуБЯ');
+  showToast('✅ 会社休日を保存しました');
 }
 function editCompanyHoliday(dateStr){
   var data=getCompanyHolidays();
@@ -398,14 +399,14 @@ function editCompanyHoliday(dateStr){
 function deleteCompanyHoliday(dateStr){
   var data=getCompanyHolidays();
   if(!data[dateStr])return;
-  if(!confirm(dateStr.replace(/-/g,'/')+'уАМ'+data[dateStr]+'уАНуВТхЙКщЩдуБЧуБ╛уБЩуБЛя╝Я'))return;
+  if(!confirm(dateStr.replace(/-/g,'/')+'「'+data[dateStr]+'」を削除しますか？'))return;
   delete data[dateStr];
   saveCompanyHolidays(data);
   clearCompanyHolidayEditor();
   renderCompanyHolidayList();
   renderRecords();
   if(document.getElementById('page-stats').classList.contains('active'))renderStats();
-  showToast('ЁЯЧСя╕П ф╝Ъчд╛ф╝СцЧеуВТхЙКщЩдуБЧуБ╛уБЧуБЯ');
+  showToast('🗑️ 会社休日を削除しました');
 }
 function clearCompanyHolidayEditor(){
   var dateEl=document.getElementById('companyHolidayDate');
@@ -421,19 +422,19 @@ function renderCompanyHolidayList(){
   var data=getCompanyHolidays();
   var dates=Object.keys(data).sort();
   if(!dates.length){
-    el.innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:10px;">чЩ╗щМ▓уБХуВМуБЯф╝Ъчд╛ф╝СцЧеуБпуБВуВКуБ╛уБЫуВУ</div>';
+    el.innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:10px;">登録された会社休日はありません</div>';
     return;
   }
   el.innerHTML=dates.map(function(dateStr){
-    return '<div class="company-holiday-item"><div class="company-holiday-date">'+escapeHtml(dateStr.replace(/-/g,'/'))+'</div><div class="company-holiday-name">'+escapeHtml(data[dateStr])+'</div><div class="company-holiday-actions"><button class="company-holiday-action" onclick="editCompanyHoliday(\''+escapeJs(dateStr)+'\')">ч╖ищЫЖ</button><button class="company-holiday-action" style="color:var(--red);border-color:var(--red);" onclick="deleteCompanyHoliday(\''+escapeJs(dateStr)+'\')">хЙКщЩд</button></div></div>';
+    return '<div class="company-holiday-item"><div class="company-holiday-date">'+escapeHtml(dateStr.replace(/-/g,'/'))+'</div><div class="company-holiday-name">'+escapeHtml(data[dateStr])+'</div><div class="company-holiday-actions"><button class="company-holiday-action" onclick="editCompanyHoliday(\''+escapeJs(dateStr)+'\')">編集</button><button class="company-holiday-action" style="color:var(--red);border-color:var(--red);" onclick="deleteCompanyHoliday(\''+escapeJs(dateStr)+'\')">削除</button></div></div>';
   }).join('');
 }
 function applyCompanyHolidayDefaults(dateStr){
   var name=getCompanyHolidayName(dateStr);
   if(!name)return false;
-  selectedJobs=['ф╝СуБ┐'];
+  selectedJobs=['休み'];
   document.querySelectorAll('.job-btn').forEach(function(btn){
-    btn.classList.toggle('selected',btn.dataset.job==='ф╝СуБ┐');
+    btn.classList.toggle('selected',btn.dataset.job==='休み');
   });
   var memo=document.getElementById('jobMemo');
   if(memo)memo.value=name;
@@ -441,9 +442,9 @@ function applyCompanyHolidayDefaults(dateStr){
   trailerOn=false;
   document.getElementById('toxicBtn1').classList.remove('selected');
   document.getElementById('toxicBtn2').classList.remove('selected');
-  document.getElementById('toxicDisplay').textContent='цЬкщБ╕цКЮ';
+  document.getElementById('toxicDisplay').textContent='未選択';
   document.getElementById('trailerBtn').classList.remove('selected');
-  document.getElementById('trailerStatus').textContent='уВ┐уГГуГЧуБзON';
+  document.getElementById('trailerStatus').textContent='タップでON';
   document.getElementById('trailerStatus').style.color='var(--muted)';
   clearTimePicker('start');
   clearTimePicker('end');
@@ -474,22 +475,22 @@ function openInputAccordion(id){
   saveInputAccordionState(id,true);
 }
 function hasLongDistanceJob(){
-  return selectedJobs.includes('щХ╖ш╖ЭщЫв');
+  return selectedJobs.includes('長距離');
 }
 function isJobInputDone(){
   return selectedJobs.length>0;
 }
 function isTimeInputDone(){
-  if(selectedJobs.includes('ф╝СуБ┐'))return true;
+  if(selectedJobs.includes('休み'))return true;
   return !!(document.getElementById('startTime').value&&document.getElementById('endTime').value);
 }
 function isDistanceInputDone(){
-  if(selectedJobs.includes('ф╝СуБ┐'))return true;
-  if(selectedJobs.includes('хбйч┤ацРнш╝ЙуБоуБ┐')||selectedJobs.includes('чТ░хвГцХ┤хВЩ'))return true;
+  if(selectedJobs.includes('休み'))return true;
+  if(selectedJobs.includes('塩素搭載のみ')||selectedJobs.includes('環境整備'))return true;
   return (parseFloat(document.getElementById('distance').value)||0)>0;
 }
 function isPayInputDone(){
-  if(selectedJobs.includes('ф╝СуБ┐'))return true;
+  if(selectedJobs.includes('休み'))return true;
   return !hasLongDistanceJob() || (parseInt(document.getElementById('longDistancePay').value)||0)>0;
 }
 function getNextRequiredAccordion(){
@@ -504,40 +505,40 @@ function updateInputProgress(){
   var badge=document.getElementById('inputCompleteBadge');
   if(!chips||!badge)return;
   var items=[
-    {label:'ф╗Хф║Л',done:isJobInputDone(),required:true},
-    {label:'цЩВщЦУ',done:isTimeInputDone(),required:true},
-    {label:'ш╖ЭщЫв',done:isDistanceInputDone(),required:true},
-    {label:'щЗСщбН',done:isPayInputDone(),required:hasLongDistanceJob()}
+    {label:'仕事',done:isJobInputDone(),required:true},
+    {label:'時間',done:isTimeInputDone(),required:true},
+    {label:'距離',done:isDistanceInputDone(),required:true},
+    {label:'金額',done:isPayInputDone(),required:hasLongDistanceJob()}
   ];
   chips.innerHTML=items.map(function(it){
-    var icon=it.done?'тЬЕ':(it.required?'тЪк':'я╝Н');
+    var icon=it.done?'✅':(it.required?'⚪':'－');
     var bg=it.done?'rgba(46,204,113,.12)':(it.required?'rgba(232,96,28,.10)':'var(--surface2)');
     var bd=it.done?'var(--green)':(it.required?'var(--accent)':'var(--border)');
     var color=it.done?'var(--green)':(it.required?'var(--accent)':'var(--muted)');
     return '<span style="font-size:12px;border:1px solid '+bd+';background:'+bg+';color:'+color+';border-radius:999px;padding:4px 8px;">'+icon+' '+it.label+'</span>';
   }).join('');
   var next=getNextRequiredAccordion();
-  if(next){badge.textContent='цЬкхЕехКЫуБВуВК';badge.style.color='var(--muted)';}
-  else{badge.textContent='ЁЯОЙ хЕехКЫхоМф║Ж';badge.style.color='var(--green)';}
+  if(next){badge.textContent='未入力あり';badge.style.color='var(--muted)';}
+  else{badge.textContent='🎉 入力完了';badge.style.color='var(--green)';}
   renderInputSummary();
 }
 
 function renderInputSummary(){
   var el=document.getElementById('inputSummaryList');
   if(!el)return;
-  var jobs=selectedJobs.length?selectedJobs.join('уГ╗'):'цЬкхЕехКЫ';
+  var jobs=selectedJobs.length?selectedJobs.join('・'):'未入力';
   var start=document.getElementById('startTime').value||'--:--';
   var end=document.getElementById('endTime').value||'--:--';
   var dist=parseFloat(document.getElementById('distance').value)||0;
   var pay=parseInt(document.getElementById('longDistancePay').value)||0;
   var items=[
-    {label:'ф╗Хф║Л',value:jobs,done:isJobInputDone(),target:'inputJobAccordion'},
-    {label:'цЩВщЦУ',value:start+' тЖТ '+end,done:isTimeInputDone(),target:'inputTimeAccordion'},
-    {label:'ш╖ЭщЫв',value:dist>0?dist.toLocaleString()+'km':'цЬкхЕехКЫ',done:isDistanceInputDone(),target:'inputDistanceAccordion'},
-    {label:'щЗСщбН',value:hasLongDistanceJob()?(pay>0?pay.toLocaleString()+'хЖЖ':'цЬкхЕехКЫ'):'хп╛ш▒бхдЦ',done:isPayInputDone(),target:'inputPayAccordion'}
+    {label:'仕事',value:jobs,done:isJobInputDone(),target:'inputJobAccordion'},
+    {label:'時間',value:start+' → '+end,done:isTimeInputDone(),target:'inputTimeAccordion'},
+    {label:'距離',value:dist>0?dist.toLocaleString()+'km':'未入力',done:isDistanceInputDone(),target:'inputDistanceAccordion'},
+    {label:'金額',value:hasLongDistanceJob()?(pay>0?pay.toLocaleString()+'円':'未入力'):'対象外',done:isPayInputDone(),target:'inputPayAccordion'}
   ];
   el.innerHTML=items.map(function(it){
-    return '<button type="button" onclick="jumpToInputSection(\''+it.target+'\')" style="width:100%;display:flex;justify-content:space-between;gap:10px;background:var(--bg);border:1px solid '+(it.done?'var(--green)':'var(--border)')+';border-radius:10px;padding:8px 10px;font-size:12px;color:var(--text);cursor:pointer;text-align:left;"><span>'+(it.done?'тЬЕ':'тЪк')+' '+it.label+'</span><span style="color:'+(it.done?'var(--text)':'var(--muted)')+';text-align:right;">'+escapeHtml(it.value)+'</span></button>';
+    return '<button type="button" onclick="jumpToInputSection(\''+it.target+'\')" style="width:100%;display:flex;justify-content:space-between;gap:10px;background:var(--bg);border:1px solid '+(it.done?'var(--green)':'var(--border)')+';border-radius:10px;padding:8px 10px;font-size:12px;color:var(--text);cursor:pointer;text-align:left;"><span>'+(it.done?'✅':'⚪')+' '+it.label+'</span><span style="color:'+(it.done?'var(--text)':'var(--muted)')+';text-align:right;">'+escapeHtml(it.value)+'</span></button>';
   }).join('');
 }
 
@@ -614,8 +615,8 @@ function calcSundayBreakHours(workH){
 function calcSundayAllowanceHours(r){var workH=getWorkHoursNum(r);var breakH=calcSundayBreakHours(workH);return Math.max(0,Math.round((workH-breakH)*100)/100);}
 
 
-function isLongDistanceRecord(r){return !!(r&&(r.jobs||[]).includes('щХ╖ш╖ЭщЫв'));}
-function normalizeFareCompareText(s){return String(s||'').replace(/\s+/g,'').replace(/уАА/g,'').toLowerCase();}
+function isLongDistanceRecord(r){return !!(r&&(r.jobs||[]).includes('長距離'));}
+function normalizeFareCompareText(s){return String(s||'').replace(/\s+/g,'').replace(/　/g,'').toLowerCase();}
 function findFareForRecord(r){
   if(!r)return null;
   var memo=normalizeFareCompareText(r.jobMemo||'');
@@ -673,7 +674,7 @@ function isHolidayWorkDate(dateStr){
   return dow===0||isBlueSaturday(dateStr)||isCompanyHolidayOrNationalHoliday(dateStr);
 }
 function isSaturdayOrHolidayRecordDate(dateStr){
-  // чЩ╜хЬЯцЫЬуБпщАЪх╕╕хЗ║хЛдцЧеуАВщЭТхЬЯцЫЬуГ╗чеЭцЧеуГ╗цЙЛхЛХф╝Ъчд╛ф╝СцЧеуБоуБ┐ф╝СцЧецЙ▒уБДуАВ
+  // 白土曜は通常出勤日。青土曜・祝日・手動会社休日のみ休日扱い。
   return !!(dateStr&&(isBlueSaturday(dateStr)||isCompanyHolidayOrNationalHoliday(dateStr)));
 }
 function calcSaturdayHolidayOvertimeHours(r){
@@ -716,8 +717,8 @@ function isHolidayAllowanceRecord(r){
   return !!(r&&r.date&&isHolidayWorkDate(r.date));
 }
 
-function isRestRecord(r){return r&&(r.jobs||[]).includes('ф╝СуБ┐');}
-function isHalfLeaveRecord(r){return r&&(r.jobs||[]).includes('хНКцЧецЬЙч╡ж');}
+function isRestRecord(r){return r&&(r.jobs||[]).includes('休み');}
+function isHalfLeaveRecord(r){return r&&(r.jobs||[]).includes('半日有給');}
 function earnsDaikyuRecord(r){
   if(!r||isRestRecord(r)||!r.date)return false;
   var dow=new Date(r.date).getDay();
@@ -764,13 +765,13 @@ function saveLeaveStart(){
   devSetItem('leaveStartDaikyu_'+ms,String(d));
   devSetItem('leaveStartManual_'+ms,'1');
   renderLeavePanel();
-  showToast('тЬЕ уБУуБоцЬИуБоцЬИхИЭцоЛуВТхЫ║хоЪуБЧуБ╛уБЧуБЯ');
+  showToast('✅ この月の月初残を固定しました');
 }
 function clearLeaveStartManualThisMonth(){
   var ms=getLeaveMonthKey();
   devRemoveItem('leaveStartManual_'+ms);
   renderLeavePanel();
-  showToast('ЁЯФД хЙНцЬИцЬлцоЛуБЛуВЙшЗкхЛХшиИчоЧуБлцИ╗уБЧуБ╛уБЧуБЯ');
+  showToast('🔄 前月末残から自動計算に戻しました');
 }
 function loadLeaveStart(){
   var ms=getLeaveMonthKey();
@@ -783,108 +784,108 @@ function loadLeaveStart(){
 function calcHalfLeaveYear(){var y=String(currentYear);var records=getRecords().filter(function(r){return r.date&&r.date.indexOf(y+'-')===0&&isHalfLeaveRecord(r);});var used=records.length;var remain=12-used;if(remain<0)remain=0;return {appUsed:records.length,used:used,remain:remain};}
 function calcLeaveMonth(){var ms=getLeaveMonthKey();var st=getLeaveStart(ms);return calcLeaveMonthByKey(ms,st);}
 
-function renderLeavePanel(){if(!document.getElementById('leaveCurrentYukyu'))return;loadLeaveStart();var c=calcLeaveMonth();var hy=calcHalfLeaveYear();document.getElementById('leaveCurrentYukyu').innerHTML=fmtLeave(c.currentYukyu)+'<span class="stat-unit"> цЧе</span>';document.getElementById('leaveCurrentDaikyu').innerHTML=fmtLeave(c.currentDaikyu)+'<span class="stat-unit"> цЧе</span>';document.getElementById('halfLeaveUsedYear').innerHTML=hy.used+'<span class="stat-unit"> / 12хЫЮ</span>';document.getElementById('halfLeaveUsedDetail').textContent='уВвуГЧуГкшиШщМ▓ '+hy.appUsed+'хЫЮ';document.getElementById('halfLeaveRemainYear').innerHTML=hy.remain+'<span class="stat-unit"> хЫЮ</span>';var warn=hy.remain<=0?' <span style="color:var(--red);font-weight:700;">ф╕КщЩРуБзуБЩ</span>':'';var html='ЁЯУЛ ф╗КцЬИхЖЕши│<br>ЁЯПа ф╝СуБ┐ '+fmtLeave(c.restDays)+'цЧея╝Иф╗гф╝Сц╢ИхМЦ '+fmtLeave(c.usedDaikyu)+'цЧе / цЬЙч╡жц╢ИхМЦ '+fmtLeave(c.usedYukyu)+'цЧея╝Й<br>ЁЯМ┤ хНКцЧецЬЙч╡ж '+c.halfCount+'хЫЮ = '+fmtLeave(c.halfDays)+'цЧе<br>ЁЯФД ф╗гф╝СчЩ║чФЯ '+fmtLeave(c.earned)+'цЧея╝ИчеЭцЧеуГ╗щЭТхЬЯцЫЬуБз8.25hф╗еф╕Кя╝ПцЧецЫЬщХ╖ш╖ЭщЫвя╝Й';if(c.shortHoliday>0)html+='<br>тП░ ф╝СцЧечЯнцЩВщЦУхЗ║хЛд '+c.shortHoliday+'цЧея╝Иф╗гф╝СуБкуБЧуГ╗хЕиуБжцоЛценцЙ▒уБДя╝Й';html+='<br><br>ЁЯУЕ '+currentYear+'х╣┤ хНКцЧецЬЙч╡жя╝ЪуВвуГЧуГкшиШщМ▓ '+hy.appUsed+'хЫЮ = '+hy.used+' / 12хЫЮуААцоЛуВК '+hy.remain+'хЫЮ'+warn;html+='<br><br>шиИчоЧя╝ЪцЬЙч╡ж '+fmtLeave(c.startYukyu)+' - '+fmtLeave(c.usedYukyu)+' - '+fmtLeave(c.halfDays)+' = '+fmtLeave(c.currentYukyu)+' / ф╗гф╝С '+fmtLeave(c.startDaikyu)+' + '+fmtLeave(c.earned)+' - '+fmtLeave(c.usedDaikyu)+' = '+fmtLeave(c.currentDaikyu);document.getElementById('leaveBreakdown').innerHTML=html;}
+function renderLeavePanel(){if(!document.getElementById('leaveCurrentYukyu'))return;loadLeaveStart();var c=calcLeaveMonth();var hy=calcHalfLeaveYear();document.getElementById('leaveCurrentYukyu').innerHTML=fmtLeave(c.currentYukyu)+'<span class="stat-unit"> 日</span>';document.getElementById('leaveCurrentDaikyu').innerHTML=fmtLeave(c.currentDaikyu)+'<span class="stat-unit"> 日</span>';document.getElementById('halfLeaveUsedYear').innerHTML=hy.used+'<span class="stat-unit"> / 12回</span>';document.getElementById('halfLeaveUsedDetail').textContent='アプリ記録 '+hy.appUsed+'回';document.getElementById('halfLeaveRemainYear').innerHTML=hy.remain+'<span class="stat-unit"> 回</span>';var warn=hy.remain<=0?' <span style="color:var(--red);font-weight:700;">上限です</span>':'';var html='📋 今月内訳<br>🏠 休み '+fmtLeave(c.restDays)+'日（代休消化 '+fmtLeave(c.usedDaikyu)+'日 / 有給消化 '+fmtLeave(c.usedYukyu)+'日）<br>🌴 半日有給 '+c.halfCount+'回 = '+fmtLeave(c.halfDays)+'日<br>🔄 代休発生 '+fmtLeave(c.earned)+'日（祝日・青土曜で8.25h以上／日曜長距離）';if(c.shortHoliday>0)html+='<br>⏰ 休日短時間出勤 '+c.shortHoliday+'日（代休なし・全て残業扱い）';html+='<br><br>📅 '+currentYear+'年 半日有給：アプリ記録 '+hy.appUsed+'回 = '+hy.used+' / 12回　残り '+hy.remain+'回'+warn;html+='<br><br>計算：有給 '+fmtLeave(c.startYukyu)+' - '+fmtLeave(c.usedYukyu)+' - '+fmtLeave(c.halfDays)+' = '+fmtLeave(c.currentYukyu)+' / 代休 '+fmtLeave(c.startDaikyu)+' + '+fmtLeave(c.earned)+' - '+fmtLeave(c.usedDaikyu)+' = '+fmtLeave(c.currentDaikyu);document.getElementById('leaveBreakdown').innerHTML=html;}
 function showTab(tab){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});document.getElementById('page-'+tab).classList.add('active');var idx=['input','records','stats'].indexOf(tab);document.querySelectorAll('.tab')[idx].classList.add('active');if(tab==='records')renderRecords();if(tab==='stats')renderStats();}
 function updateTotalDistance(){var d1=parseFloat(document.getElementById('distance1').value)||0,d2=parseFloat(document.getElementById('distance2').value)||0,d3=parseFloat(document.getElementById('distance3').value)||0,total=d1+d2+d3;document.getElementById('distance').value=total||'';document.getElementById('distanceTotal').innerHTML=total.toLocaleString()+' <span style="font-size:12px;color:var(--muted);">km</span>';updateInputProgress();}
-function getMemoParts(){var el=document.getElementById('jobMemo');var normalized=normalizeJobMemoText(el?el.value:'');return normalized?normalized.split('уАА').filter(function(p){return p!=='';}):[];}
-function setMemoParts(parts){var el=document.getElementById('jobMemo');if(!el)return;var unique=[];(parts||[]).forEach(function(p){if(p&&!unique.includes(p))unique.push(p);});el.value=unique.join('уАА');}
+function getMemoParts(){var el=document.getElementById('jobMemo');var normalized=normalizeJobMemoText(el?el.value:'');return normalized?normalized.split('　').filter(function(p){return p!=='';}):[];}
+function setMemoParts(parts){var el=document.getElementById('jobMemo');if(!el)return;var unique=[];(parts||[]).forEach(function(p){if(p&&!unique.includes(p))unique.push(p);});el.value=unique.join('　');}
 function hasMemoPart(text){return getMemoParts().includes(text);}
 function removeMemo(text){setMemoParts(getMemoParts().filter(function(p){return p!==text;}));}
 function removeMemoParts(parts){var removeSet=new Set(parts||[]);setMemoParts(getMemoParts().filter(function(p){return !removeSet.has(p);}));}
 function setMemoButtonState(id,on){var b=document.getElementById(id);if(b)b.classList.toggle('memo-selected',!!on);}
 function setToxicCountDirect(n){
   n=Math.max(0,Math.min(2,parseInt(n,10)||0));toxicCount=n;
-  selectedJobs=selectedJobs.filter(function(j){return j!=='цпТцЙЛх╜У'&&j!=='цпТ├Ч2';});
-  if(n===1)selectedJobs.push('цпТцЙЛх╜У');if(n===2)selectedJobs.push('цпТ├Ч2');
+  selectedJobs=selectedJobs.filter(function(j){return j!=='毒手当'&&j!=='毒×2';});
+  if(n===1)selectedJobs.push('毒手当');if(n===2)selectedJobs.push('毒×2');
   var b1=document.getElementById('toxicBtn1'),b2=document.getElementById('toxicBtn2'),disp=document.getElementById('toxicDisplay');
   if(b1)b1.classList.toggle('selected',n===1);if(b2)b2.classList.toggle('selected',n===2);
-  if(disp)disp.textContent=n>0?'тШая╕П├Ч'+n+' = '+(n*2500).toLocaleString()+'хЖЖ':'цЬкщБ╕цКЮ';
-  document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='цпТцЙЛх╜У')b.classList.toggle('selected',n===1);if(b.dataset.job==='цпТ├Ч2')b.classList.toggle('selected',n===2);});
+  if(disp)disp.textContent=n>0?'☠️×'+n+' = '+(n*2500).toLocaleString()+'円':'未選択';
+  document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='毒手当')b.classList.toggle('selected',n===1);if(b.dataset.job==='毒×2')b.classList.toggle('selected',n===2);});
 }
 function syncKanekaPmToxic(){
-  var hasKaneka=hasMemoPart('уИ▒уВлуГНуВл хдзщШк'),hasPm=hasMemoPart('PMцРнш╝Й');
+  var hasKaneka=hasMemoPart('㈱カネカ 大阪'),hasPm=hasMemoPart('PM搭載');
   setToxicCountDirect((hasKaneka?1:0)+(hasPm?1:0));
   setMemoButtonState('memoBtnKaneka',hasKaneka);setMemoButtonState('memoBtnPm',hasPm);updateInputProgress();
 }
 function refreshMemoButtonStates(){
-  setMemoButtonState('memoBtnGas',hasMemoPart('уВмуВ╣'));
-  setMemoButtonState('memoBtnEster',hasMemoPart('уВиуВ╣уГЖуГл')&&hasMemoPart('цРнш╝Й'));
-  setMemoButtonState('memoBtnChlorine',selectedJobs.includes('хбйч┤ацРнш╝ЙуБоуБ┐'));
-  setMemoButtonState('memoBtnChlorineDelivery',selectedJobs.includes('хбйч┤ацРнш╝Йя╝ЛщЕНщАБ'));
-  setMemoButtonState('memoBtnEnvironment',selectedJobs.includes('чТ░хвГцХ┤хВЩ'));
-  setMemoButtonState('memoBtnPm',hasMemoPart('PMцРнш╝Й'));setMemoButtonState('memoBtnKaneka',hasMemoPart('уИ▒уВлуГНуВл хдзщШк'));
+  setMemoButtonState('memoBtnGas',hasMemoPart('ガス'));
+  setMemoButtonState('memoBtnEster',hasMemoPart('エステル')&&hasMemoPart('搭載'));
+  setMemoButtonState('memoBtnChlorine',selectedJobs.includes('塩素搭載のみ'));
+  setMemoButtonState('memoBtnChlorineDelivery',selectedJobs.includes('塩素搭載＋配送'));
+  setMemoButtonState('memoBtnEnvironment',selectedJobs.includes('環境整備'));
+  setMemoButtonState('memoBtnPm',hasMemoPart('PM搭載'));setMemoButtonState('memoBtnKaneka',hasMemoPart('㈱カネカ 大阪'));
 }
 function addMemo(text){
-  if(text==='хбйч┤ацРнш╝Й'){addMemo('хбйч┤а');addMemo('цРнш╝Й');return;}
+  if(text==='塩素搭載'){addMemo('塩素');addMemo('搭載');return;}
   var parts=getMemoParts();if(!parts.includes(text))parts.push(text);setMemoParts(parts);
-  if(text==='уИ▒уВлуГНуВл хдзщШк'&&selectedJobs.includes('щХ╖ш╖ЭщЫв')){
-    var kanekaFare=FARE_DATA.find(function(f){return f.name==='уИ▒уВлуГНуВл хдзщШк';})||null;
-    if(kanekaFare){if(kanekaFare.start)setTimePicker('start',kanekaFare.start);if(kanekaFare.end)setTimePicker('end',kanekaFare.end);document.getElementById('longDistancePay').value=8000;autoCalcOvertime();updateInputProgress();showToast('ЁЯПн уВлуГНуВлхдзщШкуБоцЩВщЦУуГ╗8,000хЖЖуВТуВ╗уГГуГИуБЧуБ╛уБЧуБЯ');}
+  if(text==='㈱カネカ 大阪'&&selectedJobs.includes('長距離')){
+    var kanekaFare=FARE_DATA.find(function(f){return f.name==='㈱カネカ 大阪';})||null;
+    if(kanekaFare){if(kanekaFare.start)setTimePicker('start',kanekaFare.start);if(kanekaFare.end)setTimePicker('end',kanekaFare.end);document.getElementById('longDistancePay').value=8000;autoCalcOvertime();updateInputProgress();showToast('🏭 カネカ大阪の時間・8,000円をセットしました');}
   }
-  if(text==='уИ▒уВлуГНуВл хдзщШк'||text==='PMцРнш╝Й')syncKanekaPmToxic();refreshMemoButtonStates();
+  if(text==='㈱カネカ 大阪'||text==='PM搭載')syncKanekaPmToxic();refreshMemoButtonStates();
 }
-function toggleSimpleMemoButton(text,btnId){if(hasMemoPart(text))removeMemo(text);else addMemo(text);setMemoButtonState(btnId,hasMemoPart(text));if(text==='уИ▒уВлуГНуВл хдзщШк'||text==='PMцРнш╝Й')syncKanekaPmToxic();updateInputProgress();}
-function toggleEsterMemo(){var on=hasMemoPart('уВиуВ╣уГЖуГл')&&hasMemoPart('цРнш╝Й');if(on)removeMemoParts(['уВиуВ╣уГЖуГл','цРнш╝Й']);else{addMemo('уВиуВ╣уГЖуГл');addMemo('цРнш╝Й');}setMemoButtonState('memoBtnEster',!on);updateInputProgress();}
+function toggleSimpleMemoButton(text,btnId){if(hasMemoPart(text))removeMemo(text);else addMemo(text);setMemoButtonState(btnId,hasMemoPart(text));if(text==='㈱カネカ 大阪'||text==='PM搭載')syncKanekaPmToxic();updateInputProgress();}
+function toggleEsterMemo(){var on=hasMemoPart('エステル')&&hasMemoPart('搭載');if(on)removeMemoParts(['エステル','搭載']);else{addMemo('エステル');addMemo('搭載');}setMemoButtonState('memoBtnEster',!on);updateInputProgress();}
 function setSpecialTask(job,memoParts,zeroDistance){
-  selectedJobs=selectedJobs.filter(function(j){return !['хбйч┤ацРнш╝ЙуБоуБ┐','хбйч┤ацРнш╝Йя╝ЛщЕНщАБ','чТ░хвГцХ┤хВЩ'].includes(j);});selectedJobs.push(job);
-  removeMemoParts(['хбйч┤а','цРнш╝Й','щЕНщАБ','чТ░хвГцХ┤хВЩя╝ИщЫСчФия╝Й','чТ░хвГцХ┤хВЩ']);(memoParts||[]).forEach(function(p){addMemo(p);});
+  selectedJobs=selectedJobs.filter(function(j){return !['塩素搭載のみ','塩素搭載＋配送','環境整備'].includes(j);});selectedJobs.push(job);
+  removeMemoParts(['塩素','搭載','配送','環境整備（雑用）','環境整備']);(memoParts||[]).forEach(function(p){addMemo(p);});
   if(zeroDistance){['distance1','distance2','distance3'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});var dist=document.getElementById('distance');if(dist)dist.value='0';var total=document.getElementById('distanceTotal');if(total)total.innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';}
   document.querySelectorAll('.job-btn').forEach(function(b){b.classList.toggle('selected',selectedJobs.includes(b.dataset.job));});refreshMemoButtonStates();updateInputProgress();autoCalcOvertime();
 }
 function clearSpecialTask(job,parts){selectedJobs=selectedJobs.filter(function(j){return j!==job;});removeMemoParts(parts||[]);refreshMemoButtonStates();updateInputProgress();autoCalcOvertime();}
-function toggleChlorineOnlyTask(){if(selectedJobs.includes('хбйч┤ацРнш╝ЙуБоуБ┐')){clearSpecialTask('хбйч┤ацРнш╝ЙуБоуБ┐',['хбйч┤а','цРнш╝Й']);showToast('тЪЧя╕П хбйч┤ацРнш╝ЙуВТшзгщЩдуБЧуБ╛уБЧуБЯ');}else{setSpecialTask('хбйч┤ацРнш╝ЙуБоуБ┐',['хбйч┤а','цРнш╝Й'],true);showToast('тЪЧя╕П хбйч┤ацРнш╝Йя╝Ъш╡░шбМш╖ЭщЫв0kmуВТшинхоЪуБЧуБ╛уБЧуБЯ');}}
-function toggleChlorineDeliveryTask(){if(selectedJobs.includes('хбйч┤ацРнш╝Йя╝ЛщЕНщАБ')){clearSpecialTask('хбйч┤ацРнш╝Йя╝ЛщЕНщАБ',['хбйч┤а','цРнш╝Й','щЕНщАБ']);showToast('ЁЯЪЫ хбйч┤ацРнш╝Йя╝ЛщЕНщАБуВТшзгщЩдуБЧуБ╛уБЧуБЯ');}else{setSpecialTask('хбйч┤ацРнш╝Йя╝ЛщЕНщАБ',['хбйч┤а','цРнш╝Й','щЕНщАБ'],false);showToast('ЁЯЪЫ щЕНщАБш╖ЭщЫвуВТхЕехКЫуБЧуБжуБПуБауБХуБД');}}
-function toggleEnvironmentTask(){if(selectedJobs.includes('чТ░хвГцХ┤хВЩ')){clearSpecialTask('чТ░хвГцХ┤хВЩ',['чТ░хвГцХ┤хВЩя╝ИщЫСчФия╝Й','чТ░хвГцХ┤хВЩ']);showToast('ЁЯз╣ чТ░хвГцХ┤хВЩуВТшзгщЩдуБЧуБ╛уБЧуБЯ');}else{setSpecialTask('чТ░хвГцХ┤хВЩ',['чТ░хвГцХ┤хВЩя╝ИщЫСчФия╝Й'],true);showToast('ЁЯз╣ чТ░хвГцХ┤хВЩя╝Ъш╡░шбМш╖ЭщЫв0kmуВТшинхоЪуБЧуБ╛уБЧуБЯ');}}
-function toggleKanekaMemo(){if(hasMemoPart('уИ▒уВлуГНуВл хдзщШк')){removeMemo('уИ▒уВлуГНуВл хдзщШк');syncKanekaPmToxic();showToast('ЁЯПн уВлуГНуВлуВТшзгщЩдуБЧуБ╛уБЧуБЯ');}else{addMemo('уИ▒уВлуГНуВл хдзщШк');syncKanekaPmToxic();}refreshMemoButtonStates();}
-function togglePmMemo(){if(hasMemoPart('PMцРнш╝Й')){removeMemo('PMцРнш╝Й');syncKanekaPmToxic();showToast('тШая╕П PMцРнш╝ЙуВТшзгщЩдуБЧуБ╛уБЧуБЯ');}else{addMemo('PMцРнш╝Й');syncKanekaPmToxic();}refreshMemoButtonStates();}
-function addMemoAndToxic2(){if(!hasMemoPart('PMцРнш╝Й'))addMemo('PMцРнш╝Й');syncKanekaPmToxic();}
+function toggleChlorineOnlyTask(){if(selectedJobs.includes('塩素搭載のみ')){clearSpecialTask('塩素搭載のみ',['塩素','搭載']);showToast('⚗️ 塩素搭載を解除しました');}else{setSpecialTask('塩素搭載のみ',['塩素','搭載'],true);showToast('⚗️ 塩素搭載：走行距離0kmを設定しました');}}
+function toggleChlorineDeliveryTask(){if(selectedJobs.includes('塩素搭載＋配送')){clearSpecialTask('塩素搭載＋配送',['塩素','搭載','配送']);showToast('🚛 塩素搭載＋配送を解除しました');}else{setSpecialTask('塩素搭載＋配送',['塩素','搭載','配送'],false);showToast('🚛 配送距離を入力してください');}}
+function toggleEnvironmentTask(){if(selectedJobs.includes('環境整備')){clearSpecialTask('環境整備',['環境整備（雑用）','環境整備']);showToast('🧹 環境整備を解除しました');}else{setSpecialTask('環境整備',['環境整備（雑用）'],true);showToast('🧹 環境整備：走行距離0kmを設定しました');}}
+function toggleKanekaMemo(){if(hasMemoPart('㈱カネカ 大阪')){removeMemo('㈱カネカ 大阪');syncKanekaPmToxic();showToast('🏭 カネカを解除しました');}else{addMemo('㈱カネカ 大阪');syncKanekaPmToxic();}refreshMemoButtonStates();}
+function togglePmMemo(){if(hasMemoPart('PM搭載')){removeMemo('PM搭載');syncKanekaPmToxic();showToast('☠️ PM搭載を解除しました');}else{addMemo('PM搭載');syncKanekaPmToxic();}refreshMemoButtonStates();}
+function addMemoAndToxic2(){if(!hasMemoPart('PM搭載'))addMemo('PM搭載');syncKanekaPmToxic();}
 function toggleJob(el){
   var j=el.dataset.job;
   if(selectedJobs.includes(j)){
     selectedJobs=selectedJobs.filter(function(x){return x!==j});
     el.classList.remove('selected');
-    if(j==='цпТцЙЛх╜У'&&toxicCount===1)selectToxic(1);
-    if(j==='цпТ├Ч2'&&toxicCount===2)selectToxic(2);
-    if(j==='уГИуГмуГ╝уГйуГ╝'&&trailerOn)toggleTrailer();
-    if(j==='хНКцЧецЬЙч╡ж')removeMemo('хНКцЧецЬЙч╡ж');
-    if(j==='ф╝СуБ┐')removeMemo('ф╝СуБ┐');
+    if(j==='毒手当'&&toxicCount===1)selectToxic(1);
+    if(j==='毒×2'&&toxicCount===2)selectToxic(2);
+    if(j==='トレーラー'&&trailerOn)toggleTrailer();
+    if(j==='半日有給')removeMemo('半日有給');
+    if(j==='休み')removeMemo('休み');
   }else{
-    if(j==='ф╝СуБ┐'){
+    if(j==='休み'){
       selectedJobs=[];
       document.querySelectorAll('.job-btn').forEach(function(b){b.classList.remove('selected')});
       toxicCount=0;
       trailerOn=false;
       document.getElementById('toxicBtn1').classList.remove('selected');
       document.getElementById('toxicBtn2').classList.remove('selected');
-      document.getElementById('toxicDisplay').textContent='цЬкщБ╕цКЮ';
+      document.getElementById('toxicDisplay').textContent='未選択';
       document.getElementById('trailerBtn').classList.remove('selected');
-      document.getElementById('trailerStatus').textContent='уВ┐уГГуГЧуБзON';
+      document.getElementById('trailerStatus').textContent='タップでON';
       clearTimePicker('start');
       clearTimePicker('end');
       clearOvertimePicker();
       selectedJobs.push(j);
       el.classList.add('selected');
-      addMemo('ф╝СуБ┐');
+      addMemo('休み');
       updateInputProgress();
       ['inputJobAccordion','inputTimeAccordion','inputDistanceAccordion','inputPayAccordion'].forEach(function(id){closeInputAccordion(id);});
       return;
     }
-    if(selectedJobs.includes('ф╝СуБ┐')){
-      selectedJobs=selectedJobs.filter(function(x){return x!=='ф╝СуБ┐'});
-      document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='ф╝СуБ┐')b.classList.remove('selected')});
-      removeMemo('ф╝СуБ┐');
+    if(selectedJobs.includes('休み')){
+      selectedJobs=selectedJobs.filter(function(x){return x!=='休み'});
+      document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='休み')b.classList.remove('selected')});
+      removeMemo('休み');
     }
-    if(j==='цпТцЙЛх╜У'&&selectedJobs.includes('цпТ├Ч2'))return;
-    if(j==='цпТ├Ч2'&&selectedJobs.includes('цпТцЙЛх╜У'))return;
+    if(j==='毒手当'&&selectedJobs.includes('毒×2'))return;
+    if(j==='毒×2'&&selectedJobs.includes('毒手当'))return;
     selectedJobs.push(j);
     el.classList.add('selected');
-    if(j==='цпТцЙЛх╜У')selectToxic(1);
-    if(j==='цпТ├Ч2')selectToxic(2);
-    if(j==='уГИуГмуГ╝уГйуГ╝'&&!trailerOn)toggleTrailer();
-    if(j==='хНКцЧецЬЙч╡ж'){
+    if(j==='毒手当')selectToxic(1);
+    if(j==='毒×2')selectToxic(2);
+    if(j==='トレーラー'&&!trailerOn)toggleTrailer();
+    if(j==='半日有給'){
       setTimePicker('end','12:00');
-      addMemo('хНКцЧецЬЙч╡ж');
-      showToast('ЁЯМ┤ хНКцЧецЬЙч╡жуВТшинхоЪуБЧуБ╛уБЧуБЯя╝Ич╡ВценцЩВхИ╗ 12:00я╝Й');
+      addMemo('半日有給');
+      showToast('🌴 半日有給を設定しました（終業時刻 12:00）');
     }
   }
   if(timeState.start.h!==null&&timeState.start.m!==null)autoCalcOvertime();
@@ -892,9 +893,9 @@ function toggleJob(el){
   if(hasLongDistanceJob()&&!isPayInputDone())openInputAccordion('inputPayAccordion');
   if(!hasLongDistanceJob())closeInputAccordion('inputPayAccordion');
 }
-function selectToxic(n){if(toxicCount===n){toxicCount=0;document.getElementById('toxicBtn1').classList.remove('selected');document.getElementById('toxicBtn2').classList.remove('selected');document.getElementById('toxicDisplay').textContent='цЬкщБ╕цКЮ'}else{toxicCount=n;document.getElementById('toxicBtn1').classList.toggle('selected',n===1);document.getElementById('toxicBtn2').classList.toggle('selected',n===2);document.getElementById('toxicDisplay').textContent='тШая╕П├Ч'+n+' = '+(n*2500).toLocaleString()+'хЖЖ';}}
-function toggleTrailer(){trailerOn=!trailerOn;document.getElementById('trailerBtn').classList.toggle('selected',trailerOn);document.getElementById('trailerStatus').textContent=trailerOn?'тЬЕ 3,000хЖЖ':'уВ┐уГГуГЧуБзON';document.getElementById('trailerStatus').style.color=trailerOn?'var(--accent)':'var(--muted)';}
-function buildHourBtns(which){var c=document.getElementById(which+'HourBtns'),main=which==='start'?[4,5,6,7,8]:[14,15,16,17,18];main.forEach(function(h){var b=document.createElement('div');b.className='time-btn';b.textContent=h;b.id=which+'H'+h;b.onclick=function(){setHour(which,h)};c.appendChild(b)});var sep=document.createElement('div');sep.style.cssText='width:100%;font-size:10px;color:var(--muted);margin:4px 0 2px;';sep.textContent='уБЭуБоф╗Ц';c.appendChild(sep);for(var h=0;h<24;h++){if(main.includes(h))continue;var b=document.createElement('div');b.className='time-btn dim';b.textContent=h;b.id=which+'H'+h;(function(hh){b.onclick=function(){setHour(which,hh)}})(h);c.appendChild(b)}}
+function selectToxic(n){if(toxicCount===n){toxicCount=0;document.getElementById('toxicBtn1').classList.remove('selected');document.getElementById('toxicBtn2').classList.remove('selected');document.getElementById('toxicDisplay').textContent='未選択'}else{toxicCount=n;document.getElementById('toxicBtn1').classList.toggle('selected',n===1);document.getElementById('toxicBtn2').classList.toggle('selected',n===2);document.getElementById('toxicDisplay').textContent='☠️×'+n+' = '+(n*2500).toLocaleString()+'円';}}
+function toggleTrailer(){trailerOn=!trailerOn;document.getElementById('trailerBtn').classList.toggle('selected',trailerOn);document.getElementById('trailerStatus').textContent=trailerOn?'✅ 3,000円':'タップでON';document.getElementById('trailerStatus').style.color=trailerOn?'var(--accent)':'var(--muted)';}
+function buildHourBtns(which){var c=document.getElementById(which+'HourBtns'),main=which==='start'?[4,5,6,7,8]:[14,15,16,17,18];main.forEach(function(h){var b=document.createElement('div');b.className='time-btn';b.textContent=h;b.id=which+'H'+h;b.onclick=function(){setHour(which,h)};c.appendChild(b)});var sep=document.createElement('div');sep.style.cssText='width:100%;font-size:10px;color:var(--muted);margin:4px 0 2px;';sep.textContent='その他';c.appendChild(sep);for(var h=0;h<24;h++){if(main.includes(h))continue;var b=document.createElement('div');b.className='time-btn dim';b.textContent=h;b.id=which+'H'+h;(function(hh){b.onclick=function(){setHour(which,hh)}})(h);c.appendChild(b)}}
 function setHour(which,h){if(timeState[which].h===h){clearTimePicker(which);return}timeState[which].h=h;document.querySelectorAll('#'+which+'HourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById(which+'H'+h).classList.add('selected');if(which==='start'&&timeState[which].m===null)timeState[which].m=0;updateTimeValue(which);}
 function setMin(which,m){if(timeState[which].m===m){timeState[which].m=null;document.getElementById(which+'MinBtns').querySelectorAll('.time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById(which+'TimeDisplay').textContent=timeState[which].h!==null?String(timeState[which].h).padStart(2,'0')+':--':'--:--';document.getElementById(which+'Time').value='';return}timeState[which].m=m;var btns=document.getElementById(which+'MinBtns').querySelectorAll('.time-btn');btns.forEach(function(b){b.classList.remove('selected')});var opts=which==='start'?[0,30]:[0,15,30,45];var idx=opts.indexOf(m);if(idx>=0&&btns[idx])btns[idx].classList.add('selected');updateTimeValue(which);}
 function updateTimeValue(which){var s=timeState[which];if(s.h!==null&&s.m!==null){var v=String(s.h).padStart(2,'0')+':'+String(s.m).padStart(2,'0');document.getElementById(which+'Time').value=v;document.getElementById(which+'TimeDisplay').textContent=v;updateInputProgress()}else if(s.h!==null){document.getElementById(which+'TimeDisplay').textContent=String(s.h).padStart(2,'0')+':--'}if(timeState.start.h!==null&&timeState.start.m!==null&&timeState.end.h!==null&&timeState.end.m!==null)autoCalcOvertime();}
@@ -923,10 +924,10 @@ function clearTimePicker(which){timeState[which]={h:null,m:null};document.queryS
 function buildOvertimeHourBtns(){var c=document.getElementById('overtimeHourBtns');for(var h=0;h<=12;h++){var b=document.createElement('div');b.className='time-btn';b.textContent=h;b.id='otH'+h;(function(hh){b.onclick=function(){setOvertimeHour(hh)}})(h);c.appendChild(b)}}
 function setOvertimeHour(h){otState.h=h;document.querySelectorAll('#overtimeHourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('otH'+h).classList.add('selected');if(otState.m===null)otState.m=0;updateOvertimeDisplay();}
 function setOvertimeMin(m){otState.m=m;var btns=document.getElementById('overtimeMinBtns').querySelectorAll('.time-btn');btns.forEach(function(b){b.classList.remove('selected')});var idx=[0,15,30,45].indexOf(m);if(idx>=0&&btns[idx])btns[idx].classList.add('selected');updateOvertimeDisplay();}
-function updateOvertimeDisplay(){if(otState.h!==null){var m=otState.m!==null?otState.m:0,val=Math.round((otState.h+m/60)*100)/100;document.getElementById('overtimeDisplay').textContent=val>0?val+'h':'уБкуБЧ';}}
+function updateOvertimeDisplay(){if(otState.h!==null){var m=otState.m!==null?otState.m:0,val=Math.round((otState.h+m/60)*100)/100;document.getElementById('overtimeDisplay').textContent=val>0?val+'h':'なし';}}
 function getOvertimeValue(){if(otState.h===null)return 0;var m=otState.m!==null?otState.m:0;return Math.round((otState.h+m/60)*100)/100;}
 function setOvertimePicker(val){val=parseFloat(val)||0;if(val<=0){clearOvertimePicker();return}var h=Math.floor(val),m=Math.round((val-h)*60);if([0,15,30,45].indexOf(m)<0)m=Math.round(m/15)*15;if(m>=60){h++;m=0}otState={h:h,m:m};document.querySelectorAll('#overtimeHourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});var hb=document.getElementById('otH'+h);if(hb)hb.classList.add('selected');var btns=document.getElementById('overtimeMinBtns').querySelectorAll('.time-btn');btns.forEach(function(b){b.classList.remove('selected')});var idx=[0,15,30,45].indexOf(m);if(idx>=0&&btns[idx])btns[idx].classList.add('selected');updateOvertimeDisplay();}
-function clearOvertimePicker(){otState={h:null,m:null};document.querySelectorAll('#overtimeHourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('overtimeMinBtns').querySelectorAll('.time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('overtimeDisplay').textContent='уБкуБЧ';}
+function clearOvertimePicker(){otState={h:null,m:null};document.querySelectorAll('#overtimeHourBtns .time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('overtimeMinBtns').querySelectorAll('.time-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('overtimeDisplay').textContent='なし';}
 function goToInput(date){
   showTab('input');
   var existing=getRecords().find(function(r){return r.date===date;});
@@ -939,9 +940,9 @@ function goToInput(date){
   updateInputProgress();
   openOnlyNextRequiredAccordion();
   window.scrollTo({top:0,behavior:'smooth'});
-  showToast('ЁЯУЕ '+date.replace(/-/g,'/')+'уБохЕехКЫчФ╗щЭв');
+  showToast('📅 '+date.replace(/-/g,'/')+'の入力画面');
 }
-function saveRecord(){var date=document.getElementById('inputDate').value;if(!date){showToast('тЭЧ цЧеф╗ШуВТхЕехКЫуБЧуБжуБПуБауБХуБД',true);return}var old=editingId?getRecords().find(function(r){return String(r.id)===String(editingId)}):null;var record={id:editingId||Date.now(),date:date,jobs:selectedJobs.slice(),startTime:document.getElementById('startTime').value,endTime:document.getElementById('endTime').value,overtime:getOvertimeValue(),distance:parseFloat(document.getElementById('distance').value)||0,longDistancePay:parseInt(document.getElementById('longDistancePay').value)||0,toxicCount:toxicCount,toxicPay:toxicCount*2500,trailerOn:trailerOn,trailerPay:trailerOn?3000:0,otherPay:0,jobMemo:normalizeJobMemoText(document.getElementById('jobMemo').value),memo:'',otRate:old&&old.otRate?parseInt(old.otRate):getCurrentOTRate(),holidayRate:old&&old.holidayRate?parseInt(old.holidayRate):getCurrentHolidayRate()};var records=getRecords();if(editingId){records=records.map(function(r){return String(r.id)===String(editingId)?record:r});showToast('тЬЕ цЫ┤цЦ░уБЧуБ╛уБЧуБЯя╝Б')}else{records.unshift(record);showToast('тЬЕ ф┐ЭхнШуБЧуБ╛уБЧуБЯя╝Б')}saveRecords(records);
+function saveRecord(){var date=document.getElementById('inputDate').value;if(!date){showToast('❗ 日付を入力してください',true);return}var old=editingId?getRecords().find(function(r){return String(r.id)===String(editingId)}):null;var record={id:editingId||Date.now(),date:date,jobs:selectedJobs.slice(),startTime:document.getElementById('startTime').value,endTime:document.getElementById('endTime').value,overtime:getOvertimeValue(),distance:parseFloat(document.getElementById('distance').value)||0,longDistancePay:parseInt(document.getElementById('longDistancePay').value)||0,toxicCount:toxicCount,toxicPay:toxicCount*2500,trailerOn:trailerOn,trailerPay:trailerOn?3000:0,otherPay:0,jobMemo:normalizeJobMemoText(document.getElementById('jobMemo').value),memo:'',otRate:old&&old.otRate?parseInt(old.otRate):getCurrentOTRate(),holidayRate:old&&old.holidayRate?parseInt(old.holidayRate):getCurrentHolidayRate()};var records=getRecords();if(editingId){records=records.map(function(r){return String(r.id)===String(editingId)?record:r});showToast('✅ 更新しました！')}else{records.unshift(record);showToast('✅ 保存しました！')}saveRecords(records);
   renderLeavePanel();
   var keepDate=date;
   resetForm(false);
@@ -952,7 +953,7 @@ function saveRecord(){var date=document.getElementById('inputDate').value;if(!da
   updateInputProgress();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function resetForm(resetDate){editingId=null;selectedJobs=[];toxicCount=0;trailerOn=false;document.querySelectorAll('.job-btn').forEach(function(b){b.style.opacity='';b.style.pointerEvents='';b.classList.remove('selected')});document.querySelectorAll('.allow-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('toxicDisplay').textContent='цЬкщБ╕цКЮ';document.getElementById('trailerStatus').textContent='уВ┐уГГуГЧуБзON';document.getElementById('trailerStatus').style.color='var(--muted)';['longDistancePay','jobMemo','distance1','distance2','distance3'].forEach(function(id){document.getElementById(id).value=''});document.getElementById('distance').value='';document.getElementById('distanceTotal').innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';clearTimePicker('start');clearTimePicker('end');clearOvertimePicker();if(resetDate){var di=document.getElementById('inputDate');di.removeEventListener('change',onDateChange);di.value=getLocalDateStr();di.addEventListener('change',onDateChange);var todayEx=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayEx)loadRecordToForm(todayEx);updateInputProgress();}}
+function resetForm(resetDate){editingId=null;selectedJobs=[];toxicCount=0;trailerOn=false;document.querySelectorAll('.job-btn').forEach(function(b){b.style.opacity='';b.style.pointerEvents='';b.classList.remove('selected')});document.querySelectorAll('.allow-btn').forEach(function(b){b.classList.remove('selected')});document.getElementById('toxicDisplay').textContent='未選択';document.getElementById('trailerStatus').textContent='タップでON';document.getElementById('trailerStatus').style.color='var(--muted)';['longDistancePay','jobMemo','distance1','distance2','distance3'].forEach(function(id){document.getElementById(id).value=''});document.getElementById('distance').value='';document.getElementById('distanceTotal').innerHTML='0 <span style="font-size:12px;color:var(--muted);">km</span>';clearTimePicker('start');clearTimePicker('end');clearOvertimePicker();if(resetDate){var di=document.getElementById('inputDate');di.removeEventListener('change',onDateChange);di.value=getLocalDateStr();di.addEventListener('change',onDateChange);var todayEx=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayEx)loadRecordToForm(todayEx);updateInputProgress();}}
 
 function clearFormForNewDate(date){
   selectedJobs=[];
@@ -986,13 +987,13 @@ function clearFormForNewDate(date){
   var toxicDisplay=document.getElementById('toxicDisplay');
   if(toxic1)toxic1.classList.remove('selected');
   if(toxic2)toxic2.classList.remove('selected');
-  if(toxicDisplay)toxicDisplay.textContent='цЬкщБ╕цКЮ';
+  if(toxicDisplay)toxicDisplay.textContent='未選択';
 
   var trailerBtn=document.getElementById('trailerBtn');
   var trailerStatus=document.getElementById('trailerStatus');
   if(trailerBtn)trailerBtn.classList.remove('selected');
   if(trailerStatus){
-    trailerStatus.textContent='уВ┐уГГуГЧуБзON';
+    trailerStatus.textContent='タップでON';
     trailerStatus.style.color='var(--muted)';
   }
 
@@ -1005,7 +1006,7 @@ function clearFormForNewDate(date){
   if(chips)chips.innerHTML='';
   if(summary)summary.innerHTML='';
   if(badge){
-    badge.textContent='цЬкхЕехКЫуБВуВК';
+    badge.textContent='未入力あり';
     badge.style.color='var(--muted)';
   }
 
@@ -1013,7 +1014,7 @@ function clearFormForNewDate(date){
   renderInputSummary();
 
   var saveBtn=document.getElementById('saveBtn');
-  if(saveBtn)saveBtn.textContent='ЁЯТ╛ ф┐ЭхнШуБЩуВЛ';
+  if(saveBtn)saveBtn.textContent='💾 保存する';
 
   updateInputProgress();
   openOnlyNextRequiredAccordion();
@@ -1029,8 +1030,8 @@ function onDateChange(){
     window.scrollTo({top:0,behavior:'smooth'});
   }
 }
-function loadRecordToForm(r){editingId=r.id;selectedJobs=(r.jobs||[]).slice();document.querySelectorAll('.job-btn').forEach(function(b){b.classList.toggle('selected',selectedJobs.includes(b.dataset.job))});setTimePicker('start',r.startTime||'');setTimePicker('end',r.endTime||'');setOvertimePicker(r.overtime||0);document.getElementById('distance1').value=r.distance||'';document.getElementById('distance2').value='';document.getElementById('distance3').value='';document.getElementById('distance').value=r.distance||'';document.getElementById('distanceTotal').innerHTML=(r.distance||0).toLocaleString()+' <span style="font-size:12px;color:var(--muted);">km</span>';document.getElementById('longDistancePay').value=r.longDistancePay||'';toxicCount=r.toxicCount||0;document.getElementById('toxicBtn1').classList.toggle('selected',toxicCount===1);document.getElementById('toxicBtn2').classList.toggle('selected',toxicCount===2);document.getElementById('toxicDisplay').textContent=toxicCount>0?'тШая╕П├Ч'+toxicCount+' = '+(toxicCount*2500).toLocaleString()+'хЖЖ':'цЬкщБ╕цКЮ';trailerOn=r.trailerOn||false;document.getElementById('trailerBtn').classList.toggle('selected',trailerOn);document.getElementById('trailerStatus').textContent=trailerOn?'тЬЕ 3,000хЖЖ':'уВ┐уГГуГЧуБзON';document.getElementById('trailerStatus').style.color=trailerOn?'var(--accent)':'var(--muted)';document.getElementById('jobMemo').value=normalizeJobMemoText(r.jobMemo||'');showToast('ЁЯУЛ хЕехКЫц╕ИуБ┐уГЗуГ╝уВ┐уВТшкнуБ┐ш╛╝уБ┐уБ╛уБЧуБЯ');updateInputProgress();openOnlyNextRequiredAccordion();}
-function renderRecords(){var monthStr=currentYear+'-'+String(currentMonth+1).padStart(2,'0');document.getElementById('recordsMonthLabel').textContent=currentYear+'х╣┤'+(currentMonth+1)+'цЬИ';renderLeavePanel();var sw=document.getElementById('searchBox')?document.getElementById('searchBox').value.trim().toLowerCase():'';var list=document.getElementById('recordsList');if(sw){var res=getRecords().filter(function(r){return(r.jobMemo||'').toLowerCase().includes(sw)||(r.jobs||[]).join('').toLowerCase().includes(sw)}).sort(function(a,b){return b.date.localeCompare(a.date)});if(!res.length){list.innerHTML='<div class="empty"><div class="empty-icon">ЁЯФН</div>уАМ'+sw+'уАНуБошиШщМ▓уБпуБВуВКуБ╛уБЫуВУ</div>';return}list.innerHTML=res.map(recordCardHtml).join('');return}var all=getRecords().filter(function(r){return r.date&&r.date.startsWith(monthStr)}),rm={};renderMonthOvertimeSummary(all);all.forEach(function(r){rm[r.date]=r});var firstDay=new Date(currentYear,currentMonth,1).getDay(),dim=new Date(currentYear,currentMonth+1,0).getDate(),html='<div class="cal-grid">';['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'].forEach(function(d,i){var c=i===0?'color:#e74c3c':i===6?'color:#3498db':'color:var(--muted)';html+='<div class="cal-head" style="'+c+'">'+d+'</div>'});for(var i=0;i<firstDay;i++)html+='<div class="cal-cell empty"></div>';for(var day=1;day<=dim;day++){var ds=currentYear+'-'+String(currentMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),dow=new Date(currentYear,currentMonth,day).getDay(),r=rm[ds],hd=!!r,jobs=r?(r.jobs||[]):[],je=r?jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''):'';var dc=getDateColor(ds,dow),ih=HOLIDAYS.has(ds),companyHolidayName=getCompanyHolidayName(ds),dayCls='cal-cell '+(hd?'has-data ':'')+(companyHolidayName?'company-holiday-cell ':'')+(jobs.includes('ф╝СуБ┐')?'rest-day ':jobs.includes('хНКцЧецЬЙч╡ж')?'half-paid-day ':'');var isToday=ds===getLocalDateStr();html+='<div '+(isToday?'id="cal-today"':'')+' class="'+dayCls+'" onclick="'+(hd?'showModal('+r.id+')':"goToInput('"+ds+"')")+'" style="'+(isToday?'outline:2px solid #3498db;outline-offset:-2px;':'')+'"><div class="cal-day" style="'+dc+'">'+day+(ih?'ЁЯОМ':'')+'</div>'+(companyHolidayName?'<div class="company-holiday-label">ЁЯПв '+escapeHtml(companyHolidayName)+'</div>':'')+(hd?('<div class="cal-emoji">'+(je||'тАФ')+'</div>'+(r.startTime?'<div class="cal-time">хЗ║ '+r.startTime+'</div>':'')+(r.endTime?'<div class="cal-time">щАА '+r.endTime+'</div>':'')+(calcEffectiveOvertimeHours(r)>0?'<div class="cal-time">цоЛ '+formatHour(calcEffectiveOvertimeHours(r))+'h</div>':'')+(r.jobMemo?'<div class="cal-memo">'+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')):'')+'</div>'}list.innerHTML=html+'</div>';}
+function loadRecordToForm(r){editingId=r.id;selectedJobs=(r.jobs||[]).slice();document.querySelectorAll('.job-btn').forEach(function(b){b.classList.toggle('selected',selectedJobs.includes(b.dataset.job))});setTimePicker('start',r.startTime||'');setTimePicker('end',r.endTime||'');setOvertimePicker(r.overtime||0);document.getElementById('distance1').value=r.distance||'';document.getElementById('distance2').value='';document.getElementById('distance3').value='';document.getElementById('distance').value=r.distance||'';document.getElementById('distanceTotal').innerHTML=(r.distance||0).toLocaleString()+' <span style="font-size:12px;color:var(--muted);">km</span>';document.getElementById('longDistancePay').value=r.longDistancePay||'';toxicCount=r.toxicCount||0;document.getElementById('toxicBtn1').classList.toggle('selected',toxicCount===1);document.getElementById('toxicBtn2').classList.toggle('selected',toxicCount===2);document.getElementById('toxicDisplay').textContent=toxicCount>0?'☠️×'+toxicCount+' = '+(toxicCount*2500).toLocaleString()+'円':'未選択';trailerOn=r.trailerOn||false;document.getElementById('trailerBtn').classList.toggle('selected',trailerOn);document.getElementById('trailerStatus').textContent=trailerOn?'✅ 3,000円':'タップでON';document.getElementById('trailerStatus').style.color=trailerOn?'var(--accent)':'var(--muted)';document.getElementById('jobMemo').value=normalizeJobMemoText(r.jobMemo||'');showToast('📋 入力済みデータを読み込みました');updateInputProgress();openOnlyNextRequiredAccordion();}
+function renderRecords(){var monthStr=currentYear+'-'+String(currentMonth+1).padStart(2,'0');document.getElementById('recordsMonthLabel').textContent=currentYear+'年'+(currentMonth+1)+'月';renderLeavePanel();var sw=document.getElementById('searchBox')?document.getElementById('searchBox').value.trim().toLowerCase():'';var list=document.getElementById('recordsList');if(sw){var res=getRecords().filter(function(r){return(r.jobMemo||'').toLowerCase().includes(sw)||(r.jobs||[]).join('').toLowerCase().includes(sw)}).sort(function(a,b){return b.date.localeCompare(a.date)});if(!res.length){list.innerHTML='<div class="empty"><div class="empty-icon">🔍</div>「'+sw+'」の記録はありません</div>';return}list.innerHTML=res.map(recordCardHtml).join('');return}var all=getRecords().filter(function(r){return r.date&&r.date.startsWith(monthStr)}),rm={};renderMonthOvertimeSummary(all);all.forEach(function(r){rm[r.date]=r});var firstDay=new Date(currentYear,currentMonth,1).getDay(),dim=new Date(currentYear,currentMonth+1,0).getDate(),html='<div class="cal-grid">';['日','月','火','水','木','金','土'].forEach(function(d,i){var c=i===0?'color:#e74c3c':i===6?'color:#3498db':'color:var(--muted)';html+='<div class="cal-head" style="'+c+'">'+d+'</div>'});for(var i=0;i<firstDay;i++)html+='<div class="cal-cell empty"></div>';for(var day=1;day<=dim;day++){var ds=currentYear+'-'+String(currentMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),dow=new Date(currentYear,currentMonth,day).getDay(),r=rm[ds],hd=!!r,jobs=r?(r.jobs||[]):[],je=r?jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''):'';var dc=getDateColor(ds,dow),ih=HOLIDAYS.has(ds),companyHolidayName=getCompanyHolidayName(ds),dayCls='cal-cell '+(hd?'has-data ':'')+(companyHolidayName?'company-holiday-cell ':'')+(jobs.includes('休み')?'rest-day ':jobs.includes('半日有給')?'half-paid-day ':'');var isToday=ds===getLocalDateStr();html+='<div '+(isToday?'id="cal-today"':'')+' class="'+dayCls+'" onclick="'+(hd?'showModal('+r.id+')':"goToInput('"+ds+"')")+'" style="'+(isToday?'outline:2px solid #3498db;outline-offset:-2px;':'')+'"><div class="cal-day" style="'+dc+'">'+day+(ih?'🎌':'')+'</div>'+(companyHolidayName?'<div class="company-holiday-label">🏢 '+escapeHtml(companyHolidayName)+'</div>':'')+(hd?('<div class="cal-emoji">'+(je||'—')+'</div>'+(r.startTime?'<div class="cal-time">出 '+r.startTime+'</div>':'')+(r.endTime?'<div class="cal-time">退 '+r.endTime+'</div>':'')+(calcEffectiveOvertimeHours(r)>0?'<div class="cal-time">残 '+formatHour(calcEffectiveOvertimeHours(r))+'h</div>':'')+(r.jobMemo?'<div class="cal-memo">'+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')):'')+'</div>'}list.innerHTML=html+'</div>';}
 
 function renderMonthOvertimeSummary(monthRecords){
   var el=document.getElementById('monthOvertimeSummaryText');
@@ -1038,13 +1039,13 @@ function renderMonthOvertimeSummary(monthRecords){
   var totalOt=0;
   monthRecords.forEach(function(r){totalOt+=calcEffectiveOvertimeHours(r)||0;});
   totalOt=Math.round(totalOt*100)/100;
-  el.textContent='цоЛцен '+formatHour(totalOt)+'H';
+  el.textContent='残業 '+formatHour(totalOt)+'H';
 }
 
-function recordCardHtml(r){var d=new Date(r.date),wd=['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'][d.getDay()],dc=getDateColor(r.date,d.getDay()),jobs=r.jobs||[],je=jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''),cardCls='record-card'+(jobs.includes('ф╝СуБ┐')?' rest-day':jobs.includes('хНКцЧецЬЙч╡ж')?' half-paid-day':'');var tp=r.toxicPay||((r.toxicCount||0)*2500),dp=calcDistPay(r.distance),total=tp+(r.trailerPay||0)+dp;return '<div class="'+cardCls+'" onclick="showModal('+r.id+')"><div class="record-top"><div class="record-date" style="'+dc+'">'+r.date.replace(/-/g,'/')+'я╝И'+wd+'я╝Й</div><div>'+je+'</div></div>'+(jobs.includes('ф╝СуБ┐')?'<div style="font-size:13px;color:var(--green);font-weight:700;margin-top:4px;">ЁЯПа ф╝СуБ┐</div>':'')+(jobs.includes('хНКцЧецЬЙч╡ж')?'<div style="font-size:13px;color:#6b9b00;font-weight:700;margin-top:4px;">ЁЯМ┤ хНКцЧецЬЙч╡ж</div>':'')+(r.jobMemo?'<div style="font-size:12px;color:var(--muted);margin-top:4px;">ЁЯУЭ '+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')+(total>0?'<div style="margin-top:6px;"><span class="badge">ЁЯТ░ '+total.toLocaleString()+'хЖЖ</span></div>':'')+'</div>'}
+function recordCardHtml(r){var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()],dc=getDateColor(r.date,d.getDay()),jobs=r.jobs||[],je=jobs.map(function(j){return JOB_EMOJI[j]||''}).join(''),cardCls='record-card'+(jobs.includes('休み')?' rest-day':jobs.includes('半日有給')?' half-paid-day':'');var tp=r.toxicPay||((r.toxicCount||0)*2500),dp=calcDistPay(r.distance),total=tp+(r.trailerPay||0)+dp;return '<div class="'+cardCls+'" onclick="showModal('+r.id+')"><div class="record-top"><div class="record-date" style="'+dc+'">'+r.date.replace(/-/g,'/')+'（'+wd+'）</div><div>'+je+'</div></div>'+(jobs.includes('休み')?'<div style="font-size:13px;color:var(--green);font-weight:700;margin-top:4px;">🏠 休み</div>':'')+(jobs.includes('半日有給')?'<div style="font-size:13px;color:#6b9b00;font-weight:700;margin-top:4px;">🌴 半日有給</div>':'')+(r.jobMemo?'<div style="font-size:12px;color:var(--muted);margin-top:4px;">📝 '+escapeHtml(formatJobMemoText(r.jobMemo))+'</div>':'')+(total>0?'<div style="margin-top:6px;"><span class="badge">💰 '+total.toLocaleString()+'円</span></div>':'')+'</div>'}
 function changeMonth(d){currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++}if(currentMonth<0){currentMonth=11;currentYear--}renderRecords();}
 function changeStatsMonth(d){statsMonth+=d;if(statsMonth>11){statsMonth=0;statsYear++}if(statsMonth<0){statsMonth=11;statsYear--}renderStats();}
-function renderStats(){var ms=statsYear+'-'+String(statsMonth+1).padStart(2,'0');document.getElementById('statsMonthLabel').textContent=statsYear+'х╣┤'+(statsMonth+1)+'цЬИ';var records=getRecords().filter(function(r){return r.date&&r.date.startsWith(ms)});var totalDays=records.length,totalKm=0,totalPay=0,totalLD=0,totalTox=0,totalTr=0,totalDP=0,trDays=0,totalOTPay=0,totalHolidayPay=0,totalOTHours=0,totalHolidayHours=0;records.forEach(function(r){totalKm+=r.distance||0;var ot=calcEffectiveOvertimeHours(r),tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),lp=r.longDistancePay||0;totalTox+=tp;totalTr+=trp;totalDP+=dp;totalLD+=lp;totalPay+=tp+trp+dp;if(r.trailerOn)trDays++;if(ot>0){var isHol=isHolidayAllowanceRecord(r),rate=getRateForRecord(r);if(isHol){totalHolidayHours=Math.round((totalHolidayHours+ot)*100)/100;totalHolidayPay+=Math.round(ot*rate.holidayRate)}else{totalOTHours=Math.round((totalOTHours+ot)*100)/100;totalOTPay+=Math.round(ot*rate.otRate)}}});var sortedRecords=records.slice().sort(function(a,b){return a.date.localeCompare(b.date)});var ldRows='';sortedRecords.filter(function(r){return (r.longDistancePay||0)>0}).forEach(function(r){var d=new Date(r.date),wd=['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'][d.getDay()];ldRows+='<div class="modal-row"><span class="modal-row-label" style="font-size:12px;">'+r.date.replace(/-/g,'/')+'('+wd+') '+escapeHtml(formatJobMemoText(r.jobMemo||''))+'</span><span style="font-size:12px;">'+r.longDistancePay.toLocaleString()+' хЖЖ</span></div>'});if(!ldRows)ldRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">уБкуБЧ</div>';var wmRows='';sortedRecords.filter(function(r){var tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance);return tp+trp+dp>0}).forEach(function(r){var d=new Date(r.date),wd=['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'][d.getDay()],tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),details=[];if(tp>0)details.push('цпТ '+tp.toLocaleString()+'хЖЖ');if(trp>0)details.push('уГИуГмуГ╝уГйуГ╝ '+trp.toLocaleString()+'хЖЖ');if(dp>0)details.push('ш╖ЭщЫв '+dp.toLocaleString()+'хЖЖ');wmRows+='<div style="padding:6px 0;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--muted);">'+r.date.replace(/-/g,'/')+'('+wd+')</span><span style="font-weight:700;">'+(tp+trp+dp).toLocaleString()+' хЖЖ</span></div><div style="font-size:11px;color:var(--muted);">'+details.join('уАА')+'</div></div>'});if(!wmRows)wmRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">уБкуБЧ</div>';var otRows='';sortedRecords.filter(function(r){return calcEffectiveOvertimeHours(r)>0}).forEach(function(r){var d=new Date(r.date),wd=['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'][d.getDay()],rawWork=getWorkHoursNum(r),ot=calcEffectiveOvertimeHours(r),isHol=isHolidayAllowanceRecord(r),kind=isHol?'ЁЯМЕ ф╝СцЧе':'тП░ цЩВщЦУхдЦ',rate=getRateForRecord(r),usedRate=isHol?rate.holidayRate:rate.otRate,pay=Math.round(ot*usedRate),breakNote=isLongDistanceRecord(r)?' шинхоЪч╡Вцен'+(getLongDistanceScheduledEnd(r)||'цЬкшинхоЪ'):(isSundayRecord(r)?' хоЯхГН'+formatHour(rawWork)+'h-ф╝СцЖй'+formatHour(calcSundayBreakHours(rawWork))+'h':'');otRows+='<div class="modal-row"><span class="modal-row-label" style="font-size:12px;">'+r.date.replace(/-/g,'/')+'('+wd+') '+kind+' @'+usedRate+breakNote+'</span><span style="font-size:12px;">'+ot+'hуАА'+pay.toLocaleString()+'хЖЖ</span></div>'});if(!otRows)otRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">уБкуБЧ</div>';var otHStr=formatHour(totalOTHours),holHStr=formatHour(totalHolidayHours),totalOTH=Math.round((totalOTHours+totalHolidayHours)*100)/100,totalOTHStr=formatHour(totalOTH);document.getElementById('statsGrid').innerHTML='<div class="stat-card"><div class="stat-label">хЗ║хЛдцЧецХ░</div><div class="stat-value">'+totalDays+'<span class="stat-unit"> цЧе</span></div></div><div class="stat-card"><div class="stat-label">ч╖Пш╡░шбМш╖ЭщЫв</div><div class="stat-value">'+totalKm.toLocaleString()+'<span class="stat-unit"> km</span></div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="ldAccordion"><div class="accordion-toggle" id="ldAccordionToggle"><div><div class="stat-label">ЁЯЫМ щХ╖ш╖ЭщЫвцЙЛх╜УхРИшиИ</div><div class="stat-value">'+totalLD.toLocaleString()+'<span class="stat-unit"> хЖЖ</span></div></div><span class="arrow">тЦ╝</span></div><div class="accordion-body" id="ldAccordion">'+ldRows+'</div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="wmAccordion"><div class="accordion-toggle" id="wmAccordionToggle"><div><div class="stat-label">ЁЯТ░ уГпуГ│уГЮуГ│цЙЛх╜У</div><div class="stat-value" style="font-size:17px;">'+totalPay.toLocaleString()+'<span class="stat-unit"> хЖЖ</span></div></div><span class="arrow">тЦ╝</span></div><div class="accordion-body" id="wmAccordion">'+wmRows+'</div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="otAccordion"><div class="accordion-toggle" id="otAccordionToggle"><div><div class="stat-label">тП░ цоЛценцЩВщЦУ</div><div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;"><span style="font-size:11px;color:var(--muted);">цЩВщЦУхдЦ '+otHStr+'h</span><span style="font-size:11px;color:var(--muted);">ф╝СцЧе '+holHStr+'h</span><span style="font-size:11px;font-weight:700;">хРИшиИ '+totalOTHStr+'h / '+(totalOTPay+totalHolidayPay).toLocaleString()+'хЖЖ</span></div></div><span class="arrow">тЦ╝</span></div><div class="accordion-body" id="otAccordion">'+otRows+'</div></div>';var header='цЧеф╗Ш\tф╗Хф║Л\tхЗ║хЛд\tщААхЛд\tхоЯхГН\tцоЛцен\tш╡░шбМkm\tщХ╖ш╖ЭщЫвцЙЛх╜У\tцпТцЙЛх╜У\tуГИуГмуГ╝уГйуГ╝цЙЛх╜У\tуГпуГ│уГЮуГ│цЙЛх╜У\tцЩВщЦУхдЦхНШф╛б\tф╝СцЧехНШф╛б\tуГбуГв';var rows=sortedRecords.map(function(r){var wh=calcWorkHours(r.startTime,r.endTime)||'',tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),rate=getRateForRecord(r);return[r.date,(r.jobs||[]).map(function(j){return(JOB_EMOJI[j]||'')+j}).join('|'),r.startTime,r.endTime,wh?wh+'h':'',r.overtime>0?r.overtime+'h':'',r.distance||'',r.longDistancePay||'',tp||'',trp||'',tp+trp+dp||'',rate.otRate,rate.holidayRate,formatJobMemoText(r.jobMemo||'')].join('\t')});document.getElementById('exportText').textContent=[header].concat(rows).join('\n');enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHolidayHours);}
+function renderStats(){var ms=statsYear+'-'+String(statsMonth+1).padStart(2,'0');document.getElementById('statsMonthLabel').textContent=statsYear+'年'+(statsMonth+1)+'月';var records=getRecords().filter(function(r){return r.date&&r.date.startsWith(ms)});var totalDays=records.length,totalKm=0,totalPay=0,totalLD=0,totalTox=0,totalTr=0,totalDP=0,trDays=0,totalOTPay=0,totalHolidayPay=0,totalOTHours=0,totalHolidayHours=0;records.forEach(function(r){totalKm+=r.distance||0;var ot=calcEffectiveOvertimeHours(r),tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),lp=r.longDistancePay||0;totalTox+=tp;totalTr+=trp;totalDP+=dp;totalLD+=lp;totalPay+=tp+trp+dp;if(r.trailerOn)trDays++;if(ot>0){var isHol=isHolidayAllowanceRecord(r),rate=getRateForRecord(r);if(isHol){totalHolidayHours=Math.round((totalHolidayHours+ot)*100)/100;totalHolidayPay+=Math.round(ot*rate.holidayRate)}else{totalOTHours=Math.round((totalOTHours+ot)*100)/100;totalOTPay+=Math.round(ot*rate.otRate)}}});var sortedRecords=records.slice().sort(function(a,b){return a.date.localeCompare(b.date)});var ldRows='';sortedRecords.filter(function(r){return (r.longDistancePay||0)>0}).forEach(function(r){var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()];ldRows+='<div class="modal-row"><span class="modal-row-label" style="font-size:12px;">'+r.date.replace(/-/g,'/')+'('+wd+') '+escapeHtml(formatJobMemoText(r.jobMemo||''))+'</span><span style="font-size:12px;">'+r.longDistancePay.toLocaleString()+' 円</span></div>'});if(!ldRows)ldRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">なし</div>';var wmRows='';sortedRecords.filter(function(r){var tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance);return tp+trp+dp>0}).forEach(function(r){var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()],tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),details=[];if(tp>0)details.push('毒 '+tp.toLocaleString()+'円');if(trp>0)details.push('トレーラー '+trp.toLocaleString()+'円');if(dp>0)details.push('距離 '+dp.toLocaleString()+'円');wmRows+='<div style="padding:6px 0;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--muted);">'+r.date.replace(/-/g,'/')+'('+wd+')</span><span style="font-weight:700;">'+(tp+trp+dp).toLocaleString()+' 円</span></div><div style="font-size:11px;color:var(--muted);">'+details.join('　')+'</div></div>'});if(!wmRows)wmRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">なし</div>';var otRows='';sortedRecords.filter(function(r){return calcEffectiveOvertimeHours(r)>0}).forEach(function(r){var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()],rawWork=getWorkHoursNum(r),ot=calcEffectiveOvertimeHours(r),isHol=isHolidayAllowanceRecord(r),kind=isHol?'🌅 休日':'⏰ 時間外',rate=getRateForRecord(r),usedRate=isHol?rate.holidayRate:rate.otRate,pay=Math.round(ot*usedRate),breakNote=isLongDistanceRecord(r)?' 設定終業'+(getLongDistanceScheduledEnd(r)||'未設定'):(isSundayRecord(r)?' 実働'+formatHour(rawWork)+'h-休憩'+formatHour(calcSundayBreakHours(rawWork))+'h':'');otRows+='<div class="modal-row"><span class="modal-row-label" style="font-size:12px;">'+r.date.replace(/-/g,'/')+'('+wd+') '+kind+' @'+usedRate+breakNote+'</span><span style="font-size:12px;">'+ot+'h　'+pay.toLocaleString()+'円</span></div>'});if(!otRows)otRows='<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px;">なし</div>';var otHStr=formatHour(totalOTHours),holHStr=formatHour(totalHolidayHours),totalOTH=Math.round((totalOTHours+totalHolidayHours)*100)/100,totalOTHStr=formatHour(totalOTH);document.getElementById('statsGrid').innerHTML='<div class="stat-card"><div class="stat-label">出勤日数</div><div class="stat-value">'+totalDays+'<span class="stat-unit"> 日</span></div></div><div class="stat-card"><div class="stat-label">総走行距離</div><div class="stat-value">'+totalKm.toLocaleString()+'<span class="stat-unit"> km</span></div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="ldAccordion"><div class="accordion-toggle" id="ldAccordionToggle"><div><div class="stat-label">🛌 長距離手当合計</div><div class="stat-value">'+totalLD.toLocaleString()+'<span class="stat-unit"> 円</span></div></div><span class="arrow">▼</span></div><div class="accordion-body" id="ldAccordion">'+ldRows+'</div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="wmAccordion"><div class="accordion-toggle" id="wmAccordionToggle"><div><div class="stat-label">💰 ワンマン手当</div><div class="stat-value" style="font-size:17px;">'+totalPay.toLocaleString()+'<span class="stat-unit"> 円</span></div></div><span class="arrow">▼</span></div><div class="accordion-body" id="wmAccordion">'+wmRows+'</div></div><div class="stat-card" style="grid-column:span 2;" onclick="toggleAccordion(this)" data-id="otAccordion"><div class="accordion-toggle" id="otAccordionToggle"><div><div class="stat-label">⏰ 残業時間</div><div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;"><span style="font-size:11px;color:var(--muted);">時間外 '+otHStr+'h</span><span style="font-size:11px;color:var(--muted);">休日 '+holHStr+'h</span><span style="font-size:11px;font-weight:700;">合計 '+totalOTHStr+'h / '+(totalOTPay+totalHolidayPay).toLocaleString()+'円</span></div></div><span class="arrow">▼</span></div><div class="accordion-body" id="otAccordion">'+otRows+'</div></div>';var header='日付\t仕事\t出勤\t退勤\t実働\t残業\t走行km\t長距離手当\t毒手当\tトレーラー手当\tワンマン手当\t時間外単価\t休日単価\tメモ';var rows=sortedRecords.map(function(r){var wh=calcWorkHours(r.startTime,r.endTime)||'',tp=r.toxicPay||((r.toxicCount||0)*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),rate=getRateForRecord(r);return[r.date,(r.jobs||[]).map(function(j){return(JOB_EMOJI[j]||'')+j}).join('|'),r.startTime,r.endTime,wh?wh+'h':'',r.overtime>0?r.overtime+'h':'',r.distance||'',r.longDistancePay||'',tp||'',trp||'',tp+trp+dp||'',rate.otRate,rate.holidayRate,formatJobMemoText(r.jobMemo||'')].join('\t')});document.getElementById('exportText').textContent=[header].concat(rows).join('\n');enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHolidayHours);}
 
 function enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHolidayHours){
   var grid=document.getElementById('statsGrid');
@@ -1053,14 +1054,14 @@ function enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHoliday
   Array.from(grid.querySelectorAll('.stats-group-title,.generated-pay-card,.generated-leave-card')).forEach(function(el){el.remove();});
 
   var cards=Array.from(grid.children);
-  var attendanceCard=cards.find(function(c){return c.textContent.indexOf('хЗ║хЛдцЧецХ░')>=0;});
+  var attendanceCard=cards.find(function(c){return c.textContent.indexOf('出勤日数')>=0;});
   if(attendanceCard)attendanceCard.remove();
 
   cards=Array.from(grid.children);
-  var distanceCard=cards.find(function(c){return c.textContent.indexOf('ч╖Пш╡░шбМш╖ЭщЫв')>=0;});
-  var otCard=cards.find(function(c){return c.textContent.indexOf('цоЛценцЩВщЦУ')>=0;});
-  var ldCard=cards.find(function(c){return c.textContent.indexOf('щХ╖ш╖ЭщЫвцЙЛх╜УхРИшиИ')>=0;});
-  var wmCard=cards.find(function(c){return c.textContent.indexOf('уГпуГ│уГЮуГ│цЙЛх╜У')>=0;});
+  var distanceCard=cards.find(function(c){return c.textContent.indexOf('総走行距離')>=0;});
+  var otCard=cards.find(function(c){return c.textContent.indexOf('残業時間')>=0;});
+  var ldCard=cards.find(function(c){return c.textContent.indexOf('長距離手当合計')>=0;});
+  var wmCard=cards.find(function(c){return c.textContent.indexOf('ワンマン手当')>=0;});
 
   cards.forEach(function(c){
     c.style.order='';
@@ -1072,7 +1073,7 @@ function enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHoliday
   var timeTitle=document.createElement('div');
   timeTitle.className='stats-group-title section-title';
   timeTitle.style.cssText='grid-column:span 2;order:0;margin:4px 0 0;';
-  timeTitle.textContent='тП░ цЩВщЦУ';
+  timeTitle.textContent='⏰ 時間';
   grid.appendChild(timeTitle);
 
   if(otCard)otCard.style.order='1';
@@ -1080,19 +1081,19 @@ function enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHoliday
   var overtimePayCard=document.createElement('div');
   overtimePayCard.className='stat-card generated-pay-card';
   overtimePayCard.style.order='2';
-  overtimePayCard.innerHTML='<div class="stat-label">тП░ цЩВщЦУхдЦцЙЛх╜У</div><div class="stat-value">'+totalOTPay.toLocaleString()+'<span class="stat-unit"> хЖЖ</span></div><div style="font-size:11px;color:var(--muted);margin-top:4px;">'+formatHour(totalOTHours)+'h</div>';
+  overtimePayCard.innerHTML='<div class="stat-label">⏰ 時間外手当</div><div class="stat-value">'+totalOTPay.toLocaleString()+'<span class="stat-unit"> 円</span></div><div style="font-size:11px;color:var(--muted);margin-top:4px;">'+formatHour(totalOTHours)+'h</div>';
   grid.appendChild(overtimePayCard);
 
   var holidayPayCard=document.createElement('div');
   holidayPayCard.className='stat-card generated-pay-card';
   holidayPayCard.style.order='3';
-  holidayPayCard.innerHTML='<div class="stat-label">ЁЯМЕ ф╝СцЧецЙЛх╜У</div><div class="stat-value">'+totalHolidayPay.toLocaleString()+'<span class="stat-unit"> хЖЖ</span></div><div style="font-size:11px;color:var(--muted);margin-top:4px;">'+formatHour(totalHolidayHours)+'h</div>';
+  holidayPayCard.innerHTML='<div class="stat-label">🌅 休日手当</div><div class="stat-value">'+totalHolidayPay.toLocaleString()+'<span class="stat-unit"> 円</span></div><div style="font-size:11px;color:var(--muted);margin-top:4px;">'+formatHour(totalHolidayHours)+'h</div>';
   grid.appendChild(holidayPayCard);
 
   var payTitle=document.createElement('div');
   payTitle.className='stats-group-title section-title';
   payTitle.style.cssText='grid-column:span 2;order:4;margin:8px 0 0;';
-  payTitle.textContent='ЁЯТ░ цЙЛх╜У';
+  payTitle.textContent='💰 手当';
   grid.appendChild(payTitle);
 
   if(ldCard)ldCard.style.order='5';
@@ -1105,312 +1106,312 @@ function enhanceStatsLayout(totalOTPay,totalHolidayPay,totalOTHours,totalHoliday
 }
 
 function formatHour(n){return n%1===0?String(n):n.toFixed(2).replace(/\.?0+$/,'');}
-function copyExport(){navigator.clipboard.writeText(document.getElementById('exportText').textContent).then(function(){showToast('ЁЯУЛ уВ│уГФуГ╝уБЧуБ╛уБЧуБЯя╝Б')});}
-function fixAllRecords(){var r=getRecords().map(function(r){var oldRate=getRateForRecord(r);return Object.assign({},r,{overtime:Math.round((parseFloat(r.overtime)||0)*100)/100,distance:parseFloat(r.distance)||0,longDistancePay:parseInt(r.longDistancePay)||0,toxicCount:parseInt(r.toxicCount)||0,toxicPay:parseInt(r.toxicPay)||0,trailerPay:parseInt(r.trailerPay)||0,otherPay:0,otRate:oldRate.otRate,holidayRate:oldRate.holidayRate})});saveRecords(r);renderRecords();renderStats();showToast('тЬЕ хЕиуГЗуГ╝уВ┐уВТф┐оцнгуБЧуБ╛уБЧуБЯя╝Б');}
+function copyExport(){navigator.clipboard.writeText(document.getElementById('exportText').textContent).then(function(){showToast('📋 コピーしました！')});}
+function fixAllRecords(){var r=getRecords().map(function(r){var oldRate=getRateForRecord(r);return Object.assign({},r,{overtime:Math.round((parseFloat(r.overtime)||0)*100)/100,distance:parseFloat(r.distance)||0,longDistancePay:parseInt(r.longDistancePay)||0,toxicCount:parseInt(r.toxicCount)||0,toxicPay:parseInt(r.toxicPay)||0,trailerPay:parseInt(r.trailerPay)||0,otherPay:0,otRate:oldRate.otRate,holidayRate:oldRate.holidayRate})});saveRecords(r);renderRecords();renderStats();showToast('✅ 全データを修正しました！');}
 
 var pendingBackupRestore=null;
 function getDevStorageSnapshot(){var s={};devStorageKeys().forEach(function(k){var v=devGetItem(k);if(v!==null)s[k]=v;});return s;}
 function getBackupMonthSummary(){var l=calcLeaveMonth();return {month:getLeaveMonthKey(),currentYukyu:l.currentYukyu,currentDaikyu:l.currentDaikyu,halfLeaveUsedYear:calcHalfLeaveYear().used};}
 function makeCompleteBackupPayload(){return {app:'truck-log',environment:'PROD',version:5,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
-function formatBackupDate(iso){if(!iso)return 'ф╕НцШО';var d=new Date(iso);if(isNaN(d.getTime()))return String(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-function backupData(){try{var p=makeCompleteBackupPayload(),j=JSON.stringify(p,null,2),b=new Blob([j],{type:'application/json;charset=utf-8'}),a=document.createElement('a'),n=new Date(),st=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+'_'+String(n.getHours()).padStart(2,'0')+'-'+String(n.getMinutes()).padStart(2,'0');a.href=URL.createObjectURL(b);a.download='truck-log-test_'+st+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);devSetItem('lastBackupAt',p.exportedAt);updateBackupStatus();showToast('ЁЯТ╛ хоМхЕиуГРуГГуВпуВвуГГуГЧуВТф╜ЬцИРуБЧуБ╛уБЧуБЯ');}catch(e){console.error(e);showToast('тЭМ уГРуГГуВпуВвуГГуГЧф╜ЬцИРуБлхд▒цХЧуБЧуБ╛уБЧуБЯ',true);}}
+function formatBackupDate(iso){if(!iso)return '不明';var d=new Date(iso);if(isNaN(d.getTime()))return String(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function backupData(){try{var p=makeCompleteBackupPayload(),j=JSON.stringify(p,null,2),b=new Blob([j],{type:'application/json;charset=utf-8'}),a=document.createElement('a'),n=new Date(),st=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+'_'+String(n.getHours()).padStart(2,'0')+'-'+String(n.getMinutes()).padStart(2,'0');a.href=URL.createObjectURL(b);a.download='truck-log-test_'+st+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);devSetItem('lastBackupAt',p.exportedAt);updateBackupStatus();showToast('💾 完全バックアップを作成しました');}catch(e){console.error(e);showToast('❌ バックアップ作成に失敗しました',true);}}
 function normalizeBackupData(d){if(Array.isArray(d))return {app:'truck-log',environment:'legacy',version:1,exportedAt:null,records:d,settings:{},storage:{truckRecords:JSON.stringify(d)}};if(!d||typeof d!=='object')throw new Error('invalid');var r=Array.isArray(d.records)?d.records:[],s=d.storage&&typeof d.storage==='object'?d.storage:{};if(!s.truckRecords)s.truckRecords=JSON.stringify(r);if(d.settings){if(d.settings.otRate!==undefined&&!s.otRate)s.otRate=String(d.settings.otRate);if(d.settings.holidayRate!==undefined&&!s.holRate)s.holRate=String(d.settings.holidayRate);}return {app:d.app||'truck-log',environment:d.environment||'legacy',version:d.version||2,exportedAt:d.exportedAt||null,records:r,settings:d.settings||{},leaveSummary:d.leaveSummary||null,storage:s};}
-function previewBackupFile(input){var f=input.files&&input.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(e){try{var d=normalizeBackupData(JSON.parse(e.target.result));pendingBackupRestore={data:d,fileName:f.name};renderBackupPreview(d,f.name);document.getElementById('backupPreviewOverlay').classList.add('open');}catch(err){console.error(err);pendingBackupRestore=null;showToast('тЭМ уГРуГГуВпуВвуГГуГЧуГХуВбуВдуГлуБМцнгуБЧуБПуБВуВКуБ╛уБЫуВУ',true);input.value='';}};rd.onerror=function(){pendingBackupRestore=null;showToast('тЭМ уГХуВбуВдуГлуВТшкнуБ┐ш╛╝уВБуБ╛уБЫуВУуБзуБЧуБЯ',true);input.value='';};rd.readAsText(f,'UTF-8');}
-function renderBackupPreview(d,n){var l=d.leaveSummary||{},c=Object.keys(d.storage||{}).length,e=d.environment==='PROD'?'цЬмчХкчЙИ':(d.environment==='DEV'?'уГЖуВ╣уГИчЙИ':'цЧзх╜вх╝П'),w=d.environment==='PROD'?'<div class="rate-note" style="margin-top:10px;color:var(--red);">тЪая╕П цЬмчХкчЙИуБоуГРуГГуВпуВвуГГуГЧуБзуБЩуАВ</div>':'';var h='<div class="backup-info"><b>уГХуВбуВдуГля╝Ъ</b>'+escapeHtml(n)+'<br><b>ф╜ЬцИРцЧецЩВя╝Ъ</b>'+escapeHtml(formatBackupDate(d.exportedAt))+'<br><b>х╜вх╝Пя╝Ъ</b>уГРуГ╝уВ╕уГзуГ│ '+escapeHtml(d.version)+' / '+e+'</div><div class="backup-preview-grid"><div class="backup-preview-card"><div class="backup-preview-label">цЧеха▒ф╗╢цХ░</div><div class="backup-preview-value">'+d.records.length+'ф╗╢</div></div><div class="backup-preview-card"><div class="backup-preview-label">ф┐ЭхнШщаЕчЫо</div><div class="backup-preview-value">'+c+'хАЛ</div></div><div class="backup-preview-card"><div class="backup-preview-label">цЬЙч╡жцоЛ</div><div class="backup-preview-value">'+(l.currentYukyu!==undefined?fmtLeave(l.currentYukyu)+'цЧе':'чв║шкНф╕НхПп')+'</div></div><div class="backup-preview-card"><div class="backup-preview-label">ф╗гф╝СцоЛ</div><div class="backup-preview-value">'+(l.currentDaikyu!==undefined?fmtLeave(l.currentDaikyu)+'цЧе':'чв║шкНф╕НхПп')+'</div></div></div>'+w;document.getElementById('backupPreviewContent').innerHTML=h;}
+function previewBackupFile(input){var f=input.files&&input.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(e){try{var d=normalizeBackupData(JSON.parse(e.target.result));pendingBackupRestore={data:d,fileName:f.name};renderBackupPreview(d,f.name);document.getElementById('backupPreviewOverlay').classList.add('open');}catch(err){console.error(err);pendingBackupRestore=null;showToast('❌ バックアップファイルが正しくありません',true);input.value='';}};rd.onerror=function(){pendingBackupRestore=null;showToast('❌ ファイルを読み込めませんでした',true);input.value='';};rd.readAsText(f,'UTF-8');}
+function renderBackupPreview(d,n){var l=d.leaveSummary||{},c=Object.keys(d.storage||{}).length,e=d.environment==='PROD'?'本番版':(d.environment==='DEV'?'テスト版':'旧形式'),w=d.environment==='PROD'?'<div class="rate-note" style="margin-top:10px;color:var(--red);">⚠️ 本番版のバックアップです。</div>':'';var h='<div class="backup-info"><b>ファイル：</b>'+escapeHtml(n)+'<br><b>作成日時：</b>'+escapeHtml(formatBackupDate(d.exportedAt))+'<br><b>形式：</b>バージョン '+escapeHtml(d.version)+' / '+e+'</div><div class="backup-preview-grid"><div class="backup-preview-card"><div class="backup-preview-label">日報件数</div><div class="backup-preview-value">'+d.records.length+'件</div></div><div class="backup-preview-card"><div class="backup-preview-label">保存項目</div><div class="backup-preview-value">'+c+'個</div></div><div class="backup-preview-card"><div class="backup-preview-label">有給残</div><div class="backup-preview-value">'+(l.currentYukyu!==undefined?fmtLeave(l.currentYukyu)+'日':'確認不可')+'</div></div><div class="backup-preview-card"><div class="backup-preview-label">代休残</div><div class="backup-preview-value">'+(l.currentDaikyu!==undefined?fmtLeave(l.currentDaikyu)+'日':'確認不可')+'</div></div></div>'+w;document.getElementById('backupPreviewContent').innerHTML=h;}
 function closeBackupPreview(e){if(e.target===document.getElementById('backupPreviewOverlay'))closeBackupPreviewDirect();}
 function closeBackupPreviewDirect(){document.getElementById('backupPreviewOverlay').classList.remove('open');pendingBackupRestore=null;var i=document.getElementById('settingsRestoreFile');if(i)i.value='';}
 function saveRestoreSafetySnapshot(){devSetItem('DEV_RESTORE_SAFETY',JSON.stringify({savedAt:new Date().toISOString(),storage:getDevStorageSnapshot()}));}
 function clearCurrentDevStorage(){devStorageKeys().forEach(function(k){devRemoveItem(k);});}
-function confirmRestoreBackup(){if(!pendingBackupRestore){showToast('тЭМ х╛йхЕГуГЗуГ╝уВ┐уБМуБВуВКуБ╛уБЫуВУ',true);return;}try{var d=pendingBackupRestore.data;saveRestoreSafetySnapshot();clearCurrentDevStorage();Object.keys(d.storage||{}).forEach(function(k){var v=d.storage[k];if(v!==undefined&&v!==null)devSetItem(k,String(v));});if(!devGetItem('truckRecords'))saveRecords(d.records||[]);migrateRecordRates();closeBackupPreviewDirect();renderRecords();renderStats();renderLeavePanel();updateBackupStatus();showToast('тЬЕ '+getRecords().length+'ф╗╢уВТхоЙхЕиуБлх╛йхЕГуБЧуБ╛уБЧуБЯ');}catch(e){console.error(e);showToast('тЭМ х╛йхЕГуБлхд▒цХЧуБЧуБ╛уБЧуБЯ',true);}}
+function confirmRestoreBackup(){if(!pendingBackupRestore){showToast('❌ 復元データがありません',true);return;}try{var d=pendingBackupRestore.data;saveRestoreSafetySnapshot();clearCurrentDevStorage();Object.keys(d.storage||{}).forEach(function(k){var v=d.storage[k];if(v!==undefined&&v!==null)devSetItem(k,String(v));});if(!devGetItem('truckRecords'))saveRecords(d.records||[]);migrateRecordRates();closeBackupPreviewDirect();renderRecords();renderStats();renderLeavePanel();updateBackupStatus();showToast('✅ '+getRecords().length+'件を安全に復元しました');}catch(e){console.error(e);showToast('❌ 復元に失敗しました',true);}}
 function restoreData(input){previewBackupFile(input);}
-function updateBackupStatus(){var e=document.getElementById('backupLastStatus');if(!e)return;var l=devGetItem('lastBackupAt');e.textContent=l?'хЙНхЫЮуБоуГРуГГуВпуВвуГГуГЧя╝Ъ'+formatBackupDate(l):'уБ╛уБауБУуБочлпцЬлуБзуГРуГГуВпуВвуГГуГЧуВТф╜ЬцИРуБЧуБжуБДуБ╛уБЫуВУ';}
+function updateBackupStatus(){var e=document.getElementById('backupLastStatus');if(!e)return;var l=devGetItem('lastBackupAt');e.textContent=l?'前回のバックアップ：'+formatBackupDate(l):'まだこの端末でバックアップを作成していません';}
 
-function showModal(id){var r=getRecords().find(function(rec){return String(rec.id)===String(id)});if(!r)return;activeModal=r.id;deleteConfirmMode=false;var d=new Date(r.date),wd=['цЧе','цЬИ','чБл','ц░┤','цЬи','щЗС','хЬЯ'][d.getDay()];document.getElementById('modalTitle').textContent=r.date.replace(/-/g,'/')+'я╝И'+wd+'я╝Й '+(r.jobs||[]).map(function(j){return JOB_EMOJI[j]||''}).join('');var tc=r.toxicCount||0,tp=r.toxicPay||(tc*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),total=tp+trp+dp,rate=getRateForRecord(r),html='';if(r.startTime)html+='<div class="modal-row"><span class="modal-row-label">хЗ║хЛд</span><span>'+r.startTime+'</span></div>';if(r.endTime)html+='<div class="modal-row"><span class="modal-row-label">щААхЛд</span><span>'+r.endTime+'</span></div>';var effectiveOt=calcEffectiveOvertimeHours(r);if(effectiveOt>0)html+='<div class="modal-row"><span class="modal-row-label">цоЛцен/ф╝СцЧехп╛ш▒б</span><span>'+formatHour(effectiveOt)+'цЩВщЦУ</span></div>';if(isSundayRecord(r)&&r.startTime&&r.endTime)html+='<div class="modal-row"><span class="modal-row-label">цЧецЫЬф╝СцЖйшиИчоЧ</span><span>хоЯхГН '+formatHour(getWorkHoursNum(r))+'h - ф╝СцЖй '+formatHour(calcSundayBreakHours(getWorkHoursNum(r)))+'h</span></div>';if(effectiveOt>0)html+='<div class="modal-row"><span class="modal-row-label">хЫ║хоЪхНШф╛б</span><span>цЩВщЦУхдЦ '+rate.otRate.toLocaleString()+'хЖЖ / ф╝СцЧе '+rate.holidayRate.toLocaleString()+'хЖЖ</span></div>';if(r.distance>0)html+='<div class="modal-row"><span class="modal-row-label">ш╡░шбМш╖ЭщЫв</span><span>'+r.distance.toLocaleString()+' km</span></div>';if(r.longDistancePay>0)html+='<div class="modal-row"><span class="modal-row-label">ЁЯЫМ щХ╖ш╖ЭщЫвцЙЛх╜У</span><span>'+r.longDistancePay.toLocaleString()+' хЖЖ</span></div>';if(tp>0)html+='<div class="modal-row"><span class="modal-row-label">тШая╕П цпТцЙЛх╜Уя╝И├Ч'+tc+'я╝Й</span><span>'+tp.toLocaleString()+' хЖЖ</span></div>';if(trp>0)html+='<div class="modal-row"><span class="modal-row-label">ЁЯЪЬ уГИуГмуГ╝уГйуГ╝цЙЛх╜У</span><span>'+trp.toLocaleString()+' хЖЖ</span></div>';if(dp>0)html+='<div class="modal-row"><span class="modal-row-label">ЁЯЫгя╕П ш╡░шбМш╖ЭщЫвцЙЛх╜У</span><span>'+dp.toLocaleString()+' хЖЖ</span></div>';if(total>0)html+='<div class="modal-row" style="font-weight:700;"><span class="modal-row-label">ЁЯТ░ уГпуГ│уГЮуГ│цЙЛх╜У</span><span style="color:var(--accent)">'+total.toLocaleString()+' хЖЖ</span></div>';if(r.jobMemo)html+='<div class="modal-row"><span class="modal-row-label">ЁЯУЭ ф╗Хф║ЛхЖЕхо╣</span><span style="text-align:right;max-width:65%;">'+escapeHtml(formatJobMemoText(r.jobMemo))+'</span></div>';document.getElementById('modalContent').innerHTML=html;document.getElementById('modalOverlay').classList.add('open');}
+function showModal(id){var r=getRecords().find(function(rec){return String(rec.id)===String(id)});if(!r)return;activeModal=r.id;deleteConfirmMode=false;var d=new Date(r.date),wd=['日','月','火','水','木','金','土'][d.getDay()];document.getElementById('modalTitle').textContent=r.date.replace(/-/g,'/')+'（'+wd+'） '+(r.jobs||[]).map(function(j){return JOB_EMOJI[j]||''}).join('');var tc=r.toxicCount||0,tp=r.toxicPay||(tc*2500),trp=r.trailerPay||0,dp=calcDistPay(r.distance),total=tp+trp+dp,rate=getRateForRecord(r),html='';if(r.startTime)html+='<div class="modal-row"><span class="modal-row-label">出勤</span><span>'+r.startTime+'</span></div>';if(r.endTime)html+='<div class="modal-row"><span class="modal-row-label">退勤</span><span>'+r.endTime+'</span></div>';var effectiveOt=calcEffectiveOvertimeHours(r);if(effectiveOt>0)html+='<div class="modal-row"><span class="modal-row-label">残業/休日対象</span><span>'+formatHour(effectiveOt)+'時間</span></div>';if(isSundayRecord(r)&&r.startTime&&r.endTime)html+='<div class="modal-row"><span class="modal-row-label">日曜休憩計算</span><span>実働 '+formatHour(getWorkHoursNum(r))+'h - 休憩 '+formatHour(calcSundayBreakHours(getWorkHoursNum(r)))+'h</span></div>';if(effectiveOt>0)html+='<div class="modal-row"><span class="modal-row-label">固定単価</span><span>時間外 '+rate.otRate.toLocaleString()+'円 / 休日 '+rate.holidayRate.toLocaleString()+'円</span></div>';if(r.distance>0)html+='<div class="modal-row"><span class="modal-row-label">走行距離</span><span>'+r.distance.toLocaleString()+' km</span></div>';if(r.longDistancePay>0)html+='<div class="modal-row"><span class="modal-row-label">🛌 長距離手当</span><span>'+r.longDistancePay.toLocaleString()+' 円</span></div>';if(tp>0)html+='<div class="modal-row"><span class="modal-row-label">☠️ 毒手当（×'+tc+'）</span><span>'+tp.toLocaleString()+' 円</span></div>';if(trp>0)html+='<div class="modal-row"><span class="modal-row-label">🚜 トレーラー手当</span><span>'+trp.toLocaleString()+' 円</span></div>';if(dp>0)html+='<div class="modal-row"><span class="modal-row-label">🛣️ 走行距離手当</span><span>'+dp.toLocaleString()+' 円</span></div>';if(total>0)html+='<div class="modal-row" style="font-weight:700;"><span class="modal-row-label">💰 ワンマン手当</span><span style="color:var(--accent)">'+total.toLocaleString()+' 円</span></div>';if(r.jobMemo)html+='<div class="modal-row"><span class="modal-row-label">📝 仕事内容</span><span style="text-align:right;max-width:65%;">'+escapeHtml(formatJobMemoText(r.jobMemo))+'</span></div>';document.getElementById('modalContent').innerHTML=html;document.getElementById('modalOverlay').classList.add('open');}
 function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect();}
 function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');activeModal=null;deleteConfirmMode=false;}
 function editFromModal(){var r=getRecords().find(function(rec){return String(rec.id)===String(activeModal)});if(!r)return;closeModalDirect();showTab('input');document.getElementById('inputDate').value=r.date;loadRecordToForm(r);}
-function deleteRecord(){if(activeModal===null)return;if(!deleteConfirmMode){deleteConfirmMode=true;var btn=document.querySelector('.modal-delete');btn.textContent='тЪая╕П уВВуБЖф╕Ах║жуВ┐уГГуГЧуБзхЙКщЩд';btn.style.background='rgba(231,76,60,.4)';setTimeout(function(){deleteConfirmMode=false;if(btn){btn.textContent='ЁЯЧСя╕П хЙКщЩд';btn.style.background='rgba(231,76,60,.15)'}},3000);return}var records=getRecords().filter(function(r){return String(r.id)!==String(activeModal)});saveRecords(records);closeModalDirect();renderRecords();showToast('ЁЯЧСя╕П хЙКщЩдуБЧуБ╛уБЧуБЯ');}
+function deleteRecord(){if(activeModal===null)return;if(!deleteConfirmMode){deleteConfirmMode=true;var btn=document.querySelector('.modal-delete');btn.textContent='⚠️ もう一度タップで削除';btn.style.background='rgba(231,76,60,.4)';setTimeout(function(){deleteConfirmMode=false;if(btn){btn.textContent='🗑️ 削除';btn.style.background='rgba(231,76,60,.15)'}},3000);return}var records=getRecords().filter(function(r){return String(r.id)!==String(activeModal)});saveRecords(records);closeModalDirect();renderRecords();showToast('🗑️ 削除しました');}
 function saveInputAccordionState(id,isOpen){if(!id||id.indexOf('input')!==0)return;var state={};try{state=JSON.parse(devGetItem('truckInputAccordionState')||'{}')}catch(e){state={}}state[id]=!!isOpen;devSetItem('truckInputAccordionState',JSON.stringify(state));}
 function applyInputAccordionState(){var state={};try{state=JSON.parse(devGetItem('truckInputAccordionState')||'{}')}catch(e){state={}}['inputJobAccordion','inputTimeAccordion','inputDistanceAccordion','inputPayAccordion'].forEach(function(id){if(state[id]===undefined)return;var body=document.getElementById(id),toggle=document.getElementById(id+'Toggle');if(!body)return;body.classList.toggle('open',!!state[id]);if(toggle)toggle.classList.toggle('open',!!state[id])});}
 function toggleAccordion(el){var id=el.getAttribute?el.getAttribute('data-id'):el,body=document.getElementById(id),toggle=document.getElementById(id+'Toggle');if(!body)return;body.classList.toggle('open');if(toggle)toggle.classList.toggle('open',body.classList.contains('open'));saveInputAccordionState(id,body.classList.contains('open'));}
 var FARE_DATA=[
-  {cat:'уВиуВ╣уГЖуГл',name:'BASFуВ╕уГгуГСуГ│уИ▒ чгпхОЯ',start:'13:00',end:'20:30',pay:23000},
-  {cat:'уВиуВ╣уГЖуГл',name:'CHEMIPAZуИ▒ щЭЩх▓б',start:'18:30',end:'15:00',pay:9800},
-  {cat:'уВиуВ╣уГЖуГл',name:'CHEMIPAZуИ▒ цТнчги',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'CHEMIPAZуИ▒ щ╛НуВ▒х┤О',start:'14:30',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'DICуИ▒ ха║',start:'19:00',end:'14:30',pay:8200},
-  {cat:'уВиуВ╣уГЖуГл',name:'DICуИ▒ хНГшСЙ',start:'15:00',end:'18:30',pay:18600},
-  {cat:'уВиуВ╣уГЖуГл',name:'DICуИ▒ хМЧщЩ╕',start:'18:00',end:'15:30',pay:11600},
-  {cat:'уВиуВ╣уГЖуГл',name:'JSRуИ▒ щ╣┐х│╢',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'KJуВ▒уГЯуВлуГлуВ║уИ▒ хЕлф╗г',start:'10:00',end:'2:00',pay:36600},
-  {cat:'уВиуВ╣уГЖуГл',name:'MTуВвуВпуВвуГЭуГкуГЮуГ╝уИ▒ шМВхОЯ',start:'14:30',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'NUC х╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВвуВдуВлх╖еценуИ▒ ф╕╣ц│в',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнхМЦцИРуИ▒ х╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнхМЦцИРуИ▒ х╖Эх┤Оя╝ИхдЬя╝Й',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнхМЦцИРуИ▒ хНГшСЙ',start:'14:30',end:'18:00',pay:18000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнхМЦцИРуИ▒ ц░┤х│╢',start:'16:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнхМЦцИРуИ▒ хТМцнМх▒▒',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧнчбЭхнРуИ▒ хНГшСЙ',start:'15:00',end:'19:00',pay:19400},
-  {cat:'уВиуВ╣уГЖуГл',name:'шНТх╖ЭхМЦхнжх╖еценуИ▒ ц░┤х│╢',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'хоЗщГ╜хоохМЦх╖еуИ▒ хоЗщГ╜хоо',start:'13:30',end:'20:30',pay:22800},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзхИЖуВнуГгуГОуГ│уГЮуГЖуГкуВвуГлуИ▒ хдзхИЖя╝И2уГЮуГ│я╝Й',start:'10:30',end:'1:30',pay:34200},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзхИЖуВ▒уГЯуВлуГлуИ▒я╝И2уГЮуГ│я╝Й',start:'10:30',end:'1:30',pay:34400},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзщШкцЬЙцйЯхМЦхнжх╖еценуИ▒ хдзщШк',start:'19:00',end:'14:30',pay:7400},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзщШкцЬЙцйЯхМЦхнжх╖еценуИ▒ щЗСц▓в',start:'18:00',end:'15:30',pay:11600},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзхбЪуВвуВ░уГкуГЖуВпуГОуИ▒ щ│┤щЦА',start:'16:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'шК▒чОЛуИ▒ щ╣┐х│╢',start:'14:00',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'шК▒чОЛуИ▒ хТМцнМх▒▒',start:'18:00',end:'15:30',pay:11600},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВлуГНуВл щлШчаВ',start:'17:30',end:'16:30',pay:14000},
-  {cat:'уВиуВ╣уГЖуГл',name:'щЦвше┐уГЪуВдуГ│уГИуИ▒ щ╣┐ц▓╝',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'щЦвше┐уГЪуВдуГ│уГИуИ▒ х╣│хбЪ',start:'17:00',end:'16:30',pay:14600},
-  {cat:'уВиуВ╣уГЖуГл',name:'хМЧцЧецЬмуГЗуВгуГГуВпуИ▒я╝И2уГЮуГ│я╝Й',start:'12:30',end:'23:00',pay:28400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВнуГгуГОуГ│уИ▒ х▓йщЦУ',start:'14:30',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВнуГгуГОуГ│уИ▒ хПЦцЙЛ',start:'15:00',end:'19:00',pay:20600},
-  {cat:'уВиуВ╣уГЖуГл',name:'хАЙцХ╖ч┤бч╕╛уИ▒ х╛│х│╢х╖еха┤',start:'16:30',end:'16:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'хАЙцЬмчФгценуИ▒',start:'15:00',end:'18:30',pay:18800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВпуГйуГм цЦ░ц╜Я',start:'12:00',end:'20:30',pay:23000},
-  {cat:'уВиуВ╣уГЖуГл',name:'щлШхЬзуВмуВ╣х╖еценуИ▒ ф╜РхАЙ',start:'15:00',end:'18:30',pay:18800},
-  {cat:'уВиуВ╣уГЖуГл',name:'щлШхЬзуВмуВ╣х╖еценуИ▒ члЬщЗО',start:'17:00',end:'16:30',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф║Тх┐ЬхМЦхнжх╖еценуИ▒ чжПф║Х',start:'18:30',end:'15:30',pay:10800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВ│уГЛуВлуГЯуГОуГлуВ┐уВ╡уГЧуГйуВдуВ║',start:'15:30',end:'16:00',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВ│уГЛуВлуГЯуГОуГлуВ┐уВ╡уГЧуГйуВдуВ║ ш╛░щЗОя╝ИBAя╝Й',start:'16:30',end:'15:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВ│уГЛуВлуГЯуГОуГлуВ┐уВ╡уГЧуГйуВдуВ║ ш╛░щЗОя╝ИHAя╝Й',start:'18:30',end:'15:00',pay:9200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВ╡уВдуГЗуГ│хМЦхнжуИ▒ ц╡жхТМ',start:'16:00',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уВ╡уВдуГЗуГ│хМЦхнжуИ▒ цЭ▒ф║м',start:'16:00',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф┐бш╢КхМЦхнжх╖еценуИ▒ чЫ┤ц▒Яц┤е',start:'14:30',end:'18:00',pay:18000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЦ░ф╕нцЭСхМЦхнжх╖еценуИ▒ чжПф║Х',start:'18:30',end:'15:30',pay:10600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЦ░ф╕нцЭСхМЦхнжх╖еценуИ▒ цЬмчд╛',start:'18:30',end:'15:30',pay:10800},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╜ПхПЛхМЦхнжуИ▒ цДЫхкЫ',start:'14:30',end:'19:00',pay:20600},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╜ПхПЛхМЦхнжуИ▒ хНГшСЙ',start:'14:30',end:'18:00',pay:18000},
-  {cat:'уВиуВ╣уГЖуГл',name:'ч╢ЬчаФхМЦхнжуИ▒ чЛнх▒▒',start:'16:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзцИРуГХуВбуВдуГ│уВ▒уГЯуВлуГлуИ▒',start:'14:00',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзцИРуГХуВбуВдуГ│уВ▒уГЯуВлуГлуИ▒ цЭ▒ф║м',start:'15:30',end:'18:30',pay:19000},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГАуВдуВ╗уГлцЦ░ф║ХуВ▒уГЯуВлуГлуИ▒я╝ИHAя╝Й',start:'16:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГАуВдуВ╗уГлцЦ░ф║ХуВ▒уГЯуВлуГлуИ▒я╝ИHAф╗Ця╝Й',start:'14:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзхРМхМЦцИРх╖еценуИ▒',start:'15:30',end:'19:00',pay:19600},
-  {cat:'уВиуВ╣уГЖуГл',name:'хдзхРМхМЦцИРх╖еценуИ▒ чжПф║Х',start:'18:30',end:'15:30',pay:10600},
-  {cat:'уВиуВ╣уГЖуГл',name:'х╕Эф║║уИ▒ф╕Йх│╢ф║ЛценцЙА',start:'18:30',end:'15:30',pay:10800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГЗуВпуВ╗уГкуВвуГлуВ║уИ▒ щ╣┐ц▓╝чммф║М',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГЗуГ│уВлуИ▒ хНГшСЙ',start:'15:00',end:'19:00',pay:19400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ хЭВхЗ║',start:'16:00',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ щлШх▓б',start:'17:00',end:'15:30',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ щлШх▓бя╝ИхЖмя╝Й',start:'17:00',end:'16:30',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ х║ГщЗО',start:'12:30',end:'21:30',pay:24600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ х║ГщЗОя╝ИуГбуВ┐х╝ХхПЦуБВуВКя╝Й',start:'12:30',end:'22:30',pay:26400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒ф║ЮхРИцИРуИ▒ х║ГщЗОя╝ИуГбуВ┐х╝ХхПЦуБВуВКя╝ЙуВ╗уГЯуГИуГм',start:'12:30',end:'23:30',pay:28400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГИуВжуГЪшг╜щАа хАЙцХ╖',start:'16:30',end:'17:30',pay:17000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЭ▒уГмуГ╗уГХуВбуВдуГ│уВ▒уГЯуВлуГлуИ▒ хНГшСЙ',start:'15:00',end:'19:00',pay:20400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГИуГ╝уГиуГ╝уВ▒уГауИ▒ х╖Эш╢К',start:'16:00',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГИуГ╝уГиуГ╝уВ▒уГауИ▒ ше┐чеЮ',start:'18:00',end:'12:00',pay:12400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧеф┐бхМЦхнжх╖еценуИ▒ цнжчФЯ',start:'19:30',end:'14:30',pay:6600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЭ▒уВ╖уГ│уВ│уГ╝уИ▒ ф╕╕х▓б',start:'19:00',end:'14:30',pay:7400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЭ▒щЫ╗х╖еуИ▒ х░╛щБУ',start:'15:30',end:'18:00',pay:18000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЭ▒щЫ╗х╖еуИ▒ щЦвцЭ▒',start:'15:00',end:'19:00',pay:19600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЭ▒щЫ╗х╖еуИ▒ цЭ▒хМЧя╝И2уГЮуГ│я╝Й',start:'11:00',end:'0:30',pay:31400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВиуВдуВвуГ│уГЙуВиуГлуИ▒ цДЫхкЫ',start:'14:30',end:'19:00',pay:20600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВиуВпуВ╣уГйуГ│х╖еценуИ▒ ше┐хдзхп║',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВлуГ╝уГРуВдуГЙх╖еценуИ▒ щнЪц┤ея╝ИHAя╝Й',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВлуГ╝уГРуВдуГЙх╖еценуИ▒ щнЪц┤ея╝ИHAф╗Ця╝Й',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВлуГ╝уГРуВдуГЙх╖еценуИ▒ щнЪц┤ея╝ИхЖмя╝Й',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВлуГ╝уГРуВдуГЙх╖еценуИ▒ цЧйцЬИ',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВлуГ╝уГРуВдуГЙх╖еценуИ▒ цЧйцЬИя╝ИхЖмя╝Й',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмхМЦшЦмуИ▒ чжПх▒▒',start:'16:00',end:'18:00',pay:18000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмшзжхкТ х╖Эх┤О',start:'16:30',end:'17:30',pay:17200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмшг╜ч┤ЩуИ▒ х▓йхЫ╜',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВ╝уВкуГ│ х╛│х▒▒',start:'12:30',end:'21:30',pay:24600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуВ╝уВкуГ│уИ▒ х╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмф╣│хМЦхЙдуИ▒ х╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуГЪуВдуГ│уГИуИ▒ х▓бх▒▒',start:'17:30',end:'16:30',pay:14000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуГЪуВдуГ│уГИуИ▒ хНГшСЙ',start:'14:30',end:'19:00',pay:20600},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧецЬмуГЪуВдуГ│уГИуИ▒ цаГцЬи',start:'13:30',end:'20:30',pay:22800},
-  {cat:'уВиуВ╣уГЖуГл',name:'ца╣ф╕Кх╖еценуИ▒',start:'18:30',end:'15:30',pay:10800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГПуВдуГвуИ▒ чеЮхеИх╖Э',start:'17:00',end:'16:30',pay:14600},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГПуВдуГвуИ▒ х▒▒хПг',start:'13:00',end:'21:00',pay:23800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГПуГЛуГ╝хМЦцИР',start:'18:30',end:'15:30',pay:10800},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧечлЛхМЦцИРуИ▒ щ╣┐х│╢',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧечлЛхМЦцИРуИ▒ х▒▒х┤О',start:'13:30',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'цЧец▓╣уИ▒ х░╝х┤О',start:'18:30',end:'15:00',pay:10000},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф┐ЭхЬЯш░╖уГнуВ╕уВ╣уГЖуВгуВпуВ╣уИ▒ щГбх▒▒',start:'12:00',end:'22:00',pay:25400},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф┐ЭхЬЯш░╖уГнуВ╕уВ╣уГЖуВгуВпуВ╣уИ▒ щГбх▒▒я╝И2уГЮуГ│я╝Й',start:'15:00',end:'22:00',pay:25400},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╕Йф║ХхМЦхнжуИ▒ шМВхОЯ',start:'14:30',end:'19:30',pay:21400},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╕Йф║ХуГАуВжуВ▒уГЯуВлуГлуИ▒ хдзчл╣',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╕ЙшП▒уВ▒уГЯуВлуГлуИ▒ хпМх▒▒',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╕ЙшП▒уВ▒уГЯуВлуГлуИ▒ хпМх▒▒я╝ИхЖмя╝Й',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'ф╕ЙшП▒уВ▒уГЯуВлуГлуИ▒ х║Гх│╢',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'х▒▒х╜вуВ╣уГкуГ╝уВиуГауИ▒ цЭ▒ца╣я╝И2уГЮуГ│я╝Й',start:'11:30',end:'0:30',pay:31400},
-  {cat:'уВиуВ╣уГЖуГл',name:'х▒▒хНЧхРИцИРуИ▒ чжПф║Х',start:'18:30',end:'15:30',pay:10600},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГдуГиуВдхМЦхнжх╖еценуИ▒ х░Дц░┤я╝ИEAя╝Йя╝ИBAя╝Й',start:'17:00',end:'16:00',pay:14000},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГдуГиуВдхМЦхнжх╖еценуИ▒ х░Дц░┤я╝ИHAя╝Й',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГдуГиуВдхМЦхнжх╖еценуИ▒ х░Дц░┤я╝ИхЖмя╝Й',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГжуГЛуГЮуГЖуГГуВпуИ▒ чмм1',start:'13:00',end:'20:30',pay:23000},
-  {cat:'уВиуВ╣уГЖуГл',name:'цикц╡ЬуГЭуГкуГЮуГ╝чаФчй╢цЙА х▒▒цвия╝ИBAя╝Й',start:'16:00',end:'16:00',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'цикц╡ЬуГЭуГкуГЮуГ╝чаФчй╢цЙА х▒▒цвия╝ИHAя╝Й',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГйуВдуВкуГ│хМЦхнжуИ▒ щ╣┐х│╢',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГмуВ╛уГКуГГуВп ф╝КхЛвх┤О',start:'15:00',end:'18:30',pay:18800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГмуВ╛уГКуГГуВп х╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГмуВ╛уГКуГГуВп щ╛НщЗО',start:'17:00',end:'16:30',pay:14800},
-  {cat:'уВиуВ╣уГЖуГл',name:'уГнуГГуВпуГЪуВдуГ│уГИуИ▒ чжПх┤О',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уВиуВ╣уГЖуГлх╝ХхПЦ',name:'щЦвцЭ▒SP цЭ▒ц┤ЛхРИцИРх╖еценуИ▒',start:'15:30',end:'18:00',pay:18200},
-  {cat:'уВиуВ╣уГЖуГлх╝ХхПЦ',name:'щЦвцЭ▒SP ф╕╕хЦДуИ▒',start:'15:00',end:'19:00',pay:20400},
-  {cat:'уВиуВ╣уГЖуГлх╝ХхПЦ',name:'щЦвше┐SP щЦвше┐хМЦцИРхУБш╝╕щАБуИ▒',start:'19:00',end:'15:00',pay:8000},
-  {cat:'уВиуВ╣уГЖуГлх╝ХхПЦ',name:'уИ▒цЧецЬмшзжхкТ хР╣чФ░',start:'17:00',end:'17:00',pay:15400},
-  {cat:'уВиуВ╣уГЖуГлх╝ХхПЦ',name:'уИ▒цЧецЬмшзжхкТ хзлш╖п',start:'17:00',end:'17:00',pay:15400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уВвуВпуВвуВ╣уВиуГ│уВ╕уИ▒ уБдуБПуБ░',start:'14:30',end:'18:30',pay:18800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧнхМЦцИРуВ▒уГЯуВлуГлуВ║уИ▒ х╖Эх┤О',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧнхМЦцИРуВ▒уГЯуВлуГлуВ║уИ▒ ц░┤х│╢',start:'16:30',end:'16:30',pay:15600},
-  {cat:'уГЭуГкуГЮуГ╝',name:'чОЛхнРшг╜ч┤ЩуИ▒ хпМх▓б',start:'15:30',end:'17:30',pay:17200},
-  {cat:'уГЭуГкуГЮуГ╝',name:'хМЧх║ГуВ▒уГЯуВлуГлуИ▒ хНЧ',start:'18:00',end:'15:30',pay:11600},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уВпуГкуВ┐уВ▒уГЯуВлуГлшг╜щАауИ▒ чМ┐х│╢я╝ИцЬмчд╛я╝ЙT-50',start:'14:30',end:'18:30',pay:18800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уВпуГкуВ┐уВ▒уГЯуВлуГлшг╜щАауИ▒ ш╡дчйВ T-50',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уВпуГкуВ┐уВ▒уГЯуВлуГлшг╜щАауИ▒ ш╡дчйВ A-6051',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уВпуГкуВ┐уВ▒уГЯуВлуГлшг╜щАауИ▒ чМ┐х│╢я╝ИцЬмчд╛я╝ЙA-6051',start:'14:30',end:'19:00',pay:18800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'ф╕нш╢КуГРуГлуГЦх╖еценуИ▒ щлШх▓б',start:'18:00',end:'14:30',pay:9200},
-  {cat:'уГЭуГкуГЮуГ╝',name:'ф╕нш╢КуГРуГлуГЦх╖еценуИ▒ щлШх▓бя╝ИхЖмя╝Й',start:'17:00',end:'15:30',pay:13200},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уГЖуВдуВлуИ▒ х▓бх▒▒',start:'17:00',end:'16:30',pay:14800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЭ▒ф║ЬхРИцИРуИ▒ х║ГщЗО',start:'12:30',end:'20:30',pay:23000},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧецЬмуВиуВдуВвуГ│уГЙуВиуГлуИ▒ цДЫхкЫ',start:'14:30',end:'19:00',pay:20600},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧецЬмуВиуВдуВвуГ│уГЙуВиуГлуИ▒ хНГшСЙ',start:'14:30',end:'17:00',pay:16400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧецЬмшг╜ч┤ЩуИ▒ чЯ│х╖╗я╝И2уГЮуГ│я╝Й',start:'11:00',end:'23:30',pay:29400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧецЬмшг╜ч┤ЩуИ▒ х▓йхЫ╜',start:'14:00',end:'20:00',pay:22200},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒ADEKA хпМхгл',start:'18:30',end:'14:00',pay:7400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уВдуГбуГкуВ╣уГ╗уГЯуГНуГйуГлуВ║уГ╗уВ╕уГгуГСуГ│',start:'18:30',end:'14:30',pay:8400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уВвуВдуВ╝уГГуГИ',start:'18:30',end:'15:00',pay:9000},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уВвуВдуВ╝уГГуГИя╝ИхЖмя╝Й',start:'17:30',end:'16:00',pay:13200},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уВиуГМуГ╗уВиуВ╣уГ╗уВлуГйуГ╝уГЖуВпуГО хМЧщЩ╕',start:'19:30',end:'14:30',pay:6600},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒чЙЗх▒▒хМЦхнжх╖еценчаФчй╢цЙА ч╢╛щГи',start:'18:00',end:'16:00',pay:14000},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уВнуГ│уВ░уГ╗уГйуВдуГ│',start:'18:00',end:'15:00',pay:10800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒х░ПцЭ╛уГЧуГнуВ╗уВ╣',start:'18:30',end:'15:00',pay:9000},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уГЛуВдуВ┐уВл уБдуБПуБ░',start:'18:30',end:'18:30',pay:19800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уГХуВбуВдуГЮуГЖуГГуВп хпМхгл',start:'18:30',end:'14:30',pay:8400},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уГХуГнуГ╝уГкуГГуВп цЭ▒цЭ╛х▒▒',start:'16:00',end:'18:00',pay:18000},
-  {cat:'уГЭуГкуГЮуГ╝',name:'уИ▒уГХуГнуГ╝уГкуГГуВп хОЪцЬи',start:'17:30',end:'16:30',pay:13800},
-  {cat:'уГЭуГкуГЮуГ╝',name:'цЧнуГХуВбуВдуГРуГ╝уВ░уГйуВ╣ ц╣ШхНЧ',start:'',end:'',pay:14600},
-  {cat:'шЛЫцАзуВлуГк',name:'цЭ▒ф║мхМЦцИРхУБуВ╗уГ│уВ┐уГ╝',start:'16:30',end:'17:00',pay:16400},
-  {cat:'ц┐ГчблщЕ╕',name:'чФ░ф╕нхМЦхнжчаФчй╢цЙА чжПф║Хх╖еха┤',start:'18:30',end:'15:30',pay:10600},
-  {cat:'ц┐ГчблщЕ╕',name:'GSуГжуВвуВ╡ ч╛дщжм',start:'12:30',end:'19:00',pay:21600},
-  {cat:'ц╢▓хоЙ',name:'AWPCуИ▒ ц╣ШхНЧ',start:'17:00',end:'16:30',pay:14600},
-  {cat:'ц╢▓хоЙ',name:'AWPCуИ▒ тЖТ AN',start:'17:00',end:'17:30',pay:16400},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ чЫ╕чФЯ',start:'17:00',end:'17:00',pay:15600},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ ц╡╖хНЧ',start:'18:00',end:'15:30',pay:11600},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ ц╡╖хНЧ тЖТ AN',start:'18:00',end:'17:00',pay:14000},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ х╛бхЭК',start:'17:30',end:'16:00',pay:13200},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ хзлш╖пчммф╕А',start:'17:30',end:'16:30',pay:14000},
-  {cat:'ц╢▓хоЙ',name:'щЦвше┐щЫ╗хКЫуИ▒ хзлш╖пчммф║М',start:'17:30',end:'16:30',pay:14000},
-  {cat:'ц╢▓хоЙ',name:'хдЪцЬихМЦхнжуИ▒',start:'17:30',end:'16:00',pay:13200},
-  {cat:'ц╢▓хоЙ',name:'хдЪцЬихМЦхнжуИ▒ тЖТ AN',start:'17:30',end:'17:00',pay:15600},
-  {cat:'ц╢▓хоЙ',name:'цЦ░цЧецЬмщЫ╗х╖еуИ▒ тА╗цЧзф╕нхдощЫ╗ц░Ч',start:'15:00',end:'18:30',pay:18800},
-  {cat:'ц╢▓хоЙ',name:'ф╕нхЫ╜щЫ╗хКЫуИ▒ чОЙх│╢',start:'16:30',end:'17:30',pay:17000},
-  {cat:'ц╢▓хоЙ',name:'ф╕нхЫ╜щЫ╗хКЫуИ▒ ц░┤х│╢',start:'16:30',end:'17:00',pay:17200},
-  {cat:'ц╢▓хоЙ',name:'уИ▒уВ╣уГЖуГ│уГмуВ╣ ф╣Еф╕Ц',start:'17:30',end:'14:30',pay:14800},
-  {cat:'ц╢▓хоЙ',name:'JFEуВ╣уГБуГ╝уГлуИ▒ цЭ▒цЧецЬмшг╜щЙДцЙА хНГшСЙ',start:'15:00',end:'19:00',pay:20600},
-  {cat:'ц╢▓хоЙ',name:'JFEуВ╣уГБуГ╝уГлуИ▒цЭ▒цЧецЬмшг╜щЙДцЙАхНГшСЙтЖТAN',start:'15:00',end:'20:30',pay:23000},
-  {cat:'ц╢▓хоЙ',name:'ADEKAхпМхгл',start:'18:30',end:'15:00',pay:9000},
-  {cat:'ц╢▓хоЙ',name:'ADEKAхпМхгл тЖТ AN',start:'18:30',end:'16:30',pay:12400},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ ф╕Гх░╛',start:'16:30',end:'17:30',pay:17200},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ цЦ░ц╕п',start:'16:30',end:'17:00',pay:14800},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ ф╕Гх░╛ тЖТ AN',start:'16:30',end:'19:00',pay:19600},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ чжПф║Х',start:'18:30',end:'15:00',pay:10200},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ чжПф║Х тЖТ AN',start:'18:30',end:'16:30',pay:12600},
-  {cat:'ц╢▓хоЙ',name:'хМЧщЩ╕щЫ╗хКЫ цЦ░ц╕п тЖТ AN',start:'',end:'18:00',pay:17200},
-  {cat:'ц╢▓хоЙ',name:'уВ╣уГЖуГ│уГмуВ╣ф╣Еф╕Ц тЖТ AN',start:'',end:'18:00',pay:17200},
-  {cat:'ц╢▓хоЙ',name:'цЧечФгхМЦхнжуИ▒ хпМх▒▒х╖еха┤',start:'',end:'',pay:0},
-  {cat:'уВмуВ╣',name:'уВвуГйуВдуГЙуГЮуГЖуГкуВвуГл тЖТ CLO',start:'17:30',end:'16:30',pay:14000},
-  {cat:'уВмуВ╣',name:'уВвуГйуВдуГЙуГЮуГЖуГкуВвуГл тЖТ CLOя╝ИхЖмя╝Й',start:'17:00',end:'17:30',pay:16400},
-  {cat:'уВмуВ╣',name:'уВвуГйуВдуГЙуГЮуГЖуГкуВвуГл тЖТ NSCя╝ИхЖмя╝Й',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВмуВ╣',name:'х░╛щ╖▓цЭ▒щВжчЯ│ц▓╣ тЖТ CLO',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВмуВ╣',name:'чеЮх▓бщЙ▒цен',start:'18:00',end:'15:30',pay:10000},
-  {cat:'уВмуВ╣',name:'чеЮх▓бщЙ▒ценя╝Иф╕нц╢▓ф╗Ц13цЩВуВИуВКцЩВщЦУхдЦя╝Й',start:'',end:'',pay:0},
-  {cat:'уВмуВ╣',name:'чеЮх▓бщЙ▒цен тЖТ CLO',start:'18:00',end:'16:30',pay:13200},
-  {cat:'уВмуВ╣',name:'чеЮх▓буВ╗уГйуГЯуГГуВп тЖТ CLO',start:'18:00',end:'16:30',pay:13200},
-  {cat:'уВмуВ╣',name:'чеЮх▓буВ╗уГйуГЯуГГуВп тЖТ NSC',start:'18:00',end:'16:30',pay:13200},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИщлШх▓бя╝Й тЖТ CLO',start:'18:00',end:'14:30',pay:9800},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ CLO',start:'18:00',end:'14:30',pay:9800},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ HAS',start:'18:00',end:'14:00',pay:8000},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ HAS тЖТ хЕ╝цИ┐ тЖТ CLO',start:'18:00',end:'15:30',pay:15400},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ HAS тЖТ цЧец╕ЕуВкуВдуГкуВк тЖТ CLO',start:'19:00',end:'18:00',pay:13800},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ HAS тЖТ цЭ╛цЬмц▓╣шДВ тЖТ CLO',start:'19:00',end:'18:00',pay:13800},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ NSC',start:'18:00',end:'14:00',pay:8000},
-  {cat:'уВмуВ╣',name:'х░Пч│╕ тЖТ уВлуГНуВ╗уГ│ тЖТ NSC',start:'19:00',end:'16:00',pay:10800},
-  {cat:'уВмуВ╣',name:'уВ╡уВлуВн',start:'18:00',end:'14:30',pay:0},
-  {cat:'уВмуВ╣',name:'уВ╡уВлуВня╝ИхЖмя╝Й',start:'17:30',end:'15:00',pay:11600},
-  {cat:'уВмуВ╣',name:'уВ╡уВлуВн тЖТ CLO',start:'18:00',end:'16:00',pay:0},
-  {cat:'уВмуВ╣',name:'ф╕ЙхНФчлЛх▒▒ тЖТ CLO',start:'18:00',end:'16:30',pay:13200},
-  {cat:'уВмуВ╣',name:'ф╕ЙхНФчлЛх▒▒ тЖТ CLOя╝ИхЖмя╝Й',start:'17:00',end:'17:30',pay:16400},
-  {cat:'уВмуВ╣',name:'хбйш░╖чбЭхнР тЖТ CLO тЖТ х░ПцЭ╛щЫ╗ценцЙА',start:'16:30',end:'20:30',pay:23000},
-  {cat:'уВмуВ╣',name:'уВ╖уГгуГ╝уГЧя╝ИхЖмя╝Й',start:'16:30',end:'16:00',pay:14800},
-  {cat:'уВмуВ╣',name:'уВ╖уГгуГ╝уГЧ тЖТ SPя╝ИхЖмя╝Й',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВмуВ╣',name:'цШнхТМщЫ╗х╖ех╖Эх┤О',start:'16:30',end:'17:00',pay:16400},
-  {cat:'уВмуВ╣',name:'цШнхТМщЫ╗х╖ех╖Эх┤О тЖТ цШнхТМщЫ╗х╖ехЫЫцЧех╕В',start:'16:30',end:'20:00',pay:21200},
-  {cat:'уВмуВ╣',name:'цЭ▒уГмчЯ│х╖Э тЖТ CLO',start:'18:00',end:'16:30',pay:13200},
-  {cat:'уВмуВ╣',name:'уГИуГйуВд тЖТ CLO',start:'19:00',end:'15:30',pay:10000},
-  {cat:'уВмуВ╣',name:'уГПуВдуГЦуГкуГГуГЙ тЖТ HAS тЖТ ц╡Ьх▓б',start:'18:00',end:'15:00',pay:13800},
-  {cat:'уВмуВ╣',name:'хЕЙуБМф╕ШчЧЕщЩв',start:'18:00',end:'15:30',pay:13200},
-  {cat:'уВмуВ╣',name:'щгЫщиих╕Вц░СчЧЕщЩв тЖТ чеЮх▓бщЙ▒цен тЖТ CLO',start:'18:00',end:'16:30',pay:13400},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣ тЖТ CAP',start:'18:00',end:'21:30',pay:23800},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й',start:'18:00',end:'15:00',pay:10800},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Йя╝ИхЖмя╝Й',start:'17:00',end:'16:00',pay:14000},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ NSC',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ SP',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ SPя╝ИхЖмя╝Й',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ уГиуГНуГА',start:'18:00',end:'16:00',pay:12400},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ уГиуГНуГАя╝ИхЖмя╝Й',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ уГиуГНуГА тЖТ SP',start:'17:00',end:'17:00',pay:14000},
-  {cat:'уВмуВ╣',name:'хМЧщЕ╕щлШхЬзуВмуВ╣я╝ИхпМх▒▒я╝Й тЖТ ф╕нц╢▓',start:'17:00',end:'17:30',pay:14000},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА тЖТ SP',start:'18:30',end:'14:30',pay:9200},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА тЖТ уВ╡уВлуВн',start:'18:00',end:'15:30',pay:10800},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА тЖТ уВ╡уВлуВня╝ИхЖмя╝Й',start:'17:30',end:'16:00',pay:14000},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА тЖТ уВ╖уГгуГ╝уГЧ',start:'18:00',end:'16:30',pay:12400},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА тЖТ уВ╖уГгуГ╝уГЧя╝ИхЖмя╝Й',start:'17:30',end:'17:30',pay:15600},
-  {cat:'уВмуВ╣',name:'уГиуГНуГА',start:'18:30',end:'14:00',pay:7400},
-  {cat:'уВмуВ╣',name:'уГиуГНуГАя╝ИхЖмя╝Й',start:'17:30',end:'15:00',pay:11600},
-  {cat:'уВмуВ╣',name:'NGKчЯ│х╖Э',start:'18:00',end:'14:30',pay:10800},
-  {cat:'уВмуВ╣',name:'NGKчЯ│х╖Э тЖТ SPчйН',start:'18:00',end:'15:30',pay:12400},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓б тЖТ JX',start:'18:00',end:'17:00',pay:12400},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓б тЖТ JXя╝ИхЖмя╝Й',start:'17:00',end:'17:00',pay:15600},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓б',start:'18:00',end:'15:30',pay:10800},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓бя╝ИхЖмя╝Й',start:'18:00',end:'15:30',pay:13200},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓б тЖТ YCX',start:'18:00',end:'17:30',pay:14800},
-  {cat:'уВмуВ╣',name:'цЭ▒ф║ЬхРИцИР щлШх▓б тЖТ YCXя╝ИхЖмя╝Й',start:'17:00',end:'18:30',pay:18000},
-  {cat:'уВмуВ╣',name:'х▓йш░╖хНГшСЙ',start:'',end:'16:30',pay:16400},
-  {cat:'уВмуВ╣',name:'UACJчжПф║Х',start:'18:30',end:'15:30',pay:10600},
-  {cat:'уВмуВ╣',name:'UACJчжПф║Х тЖТ SP',start:'19:30',end:'16:30',pay:12200},
-  {cat:'ц╢▓хбй',name:'уГАуВдуВ╗уГлцЦ░ф║ХуВ▒уГЯуВлуГлуИ▒',start:'14:30',end:'19:00',pay:20600},
-  {cat:'ц╢▓хбй',name:'уГйуВ╡х╖еценуИ▒ хдзщШк',start:'15:00',end:'15:00',pay:8000},
-  {cat:'ц╢▓хбй',name:'уИ▒уВлуГНуВл хдзщШк',start:'19:00',end:'15:00',pay:8000},
-  {cat:'ц╢▓хбй',name:'цЦ░шИИхМЦхнжуИ▒ ха║шЗичХМх╖еха┤',start:'19:00',end:'15:00',pay:8000},
-  {cat:'ц╢▓хбй',name:'цЭ▒щВжуГБуВ┐уГЛуВжуГа',start:'19:00',end:'16:30',pay:14600},
-  {cat:'ц╢▓хбй',name:'уИ▒уВлуГНуВл щлШчаВ',start:'17:30',end:'16:30',pay:14000},
-  {cat:'ц╢▓хбй',name:'цЭ▒ф║ЬхРИцИР х╛│х│╢',start:'17:00',end:'19:00',pay:18800},
+  {cat:'エステル',name:'BASFジャパン㈱ 磯原',start:'13:00',end:'20:30',pay:23000},
+  {cat:'エステル',name:'CHEMIPAZ㈱ 静岡',start:'18:30',end:'15:00',pay:9800},
+  {cat:'エステル',name:'CHEMIPAZ㈱ 播磨',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル',name:'CHEMIPAZ㈱ 龍ケ崎',start:'14:30',end:'19:30',pay:21400},
+  {cat:'エステル',name:'DIC㈱ 堺',start:'19:00',end:'14:30',pay:8200},
+  {cat:'エステル',name:'DIC㈱ 千葉',start:'15:00',end:'18:30',pay:18600},
+  {cat:'エステル',name:'DIC㈱ 北陸',start:'18:00',end:'15:30',pay:11600},
+  {cat:'エステル',name:'JSR㈱ 鹿島',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'KJケミカルズ㈱ 八代',start:'10:00',end:'2:00',pay:36600},
+  {cat:'エステル',name:'MTアクアポリマー㈱ 茂原',start:'14:30',end:'19:30',pay:21400},
+  {cat:'エステル',name:'NUC 川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'アイカ工業㈱ 丹波',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル',name:'旭化成㈱ 川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'旭化成㈱ 川崎（夜）',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'旭化成㈱ 千葉',start:'14:30',end:'18:00',pay:18000},
+  {cat:'エステル',name:'旭化成㈱ 水島',start:'16:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'旭化成㈱ 和歌山',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル',name:'旭硝子㈱ 千葉',start:'15:00',end:'19:00',pay:19400},
+  {cat:'エステル',name:'荒川化学工業㈱ 水島',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'宇都宮化工㈱ 宇都宮',start:'13:30',end:'20:30',pay:22800},
+  {cat:'エステル',name:'大分キャノンマテリアル㈱ 大分（2マン）',start:'10:30',end:'1:30',pay:34200},
+  {cat:'エステル',name:'大分ケミカル㈱（2マン）',start:'10:30',end:'1:30',pay:34400},
+  {cat:'エステル',name:'大阪有機化学工業㈱ 大阪',start:'19:00',end:'14:30',pay:7400},
+  {cat:'エステル',name:'大阪有機化学工業㈱ 金沢',start:'18:00',end:'15:30',pay:11600},
+  {cat:'エステル',name:'大塚アグリテクノ㈱ 鳴門',start:'16:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'花王㈱ 鹿島',start:'14:00',end:'19:30',pay:21400},
+  {cat:'エステル',name:'花王㈱ 和歌山',start:'18:00',end:'15:30',pay:11600},
+  {cat:'エステル',name:'カネカ 高砂',start:'17:30',end:'16:30',pay:14000},
+  {cat:'エステル',name:'関西ペイント㈱ 鹿沼',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'関西ペイント㈱ 平塚',start:'17:00',end:'16:30',pay:14600},
+  {cat:'エステル',name:'北日本ディック㈱（2マン）',start:'12:30',end:'23:00',pay:28400},
+  {cat:'エステル',name:'キャノン㈱ 岩間',start:'14:30',end:'19:30',pay:21400},
+  {cat:'エステル',name:'キャノン㈱ 取手',start:'15:00',end:'19:00',pay:20600},
+  {cat:'エステル',name:'倉敷紡績㈱ 徳島工場',start:'16:30',end:'16:30',pay:17200},
+  {cat:'エステル',name:'倉本産業㈱',start:'15:00',end:'18:30',pay:18800},
+  {cat:'エステル',name:'クラレ 新潟',start:'12:00',end:'20:30',pay:23000},
+  {cat:'エステル',name:'高圧ガス工業㈱ 佐倉',start:'15:00',end:'18:30',pay:18800},
+  {cat:'エステル',name:'高圧ガス工業㈱ 竜野',start:'17:00',end:'16:30',pay:14800},
+  {cat:'エステル',name:'互応化学工業㈱ 福井',start:'18:30',end:'15:30',pay:10800},
+  {cat:'エステル',name:'コニカミノルタサプライズ',start:'15:30',end:'16:00',pay:14800},
+  {cat:'エステル',name:'コニカミノルタサプライズ 辰野（BA）',start:'16:30',end:'15:00',pay:13200},
+  {cat:'エステル',name:'コニカミノルタサプライズ 辰野（HA）',start:'18:30',end:'15:00',pay:9200},
+  {cat:'エステル',name:'サイデン化学㈱ 浦和',start:'16:00',end:'17:30',pay:17200},
+  {cat:'エステル',name:'サイデン化学㈱ 東京',start:'16:00',end:'17:30',pay:17200},
+  {cat:'エステル',name:'信越化学工業㈱ 直江津',start:'14:30',end:'18:00',pay:18000},
+  {cat:'エステル',name:'新中村化学工業㈱ 福井',start:'18:30',end:'15:30',pay:10600},
+  {cat:'エステル',name:'新中村化学工業㈱ 本社',start:'18:30',end:'15:30',pay:10800},
+  {cat:'エステル',name:'住友化学㈱ 愛媛',start:'14:30',end:'19:00',pay:20600},
+  {cat:'エステル',name:'住友化学㈱ 千葉',start:'14:30',end:'18:00',pay:18000},
+  {cat:'エステル',name:'綜研化学㈱ 狭山',start:'16:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'大成ファインケミカル㈱',start:'14:00',end:'19:30',pay:21400},
+  {cat:'エステル',name:'大成ファインケミカル㈱ 東京',start:'15:30',end:'18:30',pay:19000},
+  {cat:'エステル',name:'ダイセル新井ケミカル㈱（HA）',start:'16:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'ダイセル新井ケミカル㈱（HA他）',start:'14:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'大同化成工業㈱',start:'15:30',end:'19:00',pay:19600},
+  {cat:'エステル',name:'大同化成工業㈱ 福井',start:'18:30',end:'15:30',pay:10600},
+  {cat:'エステル',name:'帝人㈱三島事業所',start:'18:30',end:'15:30',pay:10800},
+  {cat:'エステル',name:'デクセリアルズ㈱ 鹿沼第二',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'デンカ㈱ 千葉',start:'15:00',end:'19:00',pay:19400},
+  {cat:'エステル',name:'東亞合成㈱ 坂出',start:'16:00',end:'17:30',pay:17200},
+  {cat:'エステル',name:'東亞合成㈱ 高岡',start:'17:00',end:'15:30',pay:13200},
+  {cat:'エステル',name:'東亞合成㈱ 高岡（冬）',start:'17:00',end:'16:30',pay:14800},
+  {cat:'エステル',name:'東亞合成㈱ 広野',start:'12:30',end:'21:30',pay:24600},
+  {cat:'エステル',name:'東亞合成㈱ 広野（メタ引取あり）',start:'12:30',end:'22:30',pay:26400},
+  {cat:'エステル',name:'東亞合成㈱ 広野（メタ引取あり）セミトレ',start:'12:30',end:'23:30',pay:28400},
+  {cat:'エステル',name:'トウペ製造 倉敷',start:'16:30',end:'17:30',pay:17000},
+  {cat:'エステル',name:'東レ・ファインケミカル㈱ 千葉',start:'15:00',end:'19:00',pay:20400},
+  {cat:'エステル',name:'トーヨーケム㈱ 川越',start:'16:00',end:'17:30',pay:17200},
+  {cat:'エステル',name:'トーヨーケム㈱ 西神',start:'18:00',end:'12:00',pay:12400},
+  {cat:'エステル',name:'日信化学工業㈱ 武生',start:'19:30',end:'14:30',pay:6600},
+  {cat:'エステル',name:'日東シンコー㈱ 丸岡',start:'19:00',end:'14:30',pay:7400},
+  {cat:'エステル',name:'日東電工㈱ 尾道',start:'15:30',end:'18:00',pay:18000},
+  {cat:'エステル',name:'日東電工㈱ 関東',start:'15:00',end:'19:00',pay:19600},
+  {cat:'エステル',name:'日東電工㈱ 東北（2マン）',start:'11:00',end:'0:30',pay:31400},
+  {cat:'エステル',name:'日本エイアンドエル㈱ 愛媛',start:'14:30',end:'19:00',pay:20600},
+  {cat:'エステル',name:'日本エクスラン工業㈱ 西大寺',start:'17:00',end:'17:00',pay:15600},
+  {cat:'エステル',name:'日本カーバイド工業㈱ 魚津（HA）',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル',name:'日本カーバイド工業㈱ 魚津（HA他）',start:'16:30',end:'16:00',pay:14800},
+  {cat:'エステル',name:'日本カーバイド工業㈱ 魚津（冬）',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'日本カーバイド工業㈱ 早月',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル',name:'日本カーバイド工業㈱ 早月（冬）',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'日本化薬㈱ 福山',start:'16:00',end:'18:00',pay:18000},
+  {cat:'エステル',name:'日本触媒 川崎',start:'16:30',end:'17:30',pay:17200},
+  {cat:'エステル',name:'日本製紙㈱ 岩国',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'日本ゼオン 徳山',start:'12:30',end:'21:30',pay:24600},
+  {cat:'エステル',name:'日本ゼオン㈱ 川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'日本乳化剤㈱ 川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'日本ペイント㈱ 岡山',start:'17:30',end:'16:30',pay:14000},
+  {cat:'エステル',name:'日本ペイント㈱ 千葉',start:'14:30',end:'19:00',pay:20600},
+  {cat:'エステル',name:'日本ペイント㈱ 栃木',start:'13:30',end:'20:30',pay:22800},
+  {cat:'エステル',name:'根上工業㈱',start:'18:30',end:'15:30',pay:10800},
+  {cat:'エステル',name:'ハイモ㈱ 神奈川',start:'17:00',end:'16:30',pay:14600},
+  {cat:'エステル',name:'ハイモ㈱ 山口',start:'13:00',end:'21:00',pay:23800},
+  {cat:'エステル',name:'ハニー化成',start:'18:30',end:'15:30',pay:10800},
+  {cat:'エステル',name:'日立化成㈱ 鹿島',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'日立化成㈱ 山崎',start:'13:30',end:'20:00',pay:22200},
+  {cat:'エステル',name:'日油㈱ 尼崎',start:'18:30',end:'15:00',pay:10000},
+  {cat:'エステル',name:'保土谷ロジスティクス㈱ 郡山',start:'12:00',end:'22:00',pay:25400},
+  {cat:'エステル',name:'保土谷ロジスティクス㈱ 郡山（2マン）',start:'15:00',end:'22:00',pay:25400},
+  {cat:'エステル',name:'三井化学㈱ 茂原',start:'14:30',end:'19:30',pay:21400},
+  {cat:'エステル',name:'三井ダウケミカル㈱ 大竹',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'三菱ケミカル㈱ 富山',start:'16:30',end:'16:00',pay:14800},
+  {cat:'エステル',name:'三菱ケミカル㈱ 富山（冬）',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'三菱ケミカル㈱ 広島',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'山形スリーエム㈱ 東根（2マン）',start:'11:30',end:'0:30',pay:31400},
+  {cat:'エステル',name:'山南合成㈱ 福井',start:'18:30',end:'15:30',pay:10600},
+  {cat:'エステル',name:'ヤヨイ化学工業㈱ 射水（EA）（BA）',start:'17:00',end:'16:00',pay:14000},
+  {cat:'エステル',name:'ヤヨイ化学工業㈱ 射水（HA）',start:'18:00',end:'16:00',pay:12400},
+  {cat:'エステル',name:'ヤヨイ化学工業㈱ 射水（冬）',start:'17:00',end:'17:00',pay:15600},
+  {cat:'エステル',name:'ユニマテック㈱ 第1',start:'13:00',end:'20:30',pay:23000},
+  {cat:'エステル',name:'横浜ポリマー研究所 山梨（BA）',start:'16:00',end:'16:00',pay:14800},
+  {cat:'エステル',name:'横浜ポリマー研究所 山梨（HA）',start:'18:00',end:'16:00',pay:12400},
+  {cat:'エステル',name:'ライオン化学㈱ 鹿島',start:'14:00',end:'20:00',pay:22200},
+  {cat:'エステル',name:'レゾナック 伊勢崎',start:'15:00',end:'18:30',pay:18800},
+  {cat:'エステル',name:'レゾナック 川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'エステル',name:'レゾナック 龍野',start:'17:00',end:'16:30',pay:14800},
+  {cat:'エステル',name:'ロックペイント㈱ 福崎',start:'17:30',end:'16:00',pay:13200},
+  {cat:'エステル引取',name:'関東SP 東洋合成工業㈱',start:'15:30',end:'18:00',pay:18200},
+  {cat:'エステル引取',name:'関東SP 丸善㈱',start:'15:00',end:'19:00',pay:20400},
+  {cat:'エステル引取',name:'関西SP 関西化成品輸送㈱',start:'19:00',end:'15:00',pay:8000},
+  {cat:'エステル引取',name:'㈱日本触媒 吹田',start:'17:00',end:'17:00',pay:15400},
+  {cat:'エステル引取',name:'㈱日本触媒 姫路',start:'17:00',end:'17:00',pay:15400},
+  {cat:'ポリマー',name:'アクアスエンジ㈱ つくば',start:'14:30',end:'18:30',pay:18800},
+  {cat:'ポリマー',name:'旭化成ケミカルズ㈱ 川崎',start:'16:30',end:'16:00',pay:14800},
+  {cat:'ポリマー',name:'旭化成ケミカルズ㈱ 水島',start:'16:30',end:'16:30',pay:15600},
+  {cat:'ポリマー',name:'王子製紙㈱ 富岡',start:'15:30',end:'17:30',pay:17200},
+  {cat:'ポリマー',name:'北広ケミカル㈱ 南',start:'18:00',end:'15:30',pay:11600},
+  {cat:'ポリマー',name:'クリタケミカル製造㈱ 猿島（本社）T-50',start:'14:30',end:'18:30',pay:18800},
+  {cat:'ポリマー',name:'クリタケミカル製造㈱ 赤穂 T-50',start:'16:30',end:'16:00',pay:14800},
+  {cat:'ポリマー',name:'クリタケミカル製造㈱ 赤穂 A-6051',start:'16:30',end:'16:00',pay:14800},
+  {cat:'ポリマー',name:'クリタケミカル製造㈱ 猿島（本社）A-6051',start:'14:30',end:'19:00',pay:18800},
+  {cat:'ポリマー',name:'中越バルブ工業㈱ 高岡',start:'18:00',end:'14:30',pay:9200},
+  {cat:'ポリマー',name:'中越バルブ工業㈱ 高岡（冬）',start:'17:00',end:'15:30',pay:13200},
+  {cat:'ポリマー',name:'テイカ㈱ 岡山',start:'17:00',end:'16:30',pay:14800},
+  {cat:'ポリマー',name:'東亜合成㈱ 広野',start:'12:30',end:'20:30',pay:23000},
+  {cat:'ポリマー',name:'日本エイアンドエル㈱ 愛媛',start:'14:30',end:'19:00',pay:20600},
+  {cat:'ポリマー',name:'日本エイアンドエル㈱ 千葉',start:'14:30',end:'17:00',pay:16400},
+  {cat:'ポリマー',name:'日本製紙㈱ 石巻（2マン）',start:'11:00',end:'23:30',pay:29400},
+  {cat:'ポリマー',name:'日本製紙㈱ 岩国',start:'14:00',end:'20:00',pay:22200},
+  {cat:'ポリマー',name:'㈱ADEKA 富士',start:'18:30',end:'14:00',pay:7400},
+  {cat:'ポリマー',name:'㈱イメリス・ミネラルズ・ジャパン',start:'18:30',end:'14:30',pay:8400},
+  {cat:'ポリマー',name:'㈱アイゼット',start:'18:30',end:'15:00',pay:9000},
+  {cat:'ポリマー',name:'㈱アイゼット（冬）',start:'17:30',end:'16:00',pay:13200},
+  {cat:'ポリマー',name:'㈱エヌ・エス・カラーテクノ 北陸',start:'19:30',end:'14:30',pay:6600},
+  {cat:'ポリマー',name:'㈱片山化学工業研究所 綾部',start:'18:00',end:'16:00',pay:14000},
+  {cat:'ポリマー',name:'㈱キング・ライン',start:'18:00',end:'15:00',pay:10800},
+  {cat:'ポリマー',name:'㈱小松プロセス',start:'18:30',end:'15:00',pay:9000},
+  {cat:'ポリマー',name:'㈱ニイタカ つくば',start:'18:30',end:'18:30',pay:19800},
+  {cat:'ポリマー',name:'㈱ファイマテック 富士',start:'18:30',end:'14:30',pay:8400},
+  {cat:'ポリマー',name:'㈱フローリック 東松山',start:'16:00',end:'18:00',pay:18000},
+  {cat:'ポリマー',name:'㈱フローリック 厚木',start:'17:30',end:'16:30',pay:13800},
+  {cat:'ポリマー',name:'旭ファイバーグラス 湘南',start:'',end:'',pay:14600},
+  {cat:'苛性カリ',name:'東京化成品センター',start:'16:30',end:'17:00',pay:16400},
+  {cat:'濃硫酸',name:'田中化学研究所 福井工場',start:'18:30',end:'15:30',pay:10600},
+  {cat:'濃硫酸',name:'GSユアサ 群馬',start:'12:30',end:'19:00',pay:21600},
+  {cat:'液安',name:'AWPC㈱ 湘南',start:'17:00',end:'16:30',pay:14600},
+  {cat:'液安',name:'AWPC㈱ → AN',start:'17:00',end:'17:30',pay:16400},
+  {cat:'液安',name:'関西電力㈱ 相生',start:'17:00',end:'17:00',pay:15600},
+  {cat:'液安',name:'関西電力㈱ 海南',start:'18:00',end:'15:30',pay:11600},
+  {cat:'液安',name:'関西電力㈱ 海南 → AN',start:'18:00',end:'17:00',pay:14000},
+  {cat:'液安',name:'関西電力㈱ 御坊',start:'17:30',end:'16:00',pay:13200},
+  {cat:'液安',name:'関西電力㈱ 姫路第一',start:'17:30',end:'16:30',pay:14000},
+  {cat:'液安',name:'関西電力㈱ 姫路第二',start:'17:30',end:'16:30',pay:14000},
+  {cat:'液安',name:'多木化学㈱',start:'17:30',end:'16:00',pay:13200},
+  {cat:'液安',name:'多木化学㈱ → AN',start:'17:30',end:'17:00',pay:15600},
+  {cat:'液安',name:'新日本電工㈱ ※旧中央電気',start:'15:00',end:'18:30',pay:18800},
+  {cat:'液安',name:'中国電力㈱ 玉島',start:'16:30',end:'17:30',pay:17000},
+  {cat:'液安',name:'中国電力㈱ 水島',start:'16:30',end:'17:00',pay:17200},
+  {cat:'液安',name:'㈱ステンレス 久世',start:'17:30',end:'14:30',pay:14800},
+  {cat:'液安',name:'JFEスチール㈱ 東日本製鉄所 千葉',start:'15:00',end:'19:00',pay:20600},
+  {cat:'液安',name:'JFEスチール㈱東日本製鉄所千葉→AN',start:'15:00',end:'20:30',pay:23000},
+  {cat:'液安',name:'ADEKA富士',start:'18:30',end:'15:00',pay:9000},
+  {cat:'液安',name:'ADEKA富士 → AN',start:'18:30',end:'16:30',pay:12400},
+  {cat:'液安',name:'北陸電力 七尾',start:'16:30',end:'17:30',pay:17200},
+  {cat:'液安',name:'北陸電力 新港',start:'16:30',end:'17:00',pay:14800},
+  {cat:'液安',name:'北陸電力 七尾 → AN',start:'16:30',end:'19:00',pay:19600},
+  {cat:'液安',name:'北陸電力 福井',start:'18:30',end:'15:00',pay:10200},
+  {cat:'液安',name:'北陸電力 福井 → AN',start:'18:30',end:'16:30',pay:12600},
+  {cat:'液安',name:'北陸電力 新港 → AN',start:'',end:'18:00',pay:17200},
+  {cat:'液安',name:'ステンレス久世 → AN',start:'',end:'18:00',pay:17200},
+  {cat:'液安',name:'日産化学㈱ 富山工場',start:'',end:'',pay:0},
+  {cat:'ガス',name:'アライドマテリアル → CLO',start:'17:30',end:'16:30',pay:14000},
+  {cat:'ガス',name:'アライドマテリアル → CLO（冬）',start:'17:00',end:'17:30',pay:16400},
+  {cat:'ガス',name:'アライドマテリアル → NSC（冬）',start:'17:00',end:'17:00',pay:15600},
+  {cat:'ガス',name:'尾鷲東邦石油 → CLO',start:'18:00',end:'16:00',pay:12400},
+  {cat:'ガス',name:'神岡鉱業',start:'18:00',end:'15:30',pay:10000},
+  {cat:'ガス',name:'神岡鉱業（中液他13時より時間外）',start:'',end:'',pay:0},
+  {cat:'ガス',name:'神岡鉱業 → CLO',start:'18:00',end:'16:30',pay:13200},
+  {cat:'ガス',name:'神岡セラミック → CLO',start:'18:00',end:'16:30',pay:13200},
+  {cat:'ガス',name:'神岡セラミック → NSC',start:'18:00',end:'16:30',pay:13200},
+  {cat:'ガス',name:'北酸高圧ガス（高岡） → CLO',start:'18:00',end:'14:30',pay:9800},
+  {cat:'ガス',name:'小糸 → CLO',start:'18:00',end:'14:30',pay:9800},
+  {cat:'ガス',name:'小糸 → HAS',start:'18:00',end:'14:00',pay:8000},
+  {cat:'ガス',name:'小糸 → HAS → 兼房 → CLO',start:'18:00',end:'15:30',pay:15400},
+  {cat:'ガス',name:'小糸 → HAS → 日清オイリオ → CLO',start:'19:00',end:'18:00',pay:13800},
+  {cat:'ガス',name:'小糸 → HAS → 松本油脂 → CLO',start:'19:00',end:'18:00',pay:13800},
+  {cat:'ガス',name:'小糸 → NSC',start:'18:00',end:'14:00',pay:8000},
+  {cat:'ガス',name:'小糸 → カネセン → NSC',start:'19:00',end:'16:00',pay:10800},
+  {cat:'ガス',name:'サカキ',start:'18:00',end:'14:30',pay:0},
+  {cat:'ガス',name:'サカキ（冬）',start:'17:30',end:'15:00',pay:11600},
+  {cat:'ガス',name:'サカキ → CLO',start:'18:00',end:'16:00',pay:0},
+  {cat:'ガス',name:'三協立山 → CLO',start:'18:00',end:'16:30',pay:13200},
+  {cat:'ガス',name:'三協立山 → CLO（冬）',start:'17:00',end:'17:30',pay:16400},
+  {cat:'ガス',name:'塩谷硝子 → CLO → 小松電業所',start:'16:30',end:'20:30',pay:23000},
+  {cat:'ガス',name:'シャープ（冬）',start:'16:30',end:'16:00',pay:14800},
+  {cat:'ガス',name:'シャープ → SP（冬）',start:'16:30',end:'17:00',pay:16400},
+  {cat:'ガス',name:'昭和電工川崎',start:'16:30',end:'17:00',pay:16400},
+  {cat:'ガス',name:'昭和電工川崎 → 昭和電工四日市',start:'16:30',end:'20:00',pay:21200},
+  {cat:'ガス',name:'東レ石川 → CLO',start:'18:00',end:'16:30',pay:13200},
+  {cat:'ガス',name:'トライ → CLO',start:'19:00',end:'15:30',pay:10000},
+  {cat:'ガス',name:'ハイブリッド → HAS → 浜岡',start:'18:00',end:'15:00',pay:13800},
+  {cat:'ガス',name:'光が丘病院',start:'18:00',end:'15:30',pay:13200},
+  {cat:'ガス',name:'飛騨市民病院 → 神岡鉱業 → CLO',start:'18:00',end:'16:30',pay:13400},
+  {cat:'ガス',name:'北酸高圧ガス → CAP',start:'18:00',end:'21:30',pay:23800},
+  {cat:'ガス',name:'北酸高圧ガス（富山）',start:'18:00',end:'15:00',pay:10800},
+  {cat:'ガス',name:'北酸高圧ガス（富山）（冬）',start:'17:00',end:'16:00',pay:14000},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → NSC',start:'18:00',end:'16:00',pay:12400},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → SP',start:'18:00',end:'16:00',pay:12400},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → SP（冬）',start:'17:00',end:'17:00',pay:15600},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → ヨネダ',start:'18:00',end:'16:00',pay:12400},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → ヨネダ（冬）',start:'17:00',end:'17:00',pay:15600},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → ヨネダ → SP',start:'17:00',end:'17:00',pay:14000},
+  {cat:'ガス',name:'北酸高圧ガス（富山） → 中液',start:'17:00',end:'17:30',pay:14000},
+  {cat:'ガス',name:'ヨネダ → SP',start:'18:30',end:'14:30',pay:9200},
+  {cat:'ガス',name:'ヨネダ → サカキ',start:'18:00',end:'15:30',pay:10800},
+  {cat:'ガス',name:'ヨネダ → サカキ（冬）',start:'17:30',end:'16:00',pay:14000},
+  {cat:'ガス',name:'ヨネダ → シャープ',start:'18:00',end:'16:30',pay:12400},
+  {cat:'ガス',name:'ヨネダ → シャープ（冬）',start:'17:30',end:'17:30',pay:15600},
+  {cat:'ガス',name:'ヨネダ',start:'18:30',end:'14:00',pay:7400},
+  {cat:'ガス',name:'ヨネダ（冬）',start:'17:30',end:'15:00',pay:11600},
+  {cat:'ガス',name:'NGK石川',start:'18:00',end:'14:30',pay:10800},
+  {cat:'ガス',name:'NGK石川 → SP積',start:'18:00',end:'15:30',pay:12400},
+  {cat:'ガス',name:'東亜合成 高岡 → JX',start:'18:00',end:'17:00',pay:12400},
+  {cat:'ガス',name:'東亜合成 高岡 → JX（冬）',start:'17:00',end:'17:00',pay:15600},
+  {cat:'ガス',name:'東亜合成 高岡',start:'18:00',end:'15:30',pay:10800},
+  {cat:'ガス',name:'東亜合成 高岡（冬）',start:'18:00',end:'15:30',pay:13200},
+  {cat:'ガス',name:'東亜合成 高岡 → YCX',start:'18:00',end:'17:30',pay:14800},
+  {cat:'ガス',name:'東亜合成 高岡 → YCX（冬）',start:'17:00',end:'18:30',pay:18000},
+  {cat:'ガス',name:'岩谷千葉',start:'',end:'16:30',pay:16400},
+  {cat:'ガス',name:'UACJ福井',start:'18:30',end:'15:30',pay:10600},
+  {cat:'ガス',name:'UACJ福井 → SP',start:'19:30',end:'16:30',pay:12200},
+  {cat:'液塩',name:'ダイセル新井ケミカル㈱',start:'14:30',end:'19:00',pay:20600},
+  {cat:'液塩',name:'ラサ工業㈱ 大阪',start:'15:00',end:'15:00',pay:8000},
+  {cat:'液塩',name:'㈱カネカ 大阪',start:'19:00',end:'15:00',pay:8000},
+  {cat:'液塩',name:'新興化学㈱ 堺臨界工場',start:'19:00',end:'15:00',pay:8000},
+  {cat:'液塩',name:'東邦チタニウム',start:'19:00',end:'16:30',pay:14600},
+  {cat:'液塩',name:'㈱カネカ 高砂',start:'17:30',end:'16:30',pay:14000},
+  {cat:'液塩',name:'東亜合成 徳島',start:'17:00',end:'19:00',pay:18800},
 ];
 var fareSelectedCat='',fareMode='pay';
 function openFareTable(){fareMode='pay';document.getElementById('fareOverlay').classList.add('open');document.getElementById('fareSearch').value='';fareSelectedCat='';renderFareCategoryBtns();renderFareTable();}
 function openFareTableForMemo(){fareMode='memo';document.getElementById('fareOverlay').classList.add('open');document.getElementById('fareSearch').value='';fareSelectedCat='';renderFareCategoryBtns();renderFareTable();}
 function closeFareTable(e){if(e.target===document.getElementById('fareOverlay'))closeFareTableDirect();}
 function closeFareTableDirect(){document.getElementById('fareOverlay').classList.remove('open');}
-function renderFareCategoryBtns(){var cats=[...new Set(FARE_DATA.map(function(d){return d.cat}))];document.getElementById('fareCategoryBtns').innerHTML='<button onclick="fareSelectedCat=\'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===''?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===''?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===''?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">уБЩуБ╣уБж</button>'+cats.map(function(c){return '<button onclick="fareSelectedCat=\''+escapeJs(c)+'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===c?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===c?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===c?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">'+escapeHtml(c)+'</button>'}).join('');}
-function renderFareTable(){var sw=document.getElementById('fareSearch').value.trim().toLowerCase();var data=FARE_DATA.filter(function(d){return(!fareSelectedCat||d.cat===fareSelectedCat)&&(!sw||d.name.toLowerCase().includes(sw)||d.cat.toLowerCase().includes(sw))});if(!data.length){document.getElementById('fareList').innerHTML='<div class="empty" style="padding:20px;font-size:13px;">шй▓х╜УуБкуБЧ</div>';return}document.getElementById('fareList').innerHTML=data.map(function(d){var safeName=escapeJs(d.name);return '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;" onclick="selectFare('+d.pay+',\''+safeName+'\')"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">'+escapeHtml(d.cat)+'</div><div style="font-size:14px;font-weight:600;margin-bottom:6px;">'+escapeHtml(d.name)+'</div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);gap:8px;"><span>хЗ║чЩ║ '+escapeHtml(d.start||'-')+'уААхИ░чЭА '+escapeHtml(d.end||'-')+'</span>'+(d.pay>0?'<span style="color:var(--accent);font-family:\'Oswald\',sans-serif;font-size:16px;white-space:nowrap;">'+d.pay.toLocaleString()+'хЖЖ</span>':'<span style="color:var(--muted);">шжБчв║шкН</span>')+'</div></div>'}).join('');}
+function renderFareCategoryBtns(){var cats=[...new Set(FARE_DATA.map(function(d){return d.cat}))];document.getElementById('fareCategoryBtns').innerHTML='<button onclick="fareSelectedCat=\'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===''?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===''?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===''?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">すべて</button>'+cats.map(function(c){return '<button onclick="fareSelectedCat=\''+escapeJs(c)+'\';renderFareTable();renderFareCategoryBtns();" style="background:'+(fareSelectedCat===c?'var(--accent)':'var(--surface2)')+';border:1.5px solid '+(fareSelectedCat===c?'var(--accent)':'var(--border)')+';border-radius:8px;padding:5px 12px;color:'+(fareSelectedCat===c?'#fff':'var(--text)')+';font-size:12px;cursor:pointer;">'+escapeHtml(c)+'</button>'}).join('');}
+function renderFareTable(){var sw=document.getElementById('fareSearch').value.trim().toLowerCase();var data=FARE_DATA.filter(function(d){return(!fareSelectedCat||d.cat===fareSelectedCat)&&(!sw||d.name.toLowerCase().includes(sw)||d.cat.toLowerCase().includes(sw))});if(!data.length){document.getElementById('fareList').innerHTML='<div class="empty" style="padding:20px;font-size:13px;">該当なし</div>';return}document.getElementById('fareList').innerHTML=data.map(function(d){var safeName=escapeJs(d.name);return '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;" onclick="selectFare('+d.pay+',\''+safeName+'\')"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">'+escapeHtml(d.cat)+'</div><div style="font-size:14px;font-weight:600;margin-bottom:6px;">'+escapeHtml(d.name)+'</div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);gap:8px;"><span>出発 '+escapeHtml(d.start||'-')+'　到着 '+escapeHtml(d.end||'-')+'</span>'+(d.pay>0?'<span style="color:var(--accent);font-family:\'Oswald\',sans-serif;font-size:16px;white-space:nowrap;">'+d.pay.toLocaleString()+'円</span>':'<span style="color:var(--muted);">要確認</span>')+'</div></div>'}).join('');}
 
 function shouldAutoSetToxicOneForFare(fare){
-  if(!fare||!selectedJobs.includes('щХ╖ш╖ЭщЫв'))return false;
-  return fare.cat==='ц┐ГчблщЕ╕'||fare.cat==='ц╢▓хбй'||fare.cat==='ц╢▓хоЙ';
+  if(!fare||!selectedJobs.includes('長距離'))return false;
+  return fare.cat==='濃硫酸'||fare.cat==='液塩'||fare.cat==='液安';
 }
 function autoSetToxicOneForFare(fare){
   if(!shouldAutoSetToxicOneForFare(fare))return;
   if(toxicCount===2)return;
 
   toxicCount=1;
-  selectedJobs=selectedJobs.filter(function(j){return j!=='цпТ├Ч2';});
-  if(!selectedJobs.includes('цпТцЙЛх╜У'))selectedJobs.push('цпТцЙЛх╜У');
+  selectedJobs=selectedJobs.filter(function(j){return j!=='毒×2';});
+  if(!selectedJobs.includes('毒手当'))selectedJobs.push('毒手当');
 
   document.querySelectorAll('.job-btn').forEach(function(btn){
-    if(btn.dataset.job==='цпТцЙЛх╜У')btn.classList.add('selected');
-    if(btn.dataset.job==='цпТ├Ч2')btn.classList.remove('selected');
+    if(btn.dataset.job==='毒手当')btn.classList.add('selected');
+    if(btn.dataset.job==='毒×2')btn.classList.remove('selected');
   });
 
   document.getElementById('toxicBtn1').classList.add('selected');
   document.getElementById('toxicBtn2').classList.remove('selected');
-  document.getElementById('toxicDisplay').textContent='тШая╕П├Ч1 = 2,500хЖЖ';
+  document.getElementById('toxicDisplay').textContent='☠️×1 = 2,500円';
 }
 
 function selectFare(pay,name){
@@ -1423,42 +1424,42 @@ function selectFare(pay,name){
     document.getElementById('longDistancePay').value=pay;
   }
   if(fareMode==='memo')addMemo(name);
-  if(name==='уИ▒уВлуГНуВл хдзщШк')syncKanekaPmToxic();else autoSetToxicOneForFare(fare);
+  if(name==='㈱カネカ 大阪')syncKanekaPmToxic();else autoSetToxicOneForFare(fare);
   autoCalcOvertime();
   updateInputProgress();
   renderInputSummary();
   closeFareTableDirect();
   var details=[];
-  if(fare&&fare.start)details.push('хЗ║хЛд '+fare.start);
-  if(fare&&fare.end)details.push('щААхЛд '+fare.end);
-  if((fare&&fare.pay>0)||pay>0)details.push(((fare&&fare.pay)||pay).toLocaleString()+'хЖЖ');
-  showToast((fareMode==='memo'?'ЁЯУЭ ':'ЁЯТ░ ')+name+(details.length?' / '+details.join(' / '):''));
+  if(fare&&fare.start)details.push('出勤 '+fare.start);
+  if(fare&&fare.end)details.push('退勤 '+fare.end);
+  if((fare&&fare.pay>0)||pay>0)details.push(((fare&&fare.pay)||pay).toLocaleString()+'円');
+  showToast((fareMode==='memo'?'📝 ':'💰 ')+name+(details.length?' / '+details.join(' / '):''));
 }
 function openSettings(){document.getElementById('settingOTRate').value=devGetItem('otRate')||'';document.getElementById('settingHolidayRate').value=devGetItem('holRate')||'';clearCompanyHolidayEditor();renderCompanyHolidayList();updateBackupStatus();document.getElementById('settingsOverlay').classList.add('open');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))closeSettingsDirect();}
 function closeSettingsDirect(){document.getElementById('settingsOverlay').classList.remove('open');}
-function saveSettings(){var ot=parseInt(document.getElementById('settingOTRate').value),hol=parseInt(document.getElementById('settingHolidayRate').value);if(ot>0)devSetItem('otRate',String(ot));if(hol>0)devSetItem('holRate',String(hol));closeSettingsDirect();showToast('тЬЕ хНШф╛буВТф┐ЭхнШуБЧуБ╛уБЧуБЯуАВщБОхО╗уГЗуГ╝уВ┐уБпхдЙуВПуВКуБ╛уБЫуВУ');}
+function saveSettings(){var ot=parseInt(document.getElementById('settingOTRate').value),hol=parseInt(document.getElementById('settingHolidayRate').value);if(ot>0)devSetItem('otRate',String(ot));if(hol>0)devSetItem('holRate',String(hol));closeSettingsDirect();showToast('✅ 単価を保存しました。過去データは変わりません');}
 
 function normalizeJobMemoText(text){
   var s=String(text||'');
-  s=s.replace(/хбйч┤ацРнш╝Й/g,'хбйч┤ауААцРнш╝Й');
-  s=s.replace(/уВиуВ╣уГЖуГлцРнш╝Й/g,'уВиуВ╣уГЖуГлуААцРнш╝Й');
-  s=s.replace(/^уВлуГНуВл$/g,'уИ▒уВлуГНуВл хдзщШк');
+  s=s.replace(/塩素搭載/g,'塩素　搭載');
+  s=s.replace(/エステル搭載/g,'エステル　搭載');
+  s=s.replace(/^カネカ$/g,'㈱カネカ 大阪');
   return s;
 }
 function formatJobMemoText(text){
   var s=normalizeJobMemoText(text);
-  var parts=s.split('уАА').filter(function(p){return p!=='';});
-  var hasLoad=parts.includes('цРнш╝Й');
+  var parts=s.split('　').filter(function(p){return p!=='';});
+  var hasLoad=parts.includes('搭載');
   var out=[];
   for(var i=0;i<parts.length;i++){
     var p=parts[i];
-    if(p==='цРнш╝Й')continue;
-    if(hasLoad&&(p==='хбйч┤а'||p==='уВиуВ╣уГЖуГл'))out.push(p+'цРнш╝Й');
+    if(p==='搭載')continue;
+    if(hasLoad&&(p==='塩素'||p==='エステル'))out.push(p+'搭載');
     else out.push(p);
   }
-  if(hasLoad&&!parts.includes('хбйч┤а')&&!parts.includes('уВиуВ╣уГЖуГл'))out.push('цРнш╝Й');
-  return out.join('уАА');
+  if(hasLoad&&!parts.includes('塩素')&&!parts.includes('エステル'))out.push('搭載');
+  return out.join('　');
 }
 function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]});}
 function escapeJs(s){return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
@@ -1480,7 +1481,7 @@ function changeInputDateBy(days){
   }
   updateInputProgress();
   openOnlyNextRequiredAccordion();
-  showToast('ЁЯУЕ '+next.replace(/-/g,'/'));
+  showToast('📅 '+next.replace(/-/g,'/'));
 }
 
 var TAB_ORDER=['input','records','stats'];
@@ -1489,7 +1490,7 @@ var swX=0,swY=0;function addSwipe(el,onL,onR){el.addEventListener('touchstart',f
 buildHourBtns('start');buildHourBtns('end');buildOvertimeHourBtns();
 document.getElementById('inputDate').value=getLocalDateStr();
 document.getElementById('inputDate').addEventListener('change',onDateChange);
-var _today=new Date();document.getElementById('headerDate').textContent=_today.getFullYear()+'х╣┤'+(_today.getMonth()+1)+'цЬИ'+_today.getDate()+'цЧея╝И'+'цЧецЬИчБлц░┤цЬищЗСхЬЯ'[_today.getDay()]+'я╝Й';
+var _today=new Date();document.getElementById('headerDate').textContent=_today.getFullYear()+'年'+(_today.getMonth()+1)+'月'+_today.getDate()+'日（'+'日月火水木金土'[_today.getDay()]+'）';
 migrateRecordRates();
 applyInputAccordionState();
 renderRecords();
@@ -1498,42 +1499,45 @@ addSwipe(document.getElementById('page-records'),function(){changeMonth(1)},func
 addSwipe(document.getElementById('page-input'),function(){changeInputDateBy(1)},function(){changeInputDateBy(-1)});
 addSwipe(document.getElementById('page-stats'),function(){changeStatsMonth(1)},function(){changeStatsMonth(-1)});
 setTimeout(function(){var t=document.getElementById('cal-today');if(t)t.scrollIntoView({behavior:'smooth',block:'center'})},150);
-var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayRecord)loadRecordToForm(todayRecord);refreshMemoButtonStates();if(hasMemoPart('уИ▒уВлуГНуВл хдзщШк')||hasMemoPart('PMцРнш╝Й'))syncKanekaPmToxic();updateInputProgress();setTimeout(openOnlyNextRequiredAccordion,180);
+var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()});if(todayRecord)loadRecordToForm(todayRecord);refreshMemoButtonStates();if(hasMemoPart('㈱カネカ 大阪')||hasMemoPart('PM搭載'))syncKanekaPmToxic();updateInputProgress();setTimeout(openOnlyNextRequiredAccordion,180);
 </script>
 
 <!--
-хдЙцЫ┤х▒ецн┤
-- 2026/09/01 TEST хоМхЕич╡▒хРИчЙИя╝Ъiframe/app-v7.htmlф╛ЭхнШуВТх╗ГцнвуБЧуАБхНШф╜Уindex.htmlуБауБСуБзхЛХф╜ЬуБЩуВЛцзЛцИРуБ╕ч╡▒хРИ
-- уВлуГНуВлONя╝ЭцпТ├Ч1уАБPMцРнш╝ЙONя╝ЭцпТ├Ч1уАБф╕бцЦ╣ONя╝ЭцпТ├Ч2уБиуБЧуБжцпОхЫЮцЬмф╜УуГЗуГ╝уВ┐уБ╕чЫ┤цОехРМцЬЯ
-- щХ╖ш╖ЭщЫвя╝ЛуВлуГНуВля╝ЛPMцРнш╝ЙуБзцпТ├Ч2уБлуБкуВЙуБкуБДф╕НхЕ╖хРИуВТф┐оцнг
-- уВлуГНуВлхЖНуВ┐уГГуГЧшзгщЩдцЩВуАБPMцРнш╝ЙуБМуБкуБСуВМуБ░цпТцЙЛх╜УуВТ0уБ╕чв║хоЯуБлшзгщЩд
-- уВлуГНуВлшзгщЩдцЩВуБлPMцРнш╝ЙуБМцоЛуБгуБжуБДуВЛха┤хРИуБпцпТ├Ч1уВТч╢нцМБ
-- PMцРнш╝ЙшзгщЩдцЩВуБлуВлуГНуВлуБМцоЛуБгуБжуБДуВЛха┤хРИуБпцпТ├Ч1уБ╕цИ╗уБЩ
-- ф╗Хф║ЛхЖЕхо╣уГбуГвуГЬуВ┐уГ│уВТON/OFFх╝ПуБлч╡▒ф╕АуБЧуАБщБ╕цКЮф╕нуБауБСуВкуГмуГ│уВ╕ч╕БхПЦуВК
-- уГбуГвуГЬуВ┐уГ│шбичд║уВТуАМуВмуВ╣я╝ПуВиуВ╣уГЖуГлцРнш╝Йя╝Пхбйч┤ацРнш╝Йя╝Пхбйч┤ацРнш╝Йя╝ЛщЕНщАБя╝ПчТ░хвГцХ┤хВЩя╝ПPMцРнш╝Йя╝ПуВлуГНуВля╝ПховхЕИуАНуБлцХ┤чРЖ
-- хбйч┤ацРнш╝ЙуГ╗чТ░хвГцХ┤хВЩуБпш╡░шбМш╖ЭщЫв0kmуВТхЕехКЫхоМф║ЖцЙ▒уБД
-- ф╝Ъчд╛хЕмх╝ПуБоцЩВщЦУхдЦцЧйшжЛшби4хМ║хИЖуВТHTMLуГвуГ╝уГАуГлуБзчЫ┤цОеч╡▒хРИ
-- уВ╣уГЧуГмуГГуГЙуВ╖уГ╝уГИхЗ║хКЫуВТхПдуБДцЧеф╗ШщаЖуБлуБЩуВЛцЧвхнШф╗ХцзШуАБф╝СцЧеуГ╗ф╗гф╝СуГ╗хНКцЧецЬЙч╡жуГ╗ф╝Ъчд╛ф╝СцЧеуГ╗уГРуГГуВпуВвуГГуГЧчнЙуВТч╢нцМБ
-- уВ╣уГЧуГмуГГуГЙуВ╖уГ╝уГИчФиуВ│уГФуГ╝уВТцЧеф╗ШуБохПдуБДщаЖя╝ИцЬИхИЭтЖТцЬИцЬля╝ЙуБлхдЙцЫ┤
-- цоЛценшиИчоЧуВТcalcEffectiveOvertimeHoursуБ╕ф╕АцЬмхМЦ
-- щЭТхЬЯцЫЬуБоуБ┐ф╝СцЧецЙ▒уБДуАБчЩ╜хЬЯцЫЬуБпщАЪх╕╕хЗ║хЛдцЧецЙ▒уБДуБлхдЙцЫ┤
-- хНКцЧецЬЙч╡жуВТцЬАхДкхЕИуБЧуАБ8:00уВИуВКхЙНуБоцЧйхЗ║хИЖуБауБСцоЛцен
-- хНКцЧецЬЙч╡жщБ╕цКЮцЩВуБоч╡ВценцЩВхИ╗12:00шЗкхЛХшинхоЪуВТч╢нцМБ
-- уВлуГмуГ│уГАуГ╝уГ╗шиШщМ▓шй│ч┤░уГ╗цЬИхРИшиИуГ╗щЫЖшиИуВТхРМуБШцоЛценшиИчоЧуБ╕ч╡▒ф╕А
-- цЙЛхЛХф╝Ъчд╛ф╝СцЧеуВТф╝СцЧецЙЛх╜УуГ╗ф╗гф╝СхИдхоЪуБ╕ч╡▒ф╕АхПНцШа
-- хНКцЧецЬЙч╡жуВТщБ╕цКЮуБЧуБЯуБиуБНуАБч╡ВценцЩВхИ╗уВТшЗкхЛХуБз12:00уБлшинхоЪуБЩуВЛуВИуБЖхдЙцЫ┤
-- 5:30хЗ║хЛдуБоха┤хРИуБоцоЛцен2.5цЩВщЦУшиИчоЧуБпч╢нцМБ
-- хНКцЧецЬЙч╡жуВТх╛МуБЛуВЙщБ╕цКЮуБЧуБЯщЪЫуАБхЬЯцЫЬуГ╗чеЭцЧехИдхоЪуВИуВКхНКцЧецЬЙч╡жшиИчоЧуВТхДкхЕИуБЩуВЛуВИуБЖф┐оцнг
-- хНКцЧецЬЙч╡жуБоцоЛценуВТуАМ8:00уВИуВКхЙНуБоцЧйхЗ║цЩВщЦУуАНуБз15хИЖхНШф╜НшиИчоЧя╝И5:30хЗ║хЛдуБп2.5цЩВщЦУя╝Й
-- хНКцЧецЬЙч╡жуБощБ╕цКЮуГ╗шзгщЩдцЩВуБлуАБхЕехКЫц╕ИуБ┐уБоч╡ВценцЩВхИ╗уВТхЛЭцЙЛуБлхдЙцЫ┤уГ╗ц╢ИхО╗уБЧуБкуБДуВИуБЖф┐оцнг
-- ф╝Ъчд╛ф╝СцЧечобчРЖуВТшинхоЪчФ╗щЭвуБлш┐╜хКа
-- уБКчЫЖф╝СуБ┐уГ╗х╣┤цЬлх╣┤хзЛуГ╗GWуБкуБйуБоф╝Ъчд╛ф╝СцЧеуВТцЧеф╗ШуБихРНчз░уБзчЩ╗щМ▓хПпшГ╜
-- чЩ╗щМ▓ц╕ИуБ┐ф╝Ъчд╛ф╝СцЧеуБоч╖ищЫЖуГ╗хЙКщЩдуБлхп╛х┐Ь
-- ф╝Ъчд╛ф╝СцЧеуВТуВлуГмуГ│уГАуГ╝уБ╕хРНчз░ф╗ШуБНуБзшбичд║
-- цЬкхЕехКЫуБоф╝Ъчд╛ф╝СцЧеуВТщЦЛуБДуБЯщЪЫуБлуАМф╝СуБ┐уАНуБиф╝СцЧехРНуВТшЗкхЛХхЕехКЫ
-- ф╝Ъчд╛ф╝СцЧеуВТф╝СцЧецЙЛх╜УуГ╗ф╗гф╝СхИдхоЪуБ╕хПНцШа
-- ф╝Ъчд╛ф╝СцЧеуГЗуГ╝уВ┐уВТхоМхЕиуГРуГГуВпуВвуГГуГЧуГ╗х╛йхЕГуБохп╛ш▒буБлш┐╜хКа
-- цЧвхнШуБоцЩВщЦУхдЦцЙЛх╜УуГ╗ф╝СцЧецЙЛх╜УхИешбичд║уАБцЧеха▒уАБщЫЖшиИуАБцЬЙч╡жуАБф╗гф╝СуАБщХ╖ш╖ЭщЫвуАБцпТуАБуГИуГмуГ╝уГйуГ╝уАБуГРуГГуВпуВвуГГуГЧцйЯшГ╜уВТч╢нцМБ
+変更履歴
+- 2026/09/01 TEST UTF-8修正版：GitHub上で日本語が文字化けした問題に対応
+- UTF-8 BOM付きで保存し、Content-TypeのUTF-8指定も追加
+- TEST表記をDEVからTESTへ統一
+- 2026/09/01 TEST 完全統合版：iframe/app-v7.html依存を廃止し、単体index.htmlだけで動作する構成へ統合
+- カネカON＝毒×1、PM搭載ON＝毒×1、両方ON＝毒×2として毎回本体データへ直接同期
+- 長距離＋カネカ＋PM搭載で毒×2にならない不具合を修正
+- カネカ再タップ解除時、PM搭載がなければ毒手当を0へ確実に解除
+- カネカ解除時にPM搭載が残っている場合は毒×1を維持
+- PM搭載解除時にカネカが残っている場合は毒×1へ戻す
+- 仕事内容メモボタンをON/OFF式に統一し、選択中だけオレンジ縁取り
+- メモボタン表示を「ガス／エステル搭載／塩素搭載／塩素搭載＋配送／環境整備／PM搭載／カネカ／客先」に整理
+- 塩素搭載・環境整備は走行距離0kmを入力完了扱い
+- 会社公式の時間外早見表4区分をHTMLモーダルで直接統合
+- スプレッドシート出力を古い日付順にする既存仕様、休日・代休・半日有給・会社休日・バックアップ等を維持
+- スプレッドシート用コピーを日付の古い順（月初→月末）に変更
+- 残業計算をcalcEffectiveOvertimeHoursへ一本化
+- 青土曜のみ休日扱い、白土曜は通常出勤日扱いに変更
+- 半日有給を最優先し、8:00より前の早出分だけ残業
+- 半日有給選択時の終業時刻12:00自動設定を維持
+- カレンダー・記録詳細・月合計・集計を同じ残業計算へ統一
+- 手動会社休日を休日手当・代休判定へ統一反映
+- 半日有給を選択したとき、終業時刻を自動で12:00に設定するよう変更
+- 5:30出勤の場合の残業2.5時間計算は維持
+- 半日有給を後から選択した際、土曜・祝日判定より半日有給計算を優先するよう修正
+- 半日有給の残業を「8:00より前の早出時間」で15分単位計算（5:30出勤は2.5時間）
+- 半日有給の選択・解除時に、入力済みの終業時刻を勝手に変更・消去しないよう修正
+- 会社休日管理を設定画面に追加
+- お盆休み・年末年始・GWなどの会社休日を日付と名称で登録可能
+- 登録済み会社休日の編集・削除に対応
+- 会社休日をカレンダーへ名称付きで表示
+- 未入力の会社休日を開いた際に「休み」と休日名を自動入力
+- 会社休日を休日手当・代休判定へ反映
+- 会社休日データを完全バックアップ・復元の対象に追加
+- 既存の時間外手当・休日手当別表示、日報、集計、有給、代休、長距離、毒、トレーラー、バックアップ機能を維持
 -->
 
 <script>
@@ -1543,13 +1547,13 @@ if(document.getElementById('overtimeReferenceBtn'))return;
 var style=document.createElement('style');
 style.textContent='.ot-ref-btn{width:100%;background:rgba(52,152,219,.12);border:1.5px solid var(--blue);border-radius:10px;padding:11px 12px;color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}.ot-ref-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1200;align-items:flex-end;justify-content:center}.ot-ref-overlay.open{display:flex}.ot-ref-modal{background:var(--surface);width:100%;height:94vh;border-radius:18px 18px 0 0;overflow:hidden;display:flex;flex-direction:column;border-top:2px solid var(--blue)}.ot-ref-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex:none}.ot-ref-head-title{font-weight:700;color:var(--blue);font-size:16px}.ot-ref-close{border:0;background:var(--surface2);border-radius:9px;padding:8px 12px;font-size:16px;color:var(--text)}.ot-ref-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}.ot-ref-note{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px}.ot-ref-group{margin-bottom:18px}.ot-ref-group-title{font-size:13px;font-weight:700;margin-bottom:7px}.ot-ref-scroll{overflow:auto;border:1px solid var(--border);border-radius:10px;background:#fff}.ot-ref-table{border-collapse:collapse;min-width:760px;width:max-content;font-size:10px;color:#111;background:#fff}.ot-ref-table th,.ot-ref-table td{border:1px solid #aaa;padding:4px 5px;text-align:center;white-space:nowrap}.ot-ref-table thead th{background:#f1f3f5}.ot-ref-table .start{position:sticky;left:0;background:#fff;font-weight:700;z-index:1}.ot-ref-table .break,.ot-ref-table .limit{background:#fff3cd}.ot-ref-legend{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5}';document.head.appendChild(style);
 var otCard=document.querySelector('.time-card-ot');if(!otCard)return;
-var btn=document.createElement('button');btn.type='button';btn.id='overtimeReferenceBtn';btn.className='ot-ref-btn';btn.textContent='ЁЯУЛ ф╝Ъчд╛уБоцЩВщЦУхдЦцЧйшжЛшбиуВТшжЛуВЛ';var note=document.getElementById('overtimeModeNote');otCard.insertBefore(btn,note||null);
-var overlay=document.createElement('div');overlay.id='overtimeReferenceOverlay';overlay.className='ot-ref-overlay';overlay.innerHTML='<div class="ot-ref-modal" onclick="event.stopPropagation()"><div class="ot-ref-head"><div class="ot-ref-head-title">ЁЯУЛ ф╝Ъчд╛хЕмх╝П цЩВщЦУхдЦцЧйшжЛшби</div><button type="button" class="ot-ref-close" id="overtimeReferenceClose">тЬХ щЦЙуБШуВЛ</button></div><div class="ot-ref-body"><div class="ot-ref-note">ф╝Ъчд╛ш│ЗцЦЩуБо4хМ║хИЖуВТуВ╣уГЮуГЫуБзшжЛуВДуБЩуБДшбиуБлуБЧуБжуБДуБ╛уБЩуАВцикуБлуВ╣уВпуГнуГ╝уГлуБзуБНуБ╛уБЩуАВ</div><div id="overtimeReferenceTables"></div></div></div>';document.body.appendChild(overlay);
+var btn=document.createElement('button');btn.type='button';btn.id='overtimeReferenceBtn';btn.className='ot-ref-btn';btn.textContent='📋 会社の時間外早見表を見る';var note=document.getElementById('overtimeModeNote');otCard.insertBefore(btn,note||null);
+var overlay=document.createElement('div');overlay.id='overtimeReferenceOverlay';overlay.className='ot-ref-overlay';overlay.innerHTML='<div class="ot-ref-modal" onclick="event.stopPropagation()"><div class="ot-ref-head"><div class="ot-ref-head-title">📋 会社公式 時間外早見表</div><button type="button" class="ot-ref-close" id="overtimeReferenceClose">✕ 閉じる</button></div><div class="ot-ref-body"><div class="ot-ref-note">会社資料の4区分をスマホで見やすい表にしています。横にスクロールできます。</div><div id="overtimeReferenceTables"></div></div></div>';document.body.appendChild(overlay);
 function mins(v){var p=v.split(':');return parseInt(p[0],10)*60+parseInt(p[1],10);}function fmt(m){m=(m+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 function otHours(start,baseStart,stdEnd,end){var s=mins(start),b=mins(baseStart),std=mins(stdEnd),e=mins(end);if(e<s)e+=1440;var early=Math.max(0,b-s),post=Math.max(0,e-std);early=Math.floor(early/15)*15;post=Math.floor(post/15)*15;var credited=post;if(post>240&&post<=270)credited=240;else if(post>270)credited=post-30;return Math.max(0,Math.round(((early+credited)/60)*4)/4);}
 function num(v){return v%1===0?String(v):String(v.toFixed(2)).replace(/0+$/,'').replace(/\.$/,'');}
-function buildGroup(title,starts,baseStart,stdEnd,endStart,endFinish){var ends=[],m=mins(endStart),last=mins(endFinish);if(last<m)last+=1440;for(;m<=last;m+=15)ends.push(fmt(m));var html='<div class="ot-ref-group"><div class="ot-ref-group-title">'+title+' уАРхоЪцЩВуБощААхЛдцЩВщЦУуБп'+stdEnd+'уАС</div><div class="ot-ref-scroll"><table class="ot-ref-table"><thead><tr><th class="start">хЗ║хЛд\\щААхЛд</th>';ends.forEach(function(e){html+='<th>'+e+'</th>';});html+='</tr></thead><tbody>';starts.forEach(function(s){html+='<tr><th class="start">'+s+'</th>';ends.forEach(function(e){var em=mins(e),sm=mins(s),stdm=mins(stdEnd),post=em-stdm;if(em<sm)post+=1440;var elapsed=em-sm;if(em<sm)elapsed+=1440;var cls=(post>240&&post<=270)?'break':(elapsed===900?'limit':'');html+='<td class="'+cls+'">'+num(otHours(s,baseStart,stdEnd,e))+'</td>';});html+='</tr>';});html+='</tbody></table></div><div class="ot-ref-legend">щ╗ДшЙ▓я╝ЪхоЪцЩВх╛М4цЩВщЦУуВТш╢ЕуБИуБЯ30хИЖф╝СцЖйх╕пуАБуБ╛уБЯуБпхЗ║хЛдуБЛуВЙ15цЩВщЦУуБочЫохоЙуАВцЧйхЗ║уБпхоЪцЩВх╛М4цЩВщЦУуБоф╝СцЖйхИдхоЪуБлуБпхРлуВБуБ╛уБЫуВУуАВ</div></div>';return html;}
-document.getElementById('overtimeReferenceTables').innerHTML=buildGroup('4:30уАЬ6:00хЗ║хЛдуБоцЩВщЦУхдЦцЧйшжЛшби',['4:30','5:00','5:30','6:00'],'6:00','14:15','14:15','21:00')+buildGroup('7:00уАЬ8:00хЗ║хЛдуБоцЩВщЦУхдЦцЧйшжЛшби',['7:00','7:30','8:00'],'8:00','16:15','16:15','23:00')+buildGroup('9:00уАЬ10:00хЗ║хЛдуБоцЩВщЦУхдЦцЧйшжЛшби',['9:00','10:00'],'10:00','18:15','18:15','01:00')+buildGroup('12:00уАЬ13:00хЗ║хЛдуБоцЩВщЦУхдЦцЧйшжЛшби',['12:00','13:00'],'13:00','21:15','21:15','04:00');
+function buildGroup(title,starts,baseStart,stdEnd,endStart,endFinish){var ends=[],m=mins(endStart),last=mins(endFinish);if(last<m)last+=1440;for(;m<=last;m+=15)ends.push(fmt(m));var html='<div class="ot-ref-group"><div class="ot-ref-group-title">'+title+' 【定時の退勤時間は'+stdEnd+'】</div><div class="ot-ref-scroll"><table class="ot-ref-table"><thead><tr><th class="start">出勤\\退勤</th>';ends.forEach(function(e){html+='<th>'+e+'</th>';});html+='</tr></thead><tbody>';starts.forEach(function(s){html+='<tr><th class="start">'+s+'</th>';ends.forEach(function(e){var em=mins(e),sm=mins(s),stdm=mins(stdEnd),post=em-stdm;if(em<sm)post+=1440;var elapsed=em-sm;if(em<sm)elapsed+=1440;var cls=(post>240&&post<=270)?'break':(elapsed===900?'limit':'');html+='<td class="'+cls+'">'+num(otHours(s,baseStart,stdEnd,e))+'</td>';});html+='</tr>';});html+='</tbody></table></div><div class="ot-ref-legend">黄色：定時後4時間を超えた30分休憩帯、または出勤から15時間の目安。早出は定時後4時間の休憩判定には含めません。</div></div>';return html;}
+document.getElementById('overtimeReferenceTables').innerHTML=buildGroup('4:30〜6:00出勤の時間外早見表',['4:30','5:00','5:30','6:00'],'6:00','14:15','14:15','21:00')+buildGroup('7:00〜8:00出勤の時間外早見表',['7:00','7:30','8:00'],'8:00','16:15','16:15','23:00')+buildGroup('9:00〜10:00出勤の時間外早見表',['9:00','10:00'],'10:00','18:15','18:15','01:00')+buildGroup('12:00〜13:00出勤の時間外早見表',['12:00','13:00'],'13:00','21:15','21:15','04:00');
 btn.addEventListener('click',function(){overlay.classList.add('open');document.body.style.overflow='hidden';});document.getElementById('overtimeReferenceClose').addEventListener('click',function(){overlay.classList.remove('open');document.body.style.overflow='';});overlay.addEventListener('click',function(e){if(e.target===overlay){overlay.classList.remove('open');document.body.style.overflow='';}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installOvertimeReference);else installOvertimeReference();
