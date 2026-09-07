@@ -104,6 +104,7 @@ input[type=number]{-moz-appearance:textfield}
 .company-holiday-action{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 8px;font-size:11px;cursor:pointer}
 
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <div class="header">
@@ -317,6 +318,14 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       <button onclick="backupData()" class="copy-btn" style="background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);">💾 完全バックアップを作成</button>
     <button onclick="backupDataChooseLocation()" class="copy-btn" style="background:rgba(52,152,219,.10);border-color:var(--blue);color:var(--blue);">📁 保存先を選んでバックアップ【TEST】</button>
+    <div style="margin-top:12px;background:rgba(108,92,231,.06);border:1px solid #6c5ce7;border-radius:10px;padding:12px;">
+      <div style="font-weight:800;margin-bottom:7px;">☁️ Google Driveバックアップ【TEST】</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:9px;">初回だけGoogle Cloudで作成した「ウェブアプリのクライアントID」を入力します。クライアントシークレットは不要です。</div>
+      <input class="input-field" id="googleDriveClientId" type="text" autocomplete="off" placeholder="123456789-xxxx.apps.googleusercontent.com" style="font-size:12px;margin-bottom:8px;">
+      <button onclick="saveGoogleDriveClientId()" class="copy-btn" style="margin-bottom:8px;">🔑 クライアントIDを保存</button>
+      <button onclick="backupToGoogleDrive()" class="copy-btn" style="background:rgba(108,92,231,.12);border-color:#6c5ce7;color:#6c5ce7;">☁️ Google Driveへバックアップ</button>
+      <div id="googleDriveBackupStatus" style="font-size:10px;color:var(--muted);line-height:1.6;margin-top:8px;">未設定</div>
+    </div>
     <div style="font-size:10px;color:var(--muted);line-height:1.6;margin-top:7px;">対応ブラウザでは保存先選択画面を開きます。非対応の場合は通常のダウンロード保存に切り替わります。</div>
       <label style="width:100%;display:block;text-align:center;background:rgba(52,152,219,.15);border:1.5px solid var(--blue);border-radius:10px;padding:12px;color:var(--blue);font-size:14px;cursor:pointer;">📂 バックアップを選んで内容確認<input type="file" id="settingsRestoreFile" accept=".json,application/json" style="display:none;" onchange="previewBackupFile(this)"></label>
       <div id="backupLastStatus" style="font-size:11px;color:var(--muted);line-height:1.6;"></div>
@@ -1201,6 +1210,69 @@ function getDevStorageSnapshot(){var s={};devStorageKeys().forEach(function(k){v
 function getBackupMonthSummary(){var l=calcLeaveMonth();return {month:getLeaveMonthKey(),currentYukyu:l.currentYukyu,currentDaikyu:l.currentDaikyu,halfLeaveUsedYear:calcHalfLeaveYear().used};}
 function makeCompleteBackupPayload(){return {app:'truck-log',environment:'PROD',version:5,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
 function formatBackupDate(iso){if(!iso)return '不明';var d=new Date(iso);if(isNaN(d.getTime()))return String(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+var googleDriveTokenClient=null;
+function loadGoogleDriveClientId(){
+  var el=document.getElementById('googleDriveClientId'),saved=devGetItem('googleDriveClientId')||'';
+  if(el&&document.activeElement!==el)el.value=saved;
+  updateGoogleDriveBackupStatus();
+}
+function saveGoogleDriveClientId(){
+  var el=document.getElementById('googleDriveClientId');if(!el)return;
+  var v=String(el.value||'').trim();
+  if(!v){devRemoveItem('googleDriveClientId');googleDriveTokenClient=null;updateGoogleDriveBackupStatus();showToast('Google Drive設定を消去しました');return;}
+  if(v.indexOf('.apps.googleusercontent.com')<0){showToast('❌ クライアントIDを確認してください',true);return;}
+  devSetItem('googleDriveClientId',v);googleDriveTokenClient=null;updateGoogleDriveBackupStatus();showToast('🔑 Google Drive設定を保存しました');
+}
+function updateGoogleDriveBackupStatus(message){
+  var el=document.getElementById('googleDriveBackupStatus');if(!el)return;
+  if(message){el.textContent=message;return;}
+  var id=devGetItem('googleDriveClientId'),last=devGetItem('lastGoogleDriveBackupAt');
+  if(!id){el.textContent='⚙️ クライアントID未設定';return;}
+  el.textContent=last?'✅ 設定済み　前回Drive保存：'+formatBackupDate(last):'✅ 設定済み　まだDriveバックアップはありません';
+}
+function getGoogleDriveToken(){
+  return new Promise(function(resolve,reject){
+    var clientId=devGetItem('googleDriveClientId');
+    if(!clientId){reject(new Error('CLIENT_ID_MISSING'));return;}
+    if(!(window.google&&google.accounts&&google.accounts.oauth2)){reject(new Error('GIS_NOT_READY'));return;}
+    googleDriveTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:clientId,scope:'https://www.googleapis.com/auth/drive.file',
+      callback:function(resp){if(resp&&resp.access_token)resolve(resp.access_token);else reject(new Error((resp&&resp.error)||'TOKEN_ERROR'));},
+      error_callback:function(err){reject(err||new Error('OAUTH_ERROR'));}
+    });
+    googleDriveTokenClient.requestAccessToken({prompt:''});
+  });
+}
+async function uploadBackupJsonToGoogleDrive(accessToken,fileName,jsonText){
+  var boundary='trucklog_'+Date.now(),metadata={name:fileName,mimeType:'application/json'};
+  var body=new Blob([
+    '--'+boundary+'\r\n','Content-Type: application/json; charset=UTF-8\r\n\r\n',JSON.stringify(metadata)+'\r\n',
+    '--'+boundary+'\r\n','Content-Type: application/json; charset=UTF-8\r\n\r\n',jsonText+'\r\n','--'+boundary+'--'
+  ],{type:'multipart/related; boundary='+boundary});
+  var res=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink',{
+    method:'POST',headers:{Authorization:'Bearer '+accessToken},body:body
+  });
+  if(!res.ok)throw new Error('DRIVE_UPLOAD_'+res.status+' '+await res.text());
+  return await res.json();
+}
+async function backupToGoogleDrive(){
+  try{
+    if(!devGetItem('googleDriveClientId')){showToast('⚙️ 先にクライアントIDを設定してください',true);return false;}
+    updateGoogleDriveBackupStatus('🔐 Google認証を開いています…');
+    var token=await getGoogleDriveToken();updateGoogleDriveBackupStatus('☁️ Google Driveへ保存中…');
+    var p=makeCompleteBackupPayload(),j=JSON.stringify(p,null,2),n=new Date();
+    var st=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+'_'+String(n.getHours()).padStart(2,'0')+'-'+String(n.getMinutes()).padStart(2,'0');
+    var uploaded=await uploadBackupJsonToGoogleDrive(token,'運転日報_GoogleDriveバックアップ_'+st+'.json',j);
+    devSetItem('lastBackupAt',p.exportedAt);devSetItem('lastDailyBackupDate',getLocalDateKey());devSetItem('lastGoogleDriveBackupAt',p.exportedAt);
+    if(uploaded&&uploaded.id)devSetItem('lastGoogleDriveBackupFileId',uploaded.id);
+    updateBackupStatus();updateGoogleDriveBackupStatus();showToast('☁️ Google Driveへバックアップしました');return true;
+  }catch(e){
+    console.error(e);
+    showToast(e&&e.message==='GIS_NOT_READY'?'❌ Google認証の読み込み後にもう一度押してください':'❌ Google Driveバックアップに失敗しました',true);
+    updateGoogleDriveBackupStatus('❌ 保存できませんでした。Google設定・通信状態を確認してください');return false;
+  }
+}
+
 async function backupDataChooseLocation(){
   try{
     var p=makeCompleteBackupPayload(),j=JSON.stringify(p,null,2),n=new Date();
@@ -1639,7 +1711,8 @@ function selectFare(pay,name){
   showToast((fareMode==='memo'?'📝 ':'💰 ')+name+(details.length?' / '+details.join(' / '):''));
 }
 function openSettings(){document.getElementById('settingOTRate').value=devGetItem('otRate')||'';document.getElementById('settingHolidayRate').value=devGetItem('holRate')||'';clearCompanyHolidayEditor();renderCompanyHolidayList();updateBackupStatus();
-initDailyBackup();document.getElementById('settingsOverlay').classList.add('open');}
+initDailyBackup();
+  loadGoogleDriveClientId();document.getElementById('settingsOverlay').classList.add('open');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))closeSettingsDirect();}
 function closeSettingsDirect(){document.getElementById('settingsOverlay').classList.remove('open');}
 function saveSettings(){var ot=parseInt(document.getElementById('settingOTRate').value),hol=parseInt(document.getElementById('settingHolidayRate').value);if(ot>0)devSetItem('otRate',String(ot));if(hol>0)devSetItem('holRate',String(hol));closeSettingsDirect();showToast('✅ 単価を保存しました。過去データは変わりません');}
@@ -1708,6 +1781,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/07 TEST：Google Driveバックアップを追加
+- Google OAuth認証＋Drive APIのdrive.file権限でJSONをMy Driveへ保存
+- クライアントIDのみ端末保存。クライアントシークレットは使用しない
+- Drive保存名：運転日報_GoogleDriveバックアップ_YYYY-MM-DD_HH-MM.json
+- 従来の端末自動バックアップ・保存先選択・全既存機能を維持
 - 2026/09/07 TEST：保存先を選んでバックアップする実験機能を追加
 - 対応ブラウザでは任意の保存先・ファイル名を選択可能
 - 非対応ブラウザでは通常ダウンロードへ自動切替
