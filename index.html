@@ -310,7 +310,6 @@ input[type=number]{-moz-appearance:textfield}
 
       <hr style="border:none;border-top:1px solid var(--border);">
       <div class="section-title" style="margin-bottom:0;">🛡️ 安全・便利機能【TEST】</div>
-      <div id="backupHealthPanel" class="backup-info"></div>
       <button onclick="backupData({monthEnd:true})" class="copy-btn" style="border-color:#6c5ce7;color:#6c5ce7;">📦 月末バックアップを作成</button>
       <div id="backupGenerationList" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
       <hr style="border:none;border-top:1px solid var(--border);">
@@ -322,14 +321,7 @@ input[type=number]{-moz-appearance:textfield}
         <button onclick="reopenWorkMonth()" class="copy-btn" style="border-color:var(--green);color:var(--green);">🔓 締め解除</button>
       </div>
       <div id="closedMonthList" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
-      <hr style="border:none;border-top:1px solid var(--border);">
-      <div class="section-title" style="margin-bottom:0;">⚡ よく使う勤務パターン</div>
-      <div class="rate-note">入力画面の現在内容を登録して、次回1タップで呼び出せます。</div>
-      <input class="input-field" type="text" id="workPatternName" placeholder="例：5:30 地場 ガス">
-      <button onclick="saveCurrentWorkPattern()" class="copy-btn">＋ 現在の入力内容をパターン登録</button>
-      <div id="workPatternList"></div>
-
-      <hr style="border:none;border-top:1px solid var(--border);">
+<hr style="border:none;border-top:1px solid var(--border);">
       <div class="section-title" style="margin-bottom:0;">💾 バックアップ</div>
       <div class="backup-info">
         日報・単価・有給・代休・入力状態など、本番版の保存データをまとめて保存します。復元前に内容を確認できます。<br>
@@ -1759,11 +1751,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
-- 2026/09/07 TEST：追加候補①②④⑤⑨を統合
-- ①バックアップ健康診断：最終バックアップ経過日数・勤務記録件数・最終勤務日を表示
+- 2026/09/07 TEST：候補①・⑤を削除し、②・④・⑨だけを残した統合版
+- 削除：①バックアップ健康診断
+- 削除：⑤よく使う勤務パターン
 - ②月末締め：締めた月の勤務記録の保存・削除をロック。締め解除可能。締め時に月末バックアップ作成
 - ④入力漏れチェック：出退勤・距離・長距離メモ等を保存前に確認し、警告後も必要なら保存可能
-- ⑤よく使う勤務パターン：現在の入力内容を名前付き登録・呼び出し・削除可能
 - ⑨バックアップ世代管理：日次／手動／月末のファイル名を区別し、アプリ内に直近60回の履歴を保存
 - Androidのダウンロード済みファイルをWebアプリから勝手に削除する処理は行わない
 - TEST専用 STORAGE_PREFIX=DEV_ で本番データと分離
@@ -1865,21 +1857,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     return a.indexOf(m)>=0;
   };
   window.renderSafetyFeatures=function(){
-    var now=new Date(), last=devGetItem('lastBackupAt'), hp=document.getElementById('backupHealthPanel');
-    var days=null;
-    if(last){days=Math.floor((now-new Date(last))/86400000);}
-    if(hp){
-      var recs=getRecords(), latest=recs.slice().filter(function(r){return r.date}).sort(function(a,b){return b.date.localeCompare(a.date)})[0];
-      var state=!last?'🔴 バックアップ未作成':days>=3?'🔴 '+days+'日バックアップなし':days>=1?'🟡 前回から'+days+'日':'🟢 今日バックアップ済み';
-      hp.innerHTML='<b>🩺 バックアップ健康診断</b><br>'+state+'<br>勤務記録 '+recs.length+'件'+(latest?' ／ 最終勤務 '+latest.date:'');
-    }
-    var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationList');
+var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationList');
     if(gl)gl.innerHTML='<b>📚 アプリ内バックアップ履歴</b><br>'+(hist.length?hist.slice(0,10).map(function(x){return '・'+x.type+'　'+x.at.replace('T',' ').slice(0,16)}).join('<br>'):'まだ履歴はありません');
     var cm=document.getElementById('closedMonthList'), closed=jget('closedWorkMonths',[]);
     if(cm)cm.innerHTML=closed.length?'締め済み：'+closed.slice().sort().join('、'):'締め済みの月はありません';
     var mt=document.getElementById('monthCloseTarget');
     if(mt&&!mt.value)mt.value=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
-    renderWorkPatterns();
   };
 
   window.closeWorkMonth=function(){
@@ -1893,35 +1876,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     renderSafetyFeatures();showToast('🔓 '+m+' の締めを解除しました');
   };
 
-  function collectPattern(){
-    return {jobs:selectedJobs.slice(),startTime:document.getElementById('startTime').value,endTime:document.getElementById('endTime').value,
-      jobMemo:document.getElementById('jobMemo').value,toxicCount:toxicCount,trailerOn:trailerOn,longDistancePay:document.getElementById('longDistancePay').value};
-  }
-  window.saveCurrentWorkPattern=function(){
-    var n=String((document.getElementById('workPatternName')||{}).value||'').trim();
-    if(!n)return showToast('❗ パターン名を入力してください',true);
-    var a=jget('workPatterns',[]);a.push({id:Date.now(),name:n,data:collectPattern()});jset('workPatterns',a);
-    document.getElementById('workPatternName').value='';renderWorkPatterns();showToast('⚡ 勤務パターンを登録しました');
-  };
-  window.applyWorkPattern=function(id){
-    var p=jget('workPatterns',[]).find(function(x){return String(x.id)===String(id)});if(!p)return;
-    var d=p.data||{};selectedJobs=(d.jobs||[]).slice();toxicCount=parseInt(d.toxicCount)||0;trailerOn=!!d.trailerOn;
-    document.querySelectorAll('.job-btn').forEach(function(b){b.classList.remove('selected')});
-    selectedJobs.forEach(function(j){document.querySelectorAll('.job-btn').forEach(function(b){if(b.textContent.indexOf(j)>=0)b.classList.add('selected')})});
-    if(d.startTime)setTimePicker('start',d.startTime);else clearTimePicker('start');
-    if(d.endTime)setTimePicker('end',d.endTime);else clearTimePicker('end');
-    document.getElementById('jobMemo').value=d.jobMemo||'';document.getElementById('longDistancePay').value=d.longDistancePay||'';
-    if(typeof setToxicCountDirect==='function')setToxicCountDirect(toxicCount);
-    if(typeof updateTrailerUI==='function')updateTrailerUI();
-    updateInputProgress();showToast('⚡ '+p.name+' を呼び出しました');
-  };
-  window.deleteWorkPattern=function(id){
-    jset('workPatterns',jget('workPatterns',[]).filter(function(x){return String(x.id)!==String(id)}));renderWorkPatterns();showToast('🗑️ パターンを削除しました');
-  };
-  window.renderWorkPatterns=function(){
-    var el=document.getElementById('workPatternList');if(!el)return;var a=jget('workPatterns',[]);
-    el.innerHTML=a.length?a.map(function(p){return '<div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:7px;"><button class="copy-btn" style="margin:0;text-align:left;" onclick="applyWorkPattern('+p.id+')">⚡ '+escapeHtml(p.name)+'</button><button class="copy-btn" style="margin:0;color:var(--red);" onclick="deleteWorkPattern('+p.id+')">削除</button></div>'}).join(''):'<div style="font-size:11px;color:var(--muted);margin-top:7px;">まだ登録されていません</div>';
-  };
 
   window.getInputWarnings=function(){
     var w=[],date=document.getElementById('inputDate').value,start=document.getElementById('startTime').value,end=document.getElementById('endTime').value;
