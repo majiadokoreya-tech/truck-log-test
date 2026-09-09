@@ -104,6 +104,7 @@ input[type=number]{-moz-appearance:textfield}
 .company-holiday-action{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 8px;font-size:11px;cursor:pointer}
 
 </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <div class="header">
@@ -309,7 +310,7 @@ input[type=number]{-moz-appearance:textfield}
       <div id="companyHolidayList" class="company-holiday-list"></div>
 
       <hr style="border:none;border-top:1px solid var(--border);">
-      <div class="section-title" style="margin-bottom:0;">🛡️ 安全・便利機能【TEST】</div>
+      <div class="section-title" style="margin-bottom:0;">🛡️ 安全・便利機能</div>
       <button onclick="backupData({monthEnd:true})" class="copy-btn" style="border-color:#6c5ce7;color:#6c5ce7;">📦 月末バックアップを作成</button>
       <div id="backupGenerationList" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
       <hr style="border:none;border-top:1px solid var(--border);">
@@ -324,11 +325,35 @@ input[type=number]{-moz-appearance:textfield}
 <hr style="border:none;border-top:1px solid var(--border);">
       <div class="section-title" style="margin-bottom:0;">💾 バックアップ</div>
       <div class="backup-info">
-        日報・単価・有給・代休・入力状態など、本番版の保存データをまとめて保存します。復元前に内容を確認できます。<br>
+        日報・単価・有給・代休・入力状態など、テスト版の保存データをまとめて保存します。復元前に内容を確認できます。<br>
         <b>🔒 毎日1回 自動バックアップ：ON</b><br>
-        その日の最初の操作時に、JSONバックアップを端末のダウンロードフォルダへ自動保存します。ファイル名は「運転日報_自動バックアップ_日付_時刻.json」です。
+        その日の最初の操作時に、JSONバックアップを端末のダウンロードフォルダへ自動保存します。ファイル名は「運転日報_日次バックアップ_日付_時刻.json」です。
       </div>
       <button onclick="backupData()" class="copy-btn" style="background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);">💾 完全バックアップを作成</button>
+      <hr style="border:none;border-top:1px solid var(--border);">
+      <div class="section-title" style="margin-bottom:0;">☁️ Google Drive 自動バックアップ【TEST】</div>
+      <div class="backup-info" style="line-height:1.7;">
+        Google Driveへ日次バックアップを保存し、設定した保持数を超えたら<b>古いDriveバックアップから自動削除</b>します。<br>
+        <b>端末のダウンロード済みJSONは削除しません。</b><br>
+        Google認証が切れた場合だけ、再接続が必要です。
+      </div>
+      <label class="input-label" for="driveClientId">Google OAuth クライアントID</label>
+      <input class="input-field" type="text" id="driveClientId" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" oninput="saveDriveSettings(false)" onblur="saveDriveSettings(true)">
+      <label class="input-label" for="driveRetentionCount">Driveに残す自動バックアップ数（5〜10）</label>
+      <select class="input-field" id="driveRetentionCount" onchange="saveDriveSettings(true)">
+        <option value="5">5日分</option>
+        <option value="6">6日分</option>
+        <option value="7" selected>7日分</option>
+        <option value="8">8日分</option>
+        <option value="9">9日分</option>
+        <option value="10">10日分</option>
+      </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="connectGoogleDrive()" class="copy-btn" style="border-color:#4285f4;color:#4285f4;">🔗 Google Drive接続</button>
+        <button onclick="disconnectGoogleDrive()" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">接続解除</button>
+      </div>
+      <button onclick="manualGoogleDriveBackup()" class="copy-btn" style="background:rgba(66,133,244,.10);border-color:#4285f4;color:#4285f4;">☁️ 今すぐDriveへバックアップ</button>
+      <div id="driveBackupStatus" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
     <input type="file" id="recordsOnlyRestoreFile" accept=".json,application/json" style="display:none" onchange="restoreRecordsOnly(this)">
     <button onclick="document.getElementById('recordsOnlyRestoreFile').click()" class="copy-btn" style="background:rgba(52,152,219,.10);border-color:var(--blue);color:var(--blue);">🛟 勤務記録だけ復元（設定はそのまま）</button>
     <div style="font-size:10px;color:var(--muted);line-height:1.6;margin-top:6px;">古いバックアップから勤務記録だけを取り込みます。有給・代休・会社休日・各種設定は変更しません。同じ日付の記録が現在側にある場合は現在の記録を優先します。</div>
@@ -581,7 +606,12 @@ function jumpToInputSection(id){
     if(toggle)toggle.classList.toggle('open',sectionId===id);
   });
   var target=document.getElementById(id+'Toggle');
-  setTimeout(function(){if(target)target.scrollIntoView({behavior:'smooth',block:'start'});},80);
+  setTimeout(function(){
+    if(!target)return;
+    var stickyOffset=(id==='inputJobAccordion')?185:145;
+    var top=target.getBoundingClientRect().top+window.pageYOffset-stickyOffset;
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  },80);
 }
 
 function openOnlyNextRequiredAccordion(){
@@ -1213,7 +1243,7 @@ function fixAllRecords(){var r=getRecords().map(function(r){var oldRate=getRateF
 var pendingBackupRestore=null;
 function getDevStorageSnapshot(){var s={};devStorageKeys().forEach(function(k){var v=devGetItem(k);if(v!==null)s[k]=v;});return s;}
 function getBackupMonthSummary(){var l=calcLeaveMonth();return {month:getLeaveMonthKey(),currentYukyu:l.currentYukyu,currentDaikyu:l.currentDaikyu,halfLeaveUsedYear:calcHalfLeaveYear().used};}
-function makeCompleteBackupPayload(){return {app:'truck-log',environment:'PROD',version:5,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
+function makeCompleteBackupPayload(){return {app:'truck-log',environment:'DEV',version:6,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
 function formatBackupDate(iso){if(!iso)return '不明';var d=new Date(iso);if(isNaN(d.getTime()))return String(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
 function getLocalDateKey(){
   var n=new Date();
@@ -1751,6 +1781,25 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/10 TEST：Google Drive日次バックアップ＋自動世代削除を追加
+- Google DriveにTEST専用フォルダ「運転日報バックアップ_TEST」を自動作成
+- Drive保持数を5〜10日分から選択可能（初期値7日）
+- Driveへの新規バックアップ成功後、保持数を超えた古いDriveバックアップを古い順に自動削除
+- Driveの削除対象はこのアプリが作成したTEST自動バックアップのみ。端末Downloads内のJSONは削除しない
+- Google Drive OAuthは drive.file スコープを使用
+- Google認証トークンが有効な間は日次バックアップ時にDriveへも自動保存。認証切れ時は再接続案内
+- 手動の「今すぐDriveへバックアップ」ボタンも追加
+- TEST STORAGE_PREFIX=DEV_、バックアップ environment=DEV を維持し、本番データと分離
+- 2026/09/09 PROD：入力進捗の「仕事」タップ時のスクロール位置を上方向へ調整
+- 「仕事の種類」へ移動した直後に、地場・長距離など先頭の仕事ボタンが画面内に入りやすい位置で停止するよう修正
+- 時間・距離・手当へのジャンプは従来動作を維持しつつ、固定ヘッダーとの重なりを軽減
+- 2026/09/07 PROD：TEST確認版（②・④・⑨）を本番へ統合
+- ②月末締め：締めた月の勤務記録の保存・削除をロック。締め解除可能。締め時に月末バックアップ作成
+- ④入力漏れチェック：出退勤・距離・長距離メモ等を保存前に確認し、警告後も必要なら保存可能
+- ⑨バックアップ世代管理：日次／手動／月末のファイル名を区別し、アプリ内に直近60回の履歴を保存
+- ①バックアップ健康診断、⑤よく使う勤務パターンは削除済み
+- Androidのダウンロード済みファイルをWebアプリから勝手に削除する処理は行わない
+- PROD STORAGE_PREFIX='' を維持し、既存本番localStorageをそのまま使用
 - 2026/09/07 TEST：候補①・⑤を削除し、②・④・⑨だけを残した統合版
 - 削除：①バックアップ健康診断
 - 削除：⑤よく使う勤務パターン
@@ -1929,6 +1978,277 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
       ['change','input'].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target&&['inputDate','startTime','endTime','distance','jobMemo','longDistancePay'].indexOf(e.target.id)>=0)setTimeout(refresh,0)},true)});
       setTimeout(refresh,300);
     }
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  var DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+  var DRIVE_FOLDER_NAME='運転日報バックアップ_TEST';
+  var DRIVE_AUTO_PREFIX='運転日報_Drive自動_TEST_';
+  var driveTokenClient=null;
+  var driveAccessToken='';
+  var driveTokenExpiresAt=0;
+  var driveAuthPendingAction=null;
+
+  function getDriveRetention(){
+    var n=parseInt(devGetItem('driveRetentionCount')||'7',10);
+    if(!isFinite(n))n=7;
+    return Math.max(5,Math.min(10,n));
+  }
+  function driveTokenValid(){
+    return !!driveAccessToken && Date.now()<driveTokenExpiresAt-60000;
+  }
+  function driveHeaders(json){
+    var h={'Authorization':'Bearer '+driveAccessToken};
+    if(json)h['Content-Type']='application/json';
+    return h;
+  }
+  function setDriveStatus(message,isError){
+    var el=document.getElementById('driveBackupStatus');
+    if(el){
+      el.innerHTML=message;
+      el.style.color=isError?'var(--red)':'var(--muted)';
+    }
+  }
+  function updateDriveStatus(){
+    var enabled=devGetItem('driveBackupEnabled')==='1';
+    var last=devGetItem('lastDriveBackupAt');
+    var retention=getDriveRetention();
+    var auth=driveTokenValid()?'🟢 接続中':(enabled?'🟡 再接続待ち':'⚪ 未接続');
+    var lastText=last?formatBackupDate(last):'まだありません';
+    setDriveStatus('<b>'+auth+'</b><br>自動保存：'+(enabled?'ON':'OFF')+' ／ 保持：'+retention+'日分<br>前回Driveバックアップ：'+escapeHtml(lastText),false);
+  }
+  window.saveDriveSettings=function(showSaved){
+    var c=document.getElementById('driveClientId');
+    var r=document.getElementById('driveRetentionCount');
+    if(c)devSetItem('driveClientId',String(c.value||'').trim());
+    if(r){
+      var n=parseInt(r.value,10);
+      n=Math.max(5,Math.min(10,isFinite(n)?n:7));
+      devSetItem('driveRetentionCount',String(n));
+    }
+    updateDriveStatus();
+    if(showSaved)showToast('☁️ Drive設定を保存しました');
+  };
+  window.loadDriveSettings=function(){
+    var c=document.getElementById('driveClientId');
+    var r=document.getElementById('driveRetentionCount');
+    if(c)c.value=devGetItem('driveClientId')||'';
+    if(r)r.value=String(getDriveRetention());
+    updateDriveStatus();
+  };
+
+  function initDriveTokenClient(){
+    var clientId=String(devGetItem('driveClientId')||'').trim();
+    if(!clientId)throw new Error('CLIENT_ID_MISSING');
+    if(!window.google||!google.accounts||!google.accounts.oauth2)throw new Error('GIS_NOT_READY');
+    driveTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:clientId,
+      scope:DRIVE_SCOPE,
+      callback:function(resp){
+        if(resp&&resp.access_token){
+          driveAccessToken=resp.access_token;
+          var expires=parseInt(resp.expires_in||'3600',10);
+          driveTokenExpiresAt=Date.now()+Math.max(300,expires)*1000;
+          devSetItem('driveBackupEnabled','1');
+          updateDriveStatus();
+          showToast('☁️ Google Driveに接続しました');
+          var action=driveAuthPendingAction;
+          driveAuthPendingAction=null;
+          if(action)setTimeout(action,0);
+        }else{
+          driveAuthPendingAction=null;
+          setDriveStatus('❌ Google Drive認証に失敗しました',true);
+        }
+      },
+      error_callback:function(err){
+        console.error(err);
+        driveAuthPendingAction=null;
+        setDriveStatus('❌ Google Drive認証を開始できませんでした',true);
+      }
+    });
+  }
+
+  function requestDriveToken(afterAuth){
+    try{
+      initDriveTokenClient();
+      driveAuthPendingAction=afterAuth||null;
+      driveTokenClient.requestAccessToken({prompt:'consent'});
+    }catch(e){
+      console.error(e);
+      if(e.message==='CLIENT_ID_MISSING'){
+        showToast('❗ Google OAuth クライアントIDを入力してください',true);
+      }else if(e.message==='GIS_NOT_READY'){
+        showToast('❗ Google認証ライブラリを読み込み中です。少し待って再度押してください',true);
+      }else{
+        showToast('❌ Google Drive接続を開始できませんでした',true);
+      }
+    }
+  }
+
+  window.connectGoogleDrive=function(){
+    saveDriveSettings(false);
+    requestDriveToken(null);
+  };
+  window.disconnectGoogleDrive=function(){
+    driveAccessToken='';
+    driveTokenExpiresAt=0;
+    driveTokenClient=null;
+    driveAuthPendingAction=null;
+    devSetItem('driveBackupEnabled','0');
+    updateDriveStatus();
+    showToast('Google Drive自動バックアップをOFFにしました');
+  };
+
+  async function driveFetch(url,options){
+    options=options||{};
+    var res=await fetch(url,options);
+    if(res.status===401){
+      driveAccessToken='';
+      driveTokenExpiresAt=0;
+      updateDriveStatus();
+      throw new Error('AUTH_EXPIRED');
+    }
+    if(!res.ok){
+      var body='';
+      try{body=await res.text();}catch(e){}
+      throw new Error('DRIVE_HTTP_'+res.status+' '+body.slice(0,250));
+    }
+    if(res.status===204)return null;
+    return await res.json();
+  }
+
+  function driveQueryEscape(s){
+    return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  }
+
+  async function findOrCreateBackupFolder(){
+    var q="name='"+driveQueryEscape(DRIVE_FOLDER_NAME)+"' and mimeType='application/vnd.google-apps.folder' and trashed=false";
+    var url='https://www.googleapis.com/drive/v3/files?spaces=drive&fields=files(id,name,createdTime)&pageSize=20&q='+encodeURIComponent(q);
+    var list=await driveFetch(url,{headers:driveHeaders(false)});
+    if(list.files&&list.files.length)return list.files[0].id;
+
+    var created=await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id,name',{
+      method:'POST',
+      headers:driveHeaders(true),
+      body:JSON.stringify({name:DRIVE_FOLDER_NAME,mimeType:'application/vnd.google-apps.folder'})
+    });
+    return created.id;
+  }
+
+  async function uploadBackupToDrive(folderId){
+    var p=makeCompleteBackupPayload();
+    p.environment='DEV';
+    p.driveBackup=true;
+    var n=new Date();
+    var st=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+'_'+String(n.getHours()).padStart(2,'0')+'-'+String(n.getMinutes()).padStart(2,'0');
+    var fileName=DRIVE_AUTO_PREFIX+st+'.json';
+
+    var boundary='-------trucklog'+Date.now();
+    var delimiter='\r\n--'+boundary+'\r\n';
+    var closeDelimiter='\r\n--'+boundary+'--';
+    var metadata={name:fileName,mimeType:'application/json',parents:[folderId],appProperties:{truckLogBackup:'1',environment:'TEST'}};
+    var body=delimiter+
+      'Content-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(metadata)+
+      delimiter+
+      'Content-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(p,null,2)+
+      closeDelimiter;
+
+    var res=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,createdTime',{
+      method:'POST',
+      headers:{
+        'Authorization':'Bearer '+driveAccessToken,
+        'Content-Type':'multipart/related; boundary='+boundary
+      },
+      body:body
+    });
+    devSetItem('lastDriveBackupAt',new Date().toISOString());
+    return res;
+  }
+
+  async function pruneOldDriveBackups(folderId){
+    var retention=getDriveRetention();
+    var q="'"+driveQueryEscape(folderId)+"' in parents and trashed=false and name contains '"+driveQueryEscape(DRIVE_AUTO_PREFIX)+"'";
+    var url='https://www.googleapis.com/drive/v3/files?spaces=drive&orderBy=createdTime%20desc&pageSize=100&fields=files(id,name,createdTime)&q='+encodeURIComponent(q);
+    var list=await driveFetch(url,{headers:driveHeaders(false)});
+    var files=(list.files||[]).slice().sort(function(a,b){
+      return String(b.createdTime||'').localeCompare(String(a.createdTime||''));
+    });
+    var old=files.slice(retention);
+    for(var i=0;i<old.length;i++){
+      await driveFetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(old[i].id),{
+        method:'DELETE',
+        headers:driveHeaders(false)
+      });
+    }
+    return {kept:Math.min(files.length,retention),deleted:old.length,totalBefore:files.length};
+  }
+
+  async function performDriveBackup(autoMode){
+    if(!driveTokenValid()){
+      if(autoMode){
+        setDriveStatus('🟡 Google認証が切れています。設定から「Google Drive接続」を1回押してください。<br>端末バックアップは通常どおり保存されています。',false);
+        return false;
+      }
+      requestDriveToken(function(){performDriveBackup(false);});
+      return false;
+    }
+    try{
+      setDriveStatus('☁️ Google Driveへバックアップ中…',false);
+      var folderId=await findOrCreateBackupFolder();
+      var uploaded=await uploadBackupToDrive(folderId);
+      var result=await pruneOldDriveBackups(folderId);
+      updateDriveStatus();
+      showToast('☁️ Drive保存完了'+(result.deleted?'・古いバックアップを'+result.deleted+'件削除':''));
+      return true;
+    }catch(e){
+      console.error(e);
+      if(e.message==='AUTH_EXPIRED'){
+        setDriveStatus('🟡 Google認証の期限が切れました。「Google Drive接続」を押して再接続してください。',false);
+      }else{
+        setDriveStatus('❌ Driveバックアップに失敗しました。端末バックアップは影響ありません。',true);
+      }
+      return false;
+    }
+  }
+
+  window.manualGoogleDriveBackup=function(){
+    saveDriveSettings(false);
+    if(devGetItem('driveBackupEnabled')!=='1' || !driveTokenValid()){
+      requestDriveToken(function(){performDriveBackup(false);});
+      return;
+    }
+    performDriveBackup(false);
+  };
+
+  // 既存の日次バックアップ実行後、Driveにも1回保存。
+  // ブラウザのOAuth制約により、認証が有効な間だけ完全自動。
+  var originalRunDailyBackupOnFirstAction=window.runDailyBackupOnFirstAction;
+  if(typeof originalRunDailyBackupOnFirstAction==='function'){
+    window.runDailyBackupOnFirstAction=function(){
+      var shouldRun=needsDailyBackup();
+      var r=originalRunDailyBackupOnFirstAction.apply(this,arguments);
+      if(shouldRun && devGetItem('driveBackupEnabled')==='1'){
+        setTimeout(function(){performDriveBackup(true);},500);
+      }
+      return r;
+    };
+  }
+
+  var originalOpenSettingsDrive=window.openSettings;
+  if(typeof originalOpenSettingsDrive==='function'){
+    window.openSettings=function(){
+      var r=originalOpenSettingsDrive.apply(this,arguments);
+      setTimeout(loadDriveSettings,0);
+      return r;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(loadDriveSettings,300);
   });
 })();
 </script>
