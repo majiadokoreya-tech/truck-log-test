@@ -352,7 +352,7 @@ input[type=number]{-moz-appearance:textfield}
       </select>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <button onclick="testGasConnection()" class="copy-btn" style="border-color:#4285f4;color:#4285f4;">🔗 接続テスト</button>
-        <button onclick="disableGasBackup()" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
+        <button id="gasBackupToggleBtn" onclick="toggleGasBackup()" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
       </div>
       <button onclick="manualGasDriveBackup()" class="copy-btn" style="background:rgba(66,133,244,.10);border-color:#4285f4;color:#4285f4;">☁️ 今すぐDriveへバックアップ</button>
       <div id="gasBackupStatus" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
@@ -1784,6 +1784,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/10 TEST：Google Drive自動バックアップのON/OFF切替不具合を修正
+- 自動保存ボタンを一方向OFF処理からON/OFFトグルへ変更
+- ON時は緑表示、OFF時はグレー表示にして現在状態をボタンへ即時反映
+- 手動Driveバックアップ実行時に自動保存設定を勝手にONへ変更しないよう修正
+- 接続テスト成功時も自動保存設定を勝手にONへ変更しないよう修正
 - 2026/09/10 TEST：Google DriveバックアップをOAuth方式からGoogle Apps Script中継方式へ変更
 - Google再認証を毎日求めない構成へ変更
 - Apps Script側でGoogle Drive保存・保持数5〜10個・古いバックアップ自動削除を実行
@@ -2045,6 +2050,14 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(last)line+='<br>前回Driveバックアップ：'+escapeHtml(formatBackupDate(last));
     if(lastResult)line+='<br>'+escapeHtml(lastResult);
     gasSetStatus(line,false);
+
+    var btn=document.getElementById('gasBackupToggleBtn');
+    if(btn){
+      btn.textContent=enabled?'自動保存ON':'自動保存OFF';
+      btn.style.borderColor=enabled?'var(--green)':'var(--muted)';
+      btn.style.color=enabled?'var(--green)':'var(--muted)';
+      btn.style.background=enabled?'rgba(46,204,113,.10)':'var(--surface2)';
+    }
   }
 
   window.saveGasBackupSettings=function(showSaved){
@@ -2139,11 +2152,33 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
   window.manualGasDriveBackup=function(){
     saveGasBackupSettings(false);
-    devSetItem('gasBackupEnabled','1');
     gasUpdateStatus();
     gasPost('backup','manual');
   };
 
+  window.toggleGasBackup=function(){
+    saveGasBackupSettings(false);
+
+    var enabled=devGetItem('gasBackupEnabled')==='1';
+    if(enabled){
+      devSetItem('gasBackupEnabled','0');
+      gasUpdateStatus();
+      showToast('☁️ Google Drive自動バックアップをOFFにしました');
+      return;
+    }
+
+    if(!gasSettingsReady()){
+      gasUpdateStatus();
+      showToast('❗ Apps Script URLと合言葉を確認してください',true);
+      return;
+    }
+
+    devSetItem('gasBackupEnabled','1');
+    gasUpdateStatus();
+    showToast('☁️ Google Drive自動バックアップをONにしました');
+  };
+
+  // 旧版との互換性を維持
   window.disableGasBackup=function(){
     devSetItem('gasBackupEnabled','0');
     gasUpdateStatus();
@@ -2161,7 +2196,6 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
     if(d.ok){
       if(d.action==='ping'){
-        devSetItem('gasBackupEnabled','1');
         devSetItem('lastGasBackupResult','✅ Apps Script接続OK');
         gasUpdateStatus();
         showToast('✅ Apps Script接続OK');
