@@ -336,7 +336,7 @@ input[type=number]{-moz-appearance:textfield}
         Google Driveへ日次バックアップを保存し、設定した保持数を超えたら<b>古いDriveバックアップから自動削除</b>します。<br>
         <b>端末のダウンロード済みJSONは削除しません。</b><br>
         Google認証が切れた場合だけ、再接続が必要です。<br>
-        <span style="color:var(--muted);">※ 認証トークンは端末へ永続保存せず、このブラウザタブのセッション内だけ保持します。</span>
+        <span style="color:var(--muted);">※ 認証トークンはTESTアプリ内に短時間だけ保存し、有効期限が切れたら自動破棄します。</span>
       </div>
       <label class="input-label" for="driveClientId">Google OAuth クライアントID</label>
       <input class="input-field" type="text" id="driveClientId" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" oninput="saveDriveSettings(false)" onblur="saveDriveSettings(true)">
@@ -1782,6 +1782,12 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/10 TEST：モバイルChromeでGoogle認証後に別タブ/画面遷移するとsessionStorageが保持されないケースへ対応
+- DriveアクセストークンをTEST専用localStorageへ短時間保存し、アプリ復帰時・手動バックアップ時・接続時に復元
+- 保存トークンはGoogleの有効期限付きで、期限切れまたは401時に自動削除
+- 接続済みトークンがある場合は「Google Drive接続」を押しても再認証を開始しない
+- アプリ復帰時・visibility復帰時に接続状態を再判定
+- 5〜10件保持・古いDriveバックアップ自動削除・既存日報機能・TEST分離を維持
 - 2026/09/10 TEST：Google認証後に再び認証画面へ戻るループ対策
 - Google OAuthアクセストークンをsessionStorageへ一時保存し、Google認証からアプリへ戻った際・ページ再表示時に復元
 - 同意済み以降は requestAccessToken の prompt を空にし、毎回「このアプリは確認されていません」画面を出しにくく修正
@@ -2000,27 +2006,27 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   var driveAccessToken='';
   var driveTokenExpiresAt=0;
   var driveAuthPendingAction=null;
-  var DRIVE_SESSION_TOKEN_KEY='truckLogDriveAccessToken_TEST';
-  var DRIVE_SESSION_EXPIRES_KEY='truckLogDriveTokenExpiresAt_TEST';
+  var DRIVE_TOKEN_STORAGE_KEY='driveAccessToken_TEMP';
+  var DRIVE_EXPIRES_STORAGE_KEY='driveTokenExpiresAt_TEMP';
 
   function saveDriveTokenSession(){
     try{
       if(driveAccessToken&&driveTokenExpiresAt>Date.now()){
-        sessionStorage.setItem(DRIVE_SESSION_TOKEN_KEY,driveAccessToken);
-        sessionStorage.setItem(DRIVE_SESSION_EXPIRES_KEY,String(driveTokenExpiresAt));
+        devSetItem(DRIVE_TOKEN_STORAGE_KEY,driveAccessToken);
+        devSetItem(DRIVE_EXPIRES_STORAGE_KEY,String(driveTokenExpiresAt));
       }
-    }catch(e){console.warn('Drive token session save failed',e);}
+    }catch(e){console.warn('Drive token save failed',e);}
   }
   function clearDriveTokenSession(){
     try{
-      sessionStorage.removeItem(DRIVE_SESSION_TOKEN_KEY);
-      sessionStorage.removeItem(DRIVE_SESSION_EXPIRES_KEY);
+      devRemoveItem(DRIVE_TOKEN_STORAGE_KEY);
+      devRemoveItem(DRIVE_EXPIRES_STORAGE_KEY);
     }catch(e){}
   }
   function restoreDriveTokenSession(){
     try{
-      var t=sessionStorage.getItem(DRIVE_SESSION_TOKEN_KEY)||'';
-      var exp=parseInt(sessionStorage.getItem(DRIVE_SESSION_EXPIRES_KEY)||'0',10)||0;
+      var t=devGetItem(DRIVE_TOKEN_STORAGE_KEY)||'';
+      var exp=parseInt(devGetItem(DRIVE_EXPIRES_STORAGE_KEY)||'0',10)||0;
       if(t&&exp>Date.now()+60000){
         driveAccessToken=t;
         driveTokenExpiresAt=exp;
@@ -2102,7 +2108,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
           showToast('☁️ Google Driveに接続しました');
           var action=driveAuthPendingAction;
           driveAuthPendingAction=null;
-          if(action)setTimeout(action,100);
+          if(action)setTimeout(action,250);
         }else{
           driveAuthPendingAction=null;
           setDriveStatus('❌ Google Drive認証に失敗しました',true);
@@ -2136,6 +2142,12 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
   window.connectGoogleDrive=function(){
     saveDriveSettings(false);
+    restoreDriveTokenSession();
+    if(driveTokenValid()){
+      updateDriveStatus();
+      showToast('☁️ Google Driveは接続済みです');
+      return;
+    }
     var promptMode=devGetItem('driveConsentGranted')==='1'?'':'consent';
     requestDriveToken(null,promptMode);
   };
@@ -2236,6 +2248,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   }
 
   async function performDriveBackup(autoMode){
+    restoreDriveTokenSession();
     if(!driveTokenValid()){
       if(autoMode){
         setDriveStatus('🟡 Google認証が切れています。設定から「Google Drive接続」を1回押してください。<br>端末バックアップは通常どおり保存されています。',false);
@@ -2265,6 +2278,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
   window.manualGoogleDriveBackup=function(){
     saveDriveSettings(false);
+    restoreDriveTokenSession();
     if(devGetItem('driveBackupEnabled')!=='1' || !driveTokenValid()){
       requestDriveToken(function(){performDriveBackup(false);},devGetItem('driveConsentGranted')==='1'?'':'consent');
       return;
@@ -2302,6 +2316,12 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   window.addEventListener('pageshow',function(){
     restoreDriveTokenSession();
     updateDriveStatus();
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden){
+      restoreDriveTokenSession();
+      updateDriveStatus();
+    }
   });
 })();
 </script>
