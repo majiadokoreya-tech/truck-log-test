@@ -1784,6 +1784,13 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/11 TEST：Drive日次自動バックアップが翌日に実行されない問題を修正
+- 端末Downloadsの日次バックアップ完了日とは別に lastGasDailyBackupDate を管理
+- Drive自動バックアップを端末バックアップ処理への後付けフックから独立した初回操作トリガーへ変更
+- 自動保存ONかつApps Script設定済みの場合、その日の最初の操作でDriveへ1回送信
+- Drive保存成功後だけ当日のDrive自動バックアップ完了日を記録
+- 設定画面に「今日のDrive自動バックアップ：完了／次の操作時に実行」を表示
+- 既存の日報・端末バックアップ・手動Driveバックアップ・7個保持・ON/OFF切替を維持
 - 2026/09/10 TEST：自動保存ON/OFF切替を再修正
 - ON/OFF切替をApps Script接続判定から完全分離し、localStorageへ直接保存する方式に変更
 - ボタンにtype=buttonとreturn falseを追加し、フォーム送信等の副作用を防止
@@ -2026,6 +2033,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 (function(){
   var GAS_MSG_TYPE='TRUCKLOG_GAS_BACKUP_RESULT';
   var gasPendingTimer=null;
+  var gasLastRequestedMode='';
 
   function gasGetRetention(){
     var n=parseInt(devGetItem('gasRetentionCount')||'7',10);
@@ -2052,6 +2060,8 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var lastResult=devGetItem('lastGasBackupResult')||'';
     var retention=gasGetRetention();
     var line='<b>'+(enabled?'🟢 自動保存ON':'⚪ 自動保存OFF')+'</b> ／ 保持：'+retention+'個';
+    var gasTodayDone=devGetItem('lastGasDailyBackupDate')===getLocalDateKey();
+    line+='<br>今日のDrive自動バックアップ：'+(gasTodayDone?'✅ 完了':'⏳ 次の操作時に実行');
     if(last)line+='<br>前回Driveバックアップ：'+escapeHtml(formatBackupDate(last));
     if(lastResult)line+='<br>'+escapeHtml(lastResult);
     gasSetStatus(line,false);
@@ -2089,6 +2099,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(k)k.value=devGetItem('gasBackupKey')||'';
     if(r)r.value=String(gasGetRetention());
     gasUpdateStatus();
+    setTimeout(armGasDailyBackup,100);
   };
 
   function gasBuildPayload(mode){
@@ -2142,6 +2153,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     }
 
     document.body.appendChild(form);
+    gasLastRequestedMode=mode||action;
     gasSetStatus('☁️ Google Driveへ送信中…',false);
 
     if(gasPendingTimer)clearTimeout(gasPendingTimer);
@@ -2175,6 +2187,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     gasUpdateStatus();
 
     if(stored===nextEnabled){
+      if(nextEnabled)setTimeout(armGasDailyBackup,100);
       showToast(nextEnabled
         ? '☁️ Google Drive自動バックアップをONにしました'
         : '☁️ Google Drive自動バックアップをOFFにしました');
@@ -2208,6 +2221,9 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
       }else if(d.action==='backup'){
         var now=new Date().toISOString();
         devSetItem('lastGasBackupAt',now);
+        if(gasLastRequestedMode==='daily-auto'){
+          devSetItem('lastGasDailyBackupDate',getLocalDateKey());
+        }
         var msg='✅ Drive保存完了';
         if(parseInt(d.deleted||0,10)>0)msg+='・古いバックアップを'+parseInt(d.deleted,10)+'件削除';
         if(parseInt(d.kept||0,10)>0)msg+='・現在'+parseInt(d.kept,10)+'件保持';
@@ -2223,16 +2239,39 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     }
   },false);
 
-  var originalRunDailyBackupOnFirstAction=window.runDailyBackupOnFirstAction;
-  if(typeof originalRunDailyBackupOnFirstAction==='function'){
-    window.runDailyBackupOnFirstAction=function(){
-      var shouldRun=needsDailyBackup();
-      var r=originalRunDailyBackupOnFirstAction.apply(this,arguments);
-      if(shouldRun&&devGetItem('gasBackupEnabled')==='1'&&gasSettingsReady()){
-        setTimeout(function(){gasPost('backup','daily-auto');},700);
-      }
-      return r;
-    };
+  // Drive日次自動バックアップは端末バックアップとは別の完了日で管理する。
+  var gasDailyArmed=false;
+
+  function needsGasDailyBackup(){
+    return devGetItem('lastGasDailyBackupDate')!==getLocalDateKey();
+  }
+
+  function runGasDailyBackupOnFirstAction(){
+    if(!needsGasDailyBackup()){
+      gasDailyArmed=false;
+      return;
+    }
+    if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady()){
+      gasDailyArmed=false;
+      return;
+    }
+    gasDailyArmed=false;
+    gasPost('backup','daily-auto');
+  }
+
+  function armGasDailyBackup(){
+    if(gasDailyArmed||!needsGasDailyBackup())return;
+    if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady())return;
+    gasDailyArmed=true;
+
+    function onceGas(){
+      document.removeEventListener('pointerdown',onceGas,true);
+      document.removeEventListener('keydown',onceGas,true);
+      setTimeout(runGasDailyBackupOnFirstAction,50);
+    }
+
+    document.addEventListener('pointerdown',onceGas,true);
+    document.addEventListener('keydown',onceGas,true);
   }
 
   var originalOpenSettingsGas=window.openSettings;
@@ -2245,7 +2284,10 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   }
 
   document.addEventListener('DOMContentLoaded',function(){
-    setTimeout(loadGasBackupSettings,300);
+    setTimeout(function(){
+      loadGasBackupSettings();
+      armGasDailyBackup();
+    },300);
   });
 })();
 </script>
