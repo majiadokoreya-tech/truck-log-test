@@ -1784,6 +1784,10 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/11 TEST：自動保存をONにした直後、その場で今日のDriveバックアップを実行するよう修正
+- ONボタンを押した後に「次の操作」を待つ必要をなくした
+- 日次自動バックアップ成功時のみ lastGasDailyBackupDate を記録する既存仕様は維持
+- 手動Driveバックアップ・保持数7個・既存の日報機能・端末バックアップ機能を維持
 - 2026/09/11 TEST：Drive日次自動バックアップが翌日に実行されない問題を修正
 - 端末Downloadsの日次バックアップ完了日とは別に lastGasDailyBackupDate を管理
 - Drive自動バックアップを端末バックアップ処理への後付けフックから独立した初回操作トリガーへ変更
@@ -2154,7 +2158,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
     document.body.appendChild(form);
     gasLastRequestedMode=mode||action;
-    gasSetStatus('☁️ Google Driveへ送信中…',false);
+    gasSetStatus((mode==='daily-auto'?'☁️ 今日のDrive自動バックアップ送信中…':'☁️ Google Driveへ送信中…'),false);
 
     if(gasPendingTimer)clearTimeout(gasPendingTimer);
     gasPendingTimer=setTimeout(function(){
@@ -2187,10 +2191,18 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     gasUpdateStatus();
 
     if(stored===nextEnabled){
-      if(nextEnabled)setTimeout(armGasDailyBackup,100);
-      showToast(nextEnabled
-        ? '☁️ Google Drive自動バックアップをONにしました'
-        : '☁️ Google Drive自動バックアップをOFFにしました');
+      if(nextEnabled){
+        showToast('☁️ 自動保存ON・今日のDriveバックアップを実行します');
+        setTimeout(function(){
+          if(needsGasDailyBackup()&&gasSettingsReady()){
+            gasPost('backup','daily-auto');
+          }else{
+            gasUpdateStatus();
+          }
+        },250);
+      }else{
+        showToast('☁️ Google Drive自動バックアップをOFFにしました');
+      }
     }else{
       gasSetStatus('❌ 自動保存設定を保存できませんでした。ブラウザのサイトデータ設定を確認してください。',true);
       showToast('❌ 自動保存設定の保存に失敗しました',true);
