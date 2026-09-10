@@ -335,7 +335,8 @@ input[type=number]{-moz-appearance:textfield}
       <div class="backup-info" style="line-height:1.7;">
         Google Driveへ日次バックアップを保存し、設定した保持数を超えたら<b>古いDriveバックアップから自動削除</b>します。<br>
         <b>端末のダウンロード済みJSONは削除しません。</b><br>
-        Google認証が切れた場合だけ、再接続が必要です。
+        Google認証が切れた場合だけ、再接続が必要です。<br>
+        <span style="color:var(--muted);">※ 認証トークンは端末へ永続保存せず、このブラウザタブのセッション内だけ保持します。</span>
       </div>
       <label class="input-label" for="driveClientId">Google OAuth クライアントID</label>
       <input class="input-field" type="text" id="driveClientId" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" oninput="saveDriveSettings(false)" onblur="saveDriveSettings(true)">
@@ -1781,6 +1782,13 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/10 TEST：Google認証後に再び認証画面へ戻るループ対策
+- Google OAuthアクセストークンをsessionStorageへ一時保存し、Google認証からアプリへ戻った際・ページ再表示時に復元
+- 同意済み以降は requestAccessToken の prompt を空にし、毎回「このアプリは確認されていません」画面を出しにくく修正
+- 401（認証期限切れ）時はセッショントークンを破棄して再認証待ちに切替
+- Drive接続状態に認証残り時間の目安を表示
+- アクセストークンはlocalStorageには保存せず、同一ブラウザタブのsessionStorageのみで保持
+- Google Drive保持5〜10件・古いDriveバックアップ自動削除・既存日報機能・TESTデータ分離を維持
 - 2026/09/10 TEST：Google Drive日次バックアップ＋自動世代削除を追加
 - Google DriveにTEST専用フォルダ「運転日報バックアップ_TEST」を自動作成
 - Drive保持数を5〜10日分から選択可能（初期値7日）
@@ -1992,6 +2000,36 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   var driveAccessToken='';
   var driveTokenExpiresAt=0;
   var driveAuthPendingAction=null;
+  var DRIVE_SESSION_TOKEN_KEY='truckLogDriveAccessToken_TEST';
+  var DRIVE_SESSION_EXPIRES_KEY='truckLogDriveTokenExpiresAt_TEST';
+
+  function saveDriveTokenSession(){
+    try{
+      if(driveAccessToken&&driveTokenExpiresAt>Date.now()){
+        sessionStorage.setItem(DRIVE_SESSION_TOKEN_KEY,driveAccessToken);
+        sessionStorage.setItem(DRIVE_SESSION_EXPIRES_KEY,String(driveTokenExpiresAt));
+      }
+    }catch(e){console.warn('Drive token session save failed',e);}
+  }
+  function clearDriveTokenSession(){
+    try{
+      sessionStorage.removeItem(DRIVE_SESSION_TOKEN_KEY);
+      sessionStorage.removeItem(DRIVE_SESSION_EXPIRES_KEY);
+    }catch(e){}
+  }
+  function restoreDriveTokenSession(){
+    try{
+      var t=sessionStorage.getItem(DRIVE_SESSION_TOKEN_KEY)||'';
+      var exp=parseInt(sessionStorage.getItem(DRIVE_SESSION_EXPIRES_KEY)||'0',10)||0;
+      if(t&&exp>Date.now()+60000){
+        driveAccessToken=t;
+        driveTokenExpiresAt=exp;
+        return true;
+      }
+      clearDriveTokenSession();
+    }catch(e){}
+    return false;
+  }
 
   function getDriveRetention(){
     var n=parseInt(devGetItem('driveRetentionCount')||'7',10);
@@ -2017,9 +2055,13 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var enabled=devGetItem('driveBackupEnabled')==='1';
     var last=devGetItem('lastDriveBackupAt');
     var retention=getDriveRetention();
-    var auth=driveTokenValid()?'🟢 接続中':(enabled?'🟡 再接続待ち':'⚪ 未接続');
+    var auth=driveTokenValid()?'🟢 接続中':(enabled?'🟡 Google再認証待ち':'⚪ 未接続');
     var lastText=last?formatBackupDate(last):'まだありません';
-    setDriveStatus('<b>'+auth+'</b><br>自動保存：'+(enabled?'ON':'OFF')+' ／ 保持：'+retention+'日分<br>前回Driveバックアップ：'+escapeHtml(lastText),false);
+    var remain='';
+    if(driveTokenValid()){
+      remain=' ／ 認証残り約'+Math.max(1,Math.ceil((driveTokenExpiresAt-Date.now())/60000))+'分';
+    }
+    setDriveStatus('<b>'+auth+'</b>'+remain+'<br>自動保存：'+(enabled?'ON':'OFF')+' ／ 保持：'+retention+'日分<br>前回Driveバックアップ：'+escapeHtml(lastText),false);
   }
   window.saveDriveSettings=function(showSaved){
     var c=document.getElementById('driveClientId');
@@ -2053,12 +2095,14 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
           driveAccessToken=resp.access_token;
           var expires=parseInt(resp.expires_in||'3600',10);
           driveTokenExpiresAt=Date.now()+Math.max(300,expires)*1000;
+          saveDriveTokenSession();
           devSetItem('driveBackupEnabled','1');
+          devSetItem('driveConsentGranted','1');
           updateDriveStatus();
           showToast('☁️ Google Driveに接続しました');
           var action=driveAuthPendingAction;
           driveAuthPendingAction=null;
-          if(action)setTimeout(action,0);
+          if(action)setTimeout(action,100);
         }else{
           driveAuthPendingAction=null;
           setDriveStatus('❌ Google Drive認証に失敗しました',true);
@@ -2072,11 +2116,12 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     });
   }
 
-  function requestDriveToken(afterAuth){
+  function requestDriveToken(afterAuth,promptMode){
     try{
       initDriveTokenClient();
       driveAuthPendingAction=afterAuth||null;
-      driveTokenClient.requestAccessToken({prompt:'consent'});
+      var promptValue=(typeof promptMode==='string')?promptMode:(devGetItem('driveConsentGranted')==='1'?'':'consent');
+      driveTokenClient.requestAccessToken({prompt:promptValue});
     }catch(e){
       console.error(e);
       if(e.message==='CLIENT_ID_MISSING'){
@@ -2091,13 +2136,15 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 
   window.connectGoogleDrive=function(){
     saveDriveSettings(false);
-    requestDriveToken(null);
+    var promptMode=devGetItem('driveConsentGranted')==='1'?'':'consent';
+    requestDriveToken(null,promptMode);
   };
   window.disconnectGoogleDrive=function(){
     driveAccessToken='';
     driveTokenExpiresAt=0;
     driveTokenClient=null;
     driveAuthPendingAction=null;
+    clearDriveTokenSession();
     devSetItem('driveBackupEnabled','0');
     updateDriveStatus();
     showToast('Google Drive自動バックアップをOFFにしました');
@@ -2109,6 +2156,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(res.status===401){
       driveAccessToken='';
       driveTokenExpiresAt=0;
+      clearDriveTokenSession();
       updateDriveStatus();
       throw new Error('AUTH_EXPIRED');
     }
@@ -2193,7 +2241,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
         setDriveStatus('🟡 Google認証が切れています。設定から「Google Drive接続」を1回押してください。<br>端末バックアップは通常どおり保存されています。',false);
         return false;
       }
-      requestDriveToken(function(){performDriveBackup(false);});
+      requestDriveToken(function(){performDriveBackup(false);},devGetItem('driveConsentGranted')==='1'?'':'consent');
       return false;
     }
     try{
@@ -2218,7 +2266,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   window.manualGoogleDriveBackup=function(){
     saveDriveSettings(false);
     if(devGetItem('driveBackupEnabled')!=='1' || !driveTokenValid()){
-      requestDriveToken(function(){performDriveBackup(false);});
+      requestDriveToken(function(){performDriveBackup(false);},devGetItem('driveConsentGranted')==='1'?'':'consent');
       return;
     }
     performDriveBackup(false);
@@ -2248,7 +2296,12 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   }
 
   document.addEventListener('DOMContentLoaded',function(){
+    restoreDriveTokenSession();
     setTimeout(loadDriveSettings,300);
+  });
+  window.addEventListener('pageshow',function(){
+    restoreDriveTokenSession();
+    updateDriveStatus();
   });
 })();
 </script>
