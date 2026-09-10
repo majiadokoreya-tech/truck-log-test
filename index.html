@@ -352,7 +352,7 @@ input[type=number]{-moz-appearance:textfield}
       </select>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <button onclick="testGasConnection()" class="copy-btn" style="border-color:#4285f4;color:#4285f4;">🔗 接続テスト</button>
-        <button id="gasBackupToggleBtn" onclick="toggleGasBackup()" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
+        <button type="button" id="gasBackupToggleBtn" onclick="toggleGasBackup();return false;" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
       </div>
       <button onclick="manualGasDriveBackup()" class="copy-btn" style="background:rgba(66,133,244,.10);border-color:#4285f4;color:#4285f4;">☁️ 今すぐDriveへバックアップ</button>
       <div id="gasBackupStatus" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
@@ -1784,6 +1784,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/10 TEST：自動保存ON/OFF切替を再修正
+- ON/OFF切替をApps Script接続判定から完全分離し、localStorageへ直接保存する方式に変更
+- ボタンにtype=buttonとreturn falseを追加し、フォーム送信等の副作用を防止
+- 保存結果を即時再読込して確認し、失敗時は画面にエラー表示
+- 既存の日次自動Driveバックアップ・手動バックアップ・7個保持・既存日報機能を維持
 - 2026/09/10 TEST：Google Drive自動バックアップのON/OFF切替不具合を修正
 - 自動保存ボタンを一方向OFF処理からON/OFFトグルへ変更
 - ON時は緑表示、OFF時はグレー表示にして現在状態をボタンへ即時反映
@@ -2054,6 +2059,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var btn=document.getElementById('gasBackupToggleBtn');
     if(btn){
       btn.textContent=enabled?'自動保存ON':'自動保存OFF';
+      btn.setAttribute('aria-pressed',enabled?'true':'false');
       btn.style.borderColor=enabled?'var(--green)':'var(--muted)';
       btn.style.color=enabled?'var(--green)':'var(--muted)';
       btn.style.background=enabled?'rgba(46,204,113,.10)':'var(--surface2)';
@@ -2157,25 +2163,25 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   };
 
   window.toggleGasBackup=function(){
+    // 設定欄の値は保存するが、ON/OFF切替自体は通信状態に依存させない。
     saveGasBackupSettings(false);
 
     var enabled=devGetItem('gasBackupEnabled')==='1';
-    if(enabled){
-      devSetItem('gasBackupEnabled','0');
-      gasUpdateStatus();
-      showToast('☁️ Google Drive自動バックアップをOFFにしました');
-      return;
-    }
+    var nextEnabled=!enabled;
+    devSetItem('gasBackupEnabled',nextEnabled?'1':'0');
 
-    if(!gasSettingsReady()){
-      gasUpdateStatus();
-      showToast('❗ Apps Script URLと合言葉を確認してください',true);
-      return;
-    }
-
-    devSetItem('gasBackupEnabled','1');
+    // localStorage反映確認。万一失敗した場合でも状態を画面に明示する。
+    var stored=devGetItem('gasBackupEnabled')==='1';
     gasUpdateStatus();
-    showToast('☁️ Google Drive自動バックアップをONにしました');
+
+    if(stored===nextEnabled){
+      showToast(nextEnabled
+        ? '☁️ Google Drive自動バックアップをONにしました'
+        : '☁️ Google Drive自動バックアップをOFFにしました');
+    }else{
+      gasSetStatus('❌ 自動保存設定を保存できませんでした。ブラウザのサイトデータ設定を確認してください。',true);
+      showToast('❌ 自動保存設定の保存に失敗しました',true);
+    }
   };
 
   // 旧版との互換性を維持
