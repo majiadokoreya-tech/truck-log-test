@@ -355,6 +355,8 @@ input[type=number]{-moz-appearance:textfield}
         <button type="button" id="gasBackupToggleBtn" onclick="toggleGasBackup();return false;" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
       </div>
       <button onclick="manualGasDriveBackup()" class="copy-btn" style="background:rgba(66,133,244,.10);border-color:#4285f4;color:#4285f4;">☁️ 今すぐDriveへバックアップ</button>
+      <button type="button" onclick="resetGasDailyBackupFlagForTest();return false;" class="copy-btn" style="background:rgba(108,92,231,.08);border-color:#6c5ce7;color:#6c5ce7;">🧪 今日のDrive自動バックアップ済みをリセット</button>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-top:6px;">TEST専用：翌日相当の自動バックアップ動作を今日のまま確認できます。</div>
       <div id="gasBackupStatus" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
       <iframe id="gasBackupFrame" name="gasBackupFrame" style="display:none;width:0;height:0;border:0;"></iframe>
     <input type="file" id="recordsOnlyRestoreFile" accept=".json,application/json" style="display:none" onchange="restoreRecordsOnly(this)">
@@ -1784,6 +1786,11 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/11 TEST：今日のまま翌日相当テストができる「Drive自動バックアップ済みリセット」ボタンを追加
+- リセット対象は lastGasDailyBackupDate のみ。勤務記録・各種設定・Apps Script URL・保持数には触れない
+- リセット後は次のユーザー操作で日次Drive自動バックアップを再実行できるよう再アーム
+- TEST専用の確認メッセージと状態表示を追加
+- 既存の日報機能・端末バックアップ・手動Driveバックアップ・自動保存ON/OFF・7世代保持を維持
 - 2026/09/11 TEST：自動保存をONにした直後、その場で今日のDriveバックアップを実行するよう修正
 - ONボタンを押した後に「次の操作」を待つ必要をなくした
 - 日次自動バックアップ成功時のみ lastGasDailyBackupDate を記録する既存仕様は維持
@@ -2066,6 +2073,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var line='<b>'+(enabled?'🟢 自動保存ON':'⚪ 自動保存OFF')+'</b> ／ 保持：'+retention+'個';
     var gasTodayDone=devGetItem('lastGasDailyBackupDate')===getLocalDateKey();
     line+='<br>今日のDrive自動バックアップ：'+(gasTodayDone?'✅ 完了':'⏳ 次の操作時に実行');
+    if(!gasTodayDone&&enabled&&gasSettingsReady())line+='<br>🧪 TEST：次のタップ・キー操作で日次自動保存を試せます';
     if(last)line+='<br>前回Driveバックアップ：'+escapeHtml(formatBackupDate(last));
     if(lastResult)line+='<br>'+escapeHtml(lastResult);
     gasSetStatus(line,false);
@@ -2176,6 +2184,18 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     saveGasBackupSettings(false);
     gasUpdateStatus();
     gasPost('backup','manual');
+  };
+
+  window.resetGasDailyBackupFlagForTest=function(){
+    if(!confirm('TEST専用です。今日のDrive自動バックアップ済み状態だけをリセットします。\n日報データや設定は削除しません。続けますか？'))return;
+    devRemoveItem('lastGasDailyBackupDate');
+    gasDailyArmed=false;
+    gasUpdateStatus();
+    showToast('🧪 Drive日次バックアップ済みをリセットしました');
+    setTimeout(function(){
+      armGasDailyBackup();
+      gasUpdateStatus();
+    },150);
   };
 
   window.toggleGasBackup=function(){
