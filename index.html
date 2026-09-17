@@ -9,13 +9,13 @@
 <meta name="theme-color" content="#0f1923">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="運転日報">
-<title>🧪 TEST 運転日報</title>
+<title>🚛 運転日報</title>
 <!-- latest: PROD complete integrated UTF-8 safe build 2026-09-01 -->
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f7fb;--surface:#ffffff;--surface2:#eef1f7;--accent:#6c5ce7;--accent2:#4b3fc0;--text:#1a1a1a;--muted:#666666;--border:#dddddd;--green:#2ecc71;--red:#e74c3c;--blue:#3498db;--radius:14px;}
+:root{--bg:#f5f5f5;--surface:#ffffff;--surface2:#f0f0f0;--accent:#e8601c;--accent2:#c0440a;--text:#1a1a1a;--muted:#666666;--border:#dddddd;--green:#2ecc71;--red:#e74c3c;--blue:#3498db;--radius:14px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100dvh;padding-bottom:80px}
 .header{background:linear-gradient(135deg,#f5f5f5 0%,#ffffff 100%);border-bottom:2px solid var(--accent);padding:16px 20px 12px;position:sticky;top:0;z-index:500}
@@ -149,6 +149,7 @@ input[type=number]{-moz-appearance:textfield}
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
           <div class="memo-btn" id="memoBtnGas" onclick="toggleSimpleMemoButton('ガス','memoBtnGas')">⛽ ガス</div>
           <div class="memo-btn" id="memoBtnEster" onclick="toggleEsterMemo()">🧪 エステル搭載</div>
+          <div class="memo-btn" id="memoBtnSulfuric" onclick="toggleSulfuricMemo()">🧫 硫酸搭載</div>
           <div class="memo-btn" id="memoBtnChlorine" onclick="toggleChlorineOnlyTask()">⚗️ 塩素搭載</div>
           <div class="memo-btn" id="memoBtnChlorineDelivery" onclick="toggleChlorineDeliveryTask()">🚛 塩素搭載＋配送</div>
           <div class="memo-btn" id="memoBtnEnvironment" onclick="toggleEnvironmentTask()">🧹 環境整備</div>
@@ -330,7 +331,7 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       <button onclick="backupData()" class="copy-btn" style="background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);">💾 完全バックアップを作成</button>
       <hr style="border:none;border-top:1px solid var(--border);">
-      <div class="section-title" style="margin-bottom:0;">☁️ Google Drive 自動バックアップ【TEST / Apps Script】</div>
+      <div class="section-title" style="margin-bottom:0;">☁️ Google Drive 自動バックアップ【PROD / Apps Script】</div>
       <div class="backup-info" style="line-height:1.7;">
         Google Apps Scriptを中継して、Google Driveへ日次バックアップを保存します。<br>
         <b>Google Driveの再ログイン操作なし</b>で使える方式です。<br>
@@ -355,8 +356,6 @@ input[type=number]{-moz-appearance:textfield}
         <button type="button" id="gasBackupToggleBtn" onclick="toggleGasBackup();return false;" class="copy-btn" style="border-color:var(--muted);color:var(--muted);">自動保存OFF</button>
       </div>
       <button onclick="manualGasDriveBackup()" class="copy-btn" style="background:rgba(66,133,244,.10);border-color:#4285f4;color:#4285f4;">☁️ 今すぐDriveへバックアップ</button>
-      <button type="button" onclick="resetGasDailyBackupFlagForTest();return false;" class="copy-btn" style="background:rgba(108,92,231,.08);border-color:#6c5ce7;color:#6c5ce7;">🧪 今日のDrive自動バックアップ済みをリセット</button>
-      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-top:6px;">TEST専用：翌日相当の自動バックアップ動作を今日のまま確認できます。</div>
       <div id="gasBackupStatus" style="font-size:11px;color:var(--muted);line-height:1.7;"></div>
       <iframe id="gasBackupFrame" name="gasBackupFrame" style="display:none;width:0;height:0;border:0;"></iframe>
     <input type="file" id="recordsOnlyRestoreFile" accept=".json,application/json" style="display:none" onchange="restoreRecordsOnly(this)">
@@ -946,6 +945,7 @@ function syncKanekaPmToxic(){
 function refreshMemoButtonStates(){
   setMemoButtonState('memoBtnGas',hasMemoPart('ガス'));
   setMemoButtonState('memoBtnEster',hasMemoPart('エステル')&&hasMemoPart('搭載'));
+  setMemoButtonState('memoBtnSulfuric',hasMemoPart('硫酸搭載'));
   setMemoButtonState('memoBtnChlorine',selectedJobs.includes('塩素搭載のみ'));
   setMemoButtonState('memoBtnChlorineDelivery',selectedJobs.includes('塩素搭載＋配送'));
   setMemoButtonState('memoBtnEnvironment',selectedJobs.includes('環境整備'));
@@ -961,6 +961,25 @@ function addMemo(text){
   if(text==='㈱カネカ 大阪'||text==='PM搭載')syncKanekaPmToxic();refreshMemoButtonStates();
 }
 function toggleSimpleMemoButton(text,btnId){if(hasMemoPart(text))removeMemo(text);else addMemo(text);setMemoButtonState(btnId,hasMemoPart(text));if(text==='㈱カネカ 大阪'||text==='PM搭載')syncKanekaPmToxic();updateInputProgress();}
+function setTrailerDirect(on){
+  trailerOn=!!on;
+  var btn=document.getElementById('trailerBtn'),status=document.getElementById('trailerStatus');
+  if(btn)btn.classList.toggle('selected',trailerOn);
+  if(status){status.textContent=trailerOn?'✅ 3,000円':'タップでON';status.style.color=trailerOn?'var(--accent)':'var(--muted)';}
+  document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='トレーラー')b.classList.toggle('selected',trailerOn);});
+  selectedJobs=selectedJobs.filter(function(j){return j!=='トレーラー';});if(trailerOn)selectedJobs.push('トレーラー');
+}
+function toggleSulfuricMemo(){
+  var on=hasMemoPart('硫酸搭載');
+  if(on){
+    removeMemo('硫酸搭載');setToxicCountDirect(0);setTrailerDirect(false);
+    showToast('🧫 硫酸搭載を解除：毒・トレーラー手当を解除しました');
+  }else{
+    addMemo('硫酸搭載');setToxicCountDirect(1);setTrailerDirect(true);
+    showToast('🧫 硫酸搭載：毒×1＋トレーラー手当を設定しました');
+  }
+  refreshMemoButtonStates();updateInputProgress();
+}
 function toggleEsterMemo(){var on=hasMemoPart('エステル')&&hasMemoPart('搭載');if(on)removeMemoParts(['エステル','搭載']);else{addMemo('エステル');addMemo('搭載');}setMemoButtonState('memoBtnEster',!on);updateInputProgress();}
 function setSpecialTask(job,memoParts,zeroDistance){
   selectedJobs=selectedJobs.filter(function(j){return !['塩素搭載のみ','塩素搭載＋配送','環境整備'].includes(j);});selectedJobs.push(job);
@@ -1248,7 +1267,7 @@ function fixAllRecords(){var r=getRecords().map(function(r){var oldRate=getRateF
 var pendingBackupRestore=null;
 function getDevStorageSnapshot(){var s={};devStorageKeys().forEach(function(k){var v=devGetItem(k);if(v!==null)s[k]=v;});return s;}
 function getBackupMonthSummary(){var l=calcLeaveMonth();return {month:getLeaveMonthKey(),currentYukyu:l.currentYukyu,currentDaikyu:l.currentDaikyu,halfLeaveUsedYear:calcHalfLeaveYear().used};}
-function makeCompleteBackupPayload(){return {app:'truck-log',environment:'DEV',version:6,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
+function makeCompleteBackupPayload(){return {app:'truck-log',environment:'PROD',version:6,exportedAt:new Date().toISOString(),records:getRecords(),settings:{otRate:getCurrentOTRate(),holidayRate:getCurrentHolidayRate()},leaveSummary:getBackupMonthSummary(),storage:getDevStorageSnapshot()};}
 function formatBackupDate(iso){if(!iso)return '不明';var d=new Date(iso);if(isNaN(d.getTime()))return String(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
 function getLocalDateKey(){
   var n=new Date();
@@ -1726,6 +1745,7 @@ function normalizeJobMemoText(text){
   var s=String(text||'');
   s=s.replace(/塩素搭載/g,'塩素　搭載');
   s=s.replace(/エステル搭載/g,'エステル　搭載');
+  s=s.replace(/硫酸搭載/g,'硫酸　搭載');
   s=s.replace(/^カネカ$/g,'㈱カネカ 大阪');
   return s;
 }
@@ -1786,6 +1806,12 @@ var todayRecord=getRecords().find(function(r){return r.date===getLocalDateStr()}
 
 <!--
 変更履歴
+- 2026/09/12 PROD：TESTで実日付またぎ確認済みのGoogle Drive日次自動バックアップを本番へ完全統合
+- Google Apps Script中継方式、日次初回操作トリガー、手動Driveバックアップ、自動保存ON/OFF、保持数5〜10個（初期7個）を本番へ移植
+- 2026/09/12 0:53の実日付またぎテストで、翌日分が自動で1件作成されることを確認したTEST仕様を採用
+- TEST専用の「今日のDrive自動バックアップ済みリセット」機能とTEST表示は本番から削除
+- PROD STORAGE_PREFIX=''、バックアップ environment='PROD' を維持し、既存本番localStorageをそのまま使用
+- 本番テーマは従来どおりオレンジ。勤務記録・月末締め・入力漏れチェック・世代管理・安全復元・勤務計算等の既存機能を維持
 - 2026/09/11 TEST：今日のまま翌日相当テストができる「Drive自動バックアップ済みリセット」ボタンを追加
 - リセット対象は lastGasDailyBackupDate のみ。勤務記録・各種設定・Apps Script URL・保持数には触れない
 - リセット後は次のユーザー操作で日次Drive自動バックアップを再実行できるよう再アーム
@@ -2073,7 +2099,6 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var line='<b>'+(enabled?'🟢 自動保存ON':'⚪ 自動保存OFF')+'</b> ／ 保持：'+retention+'個';
     var gasTodayDone=devGetItem('lastGasDailyBackupDate')===getLocalDateKey();
     line+='<br>今日のDrive自動バックアップ：'+(gasTodayDone?'✅ 完了':'⏳ 次の操作時に実行');
-    if(!gasTodayDone&&enabled&&gasSettingsReady())line+='<br>🧪 TEST：次のタップ・キー操作で日次自動保存を試せます';
     if(last)line+='<br>前回Driveバックアップ：'+escapeHtml(formatBackupDate(last));
     if(lastResult)line+='<br>'+escapeHtml(lastResult);
     gasSetStatus(line,false);
@@ -2184,18 +2209,6 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     saveGasBackupSettings(false);
     gasUpdateStatus();
     gasPost('backup','manual');
-  };
-
-  window.resetGasDailyBackupFlagForTest=function(){
-    if(!confirm('TEST専用です。今日のDrive自動バックアップ済み状態だけをリセットします。\n日報データや設定は削除しません。続けますか？'))return;
-    devRemoveItem('lastGasDailyBackupDate');
-    gasDailyArmed=false;
-    gasUpdateStatus();
-    showToast('🧪 Drive日次バックアップ済みをリセットしました');
-    setTimeout(function(){
-      armGasDailyBackup();
-      gasUpdateStatus();
-    },150);
   };
 
   window.toggleGasBackup=function(){
@@ -2323,6 +2336,15 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   });
 })();
 </script>
+
+<!--
+変更履歴 2026/09/17 TEST
+- 仕事内容メモに「硫酸搭載」を追加
+- 硫酸搭載ONで毒×1（2,500円）＋トレーラー手当（3,000円）を自動設定
+- 硫酸搭載を再タップでメモ選択・毒手当・トレーラー手当を解除
+- TESTはSTORAGE_PREFIX=DEV_、Driveバックアップenvironment=DEVで本番データと分離
+- 既存機能を維持
+-->
 
 </body>
 </html>
