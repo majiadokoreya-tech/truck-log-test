@@ -938,9 +938,9 @@ function setToxicCountDirect(n){
   document.querySelectorAll('.job-btn').forEach(function(b){if(b.dataset.job==='毒手当')b.classList.toggle('selected',n===1);if(b.dataset.job==='毒×2')b.classList.toggle('selected',n===2);});
 }
 function syncKanekaPmToxic(){
-  var hasKaneka=hasMemoPart('㈱カネカ 大阪'),hasPm=hasMemoPart('PM搭載');
-  setToxicCountDirect((hasKaneka?1:0)+(hasPm?1:0));
-  setMemoButtonState('memoBtnKaneka',hasKaneka);setMemoButtonState('memoBtnPm',hasPm);updateInputProgress();
+  var hasKaneka=hasMemoPart('㈱カネカ 大阪'),hasPm=hasMemoPart('PM搭載'),hasSulfuric=hasMemoPart('硫酸搭載');
+  setToxicCountDirect((hasKaneka?1:0)+(hasPm?1:0)+(hasSulfuric?1:0));
+  setMemoButtonState('memoBtnKaneka',hasKaneka);setMemoButtonState('memoBtnPm',hasPm);setMemoButtonState('memoBtnSulfuric',hasSulfuric);updateInputProgress();
 }
 function refreshMemoButtonStates(){
   setMemoButtonState('memoBtnGas',hasMemoPart('ガス'));
@@ -972,10 +972,10 @@ function setTrailerDirect(on){
 function toggleSulfuricMemo(){
   var on=hasMemoPart('硫酸搭載');
   if(on){
-    removeMemo('硫酸搭載');setToxicCountDirect(0);setTrailerDirect(false);
-    showToast('🧫 硫酸搭載を解除：毒・トレーラー手当を解除しました');
+    removeMemo('硫酸搭載');setTrailerDirect(false);syncKanekaPmToxic();
+    showToast('🧫 硫酸搭載を解除：硫酸分の毒・トレーラー手当を解除しました');
   }else{
-    addMemo('硫酸搭載');setToxicCountDirect(1);setTrailerDirect(true);
+    addMemo('硫酸搭載');setTrailerDirect(true);syncKanekaPmToxic();
     showToast('🧫 硫酸搭載：毒×1＋トレーラー手当を設定しました');
   }
   refreshMemoButtonStates();updateInputProgress();
@@ -1745,7 +1745,6 @@ function normalizeJobMemoText(text){
   var s=String(text||'');
   s=s.replace(/塩素搭載/g,'塩素　搭載');
   s=s.replace(/エステル搭載/g,'エステル　搭載');
-  s=s.replace(/硫酸搭載/g,'硫酸　搭載');
   s=s.replace(/^カネカ$/g,'㈱カネカ 大阪');
   return s;
 }
@@ -2342,6 +2341,8 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - 仕事内容メモに「硫酸搭載」を追加
 - 硫酸搭載ONで毒×1（2,500円）＋トレーラー手当（3,000円）を自動設定
 - 硫酸搭載を再タップでメモ選択・毒手当・トレーラー手当を解除
+- 2026/09/17 TEST修正：硫酸搭載の文字正規化競合を解消し、再タップ解除を修正
+- カネカ・PMとの併用時も毒手当を再計算して整合するよう修正
 - TESTはSTORAGE_PREFIX=DEV_、Driveバックアップenvironment=DEVで本番データと分離
 - 既存機能を維持
 -->
