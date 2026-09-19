@@ -2211,6 +2211,10 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     document.body.appendChild(form);
     gasLastRequestedMode=mode||action;
     gasSetStatus((mode==='daily-auto'?'☁️ 今日のDrive自動バックアップ送信中…':'☁️ Google Driveへ送信中…'),false);
+    if(mode==='daily-auto'){
+      // 起動直後でもユーザーが保存開始を確認できるよう、送信開始時にも表示する。
+      showToast('☁️ Google Driveに自動バックアップ中…');
+    }
 
     if(gasPendingTimer)clearTimeout(gasPendingTimer);
     gasPendingTimer=setTimeout(function(){
@@ -2400,5 +2404,15 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - 起動時自動バックアップ、1日1回判定、二重送信防止、TESTリセット機能を維持
 - UTF-8、日本語・絵文字、TEST分離、硫酸搭載を含む既存機能を維持
 -->
+
+<!--
+変更履歴 2026/09/20 TEST 修正版5
+- 起動時Drive自動バックアップの「送信開始」時にも画面通知を表示
+- 表示文言：「☁️ Google Driveに自動バックアップ中…」
+- Apps Script成功応答後の「☁️ Google Driveに自動バックアップしました」表示も維持
+- 応答通知が端末側で見えない場合でも、起動時にバックアップ開始を確認可能
+- 1日1回判定、二重送信防止、TESTリセット、UTF-8、TEST分離、既存機能を維持
+-->
+
 </body>
 </html>
