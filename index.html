@@ -2279,6 +2279,9 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(gasLastRequestedMode==='daily-auto')gasDailyBackupInFlight=false;
 
     if(d.ok){
+      if(d.action==='backup'&&gasLastRequestedMode==='daily-auto'){
+        showToast('☁️ Google Driveに自動バックアップしました');
+      }
       if(d.action==='ping'){
         devSetItem('lastGasBackupResult','✅ Apps Script接続OK');
         gasUpdateStatus();
@@ -2373,6 +2376,16 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - TEST専用「今日のDrive完了判定をリセット」ボタンを追加
 - リセット対象はlastGasDailyBackupDateのみ。勤務記録・設定・Drive既存ファイルは削除しない
 - 同一起動中の二重送信防止を維持
+- UTF-8、日本語・絵文字、DEV_分離、truck-log-test送信先を維持
+- 硫酸搭載を含む既存機能を維持
+-->
+
+
+<!--
+変更履歴 2026/09/20 TEST 修正版3
+- 起動時Drive自動バックアップ成功時に「☁️ Google Driveに自動バックアップしました」と画面表示
+- Driveを毎回開いて確認しなくても保存成功を確認できるよう改善
+- 起動時自動バックアップ、1日1回判定、二重送信防止、TESTリセット機能を維持
 - UTF-8、日本語・絵文字、DEV_分離、truck-log-test送信先を維持
 - 硫酸搭載を含む既存機能を維持
 -->
