@@ -2135,7 +2135,26 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(k)k.value=devGetItem('gasBackupKey')||'';
     if(r)r.value=String(gasGetRetention());
     gasUpdateStatus();
+    installGasTestResetButton();
   };
+
+  function installGasTestResetButton(){
+    if(document.getElementById('gasDailyTestResetBtn'))return;
+    var status=document.getElementById('gasBackupStatus');
+    if(!status||!status.parentNode)return;
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.id='gasDailyTestResetBtn';
+    btn.className='main-btn';
+    btn.style.cssText='margin-top:8px;border-color:var(--red);color:var(--red);';
+    btn.textContent='🧪 TEST：今日のDrive完了判定をリセット';
+    btn.onclick=function(){
+      devRemoveItem('lastGasDailyBackupDate');
+      gasUpdateStatus();
+      showToast('🧪 今日のDrive完了判定だけリセットしました');
+    };
+    status.parentNode.insertBefore(btn,status.nextSibling);
+  }
 
   function gasBuildPayload(mode){
     var payload=makeCompleteBackupPayload();
@@ -2147,7 +2166,9 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   }
 
   function gasPost(action,mode){
-    saveGasBackupSettings(false);
+    // daily-auto は設定画面の未読込inputを保存しない。
+    // 起動直後はlocalStorageに保存済みのApps Script設定をそのまま使用する。
+    if(mode!=='daily-auto')saveGasBackupSettings(false);
     var url=String(devGetItem('gasWebAppUrl')||'').trim();
     var key=String(devGetItem('gasBackupKey')||'').trim();
 
@@ -2311,10 +2332,11 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   }
 
   document.addEventListener('DOMContentLoaded',function(){
+    // 設定画面を開かなくても、保存済みlocalStorage設定だけで起動時バックアップする。
     setTimeout(function(){
-      loadGasBackupSettings();
-      setTimeout(runGasDailyBackupOnAppOpen,50);
-    },300);
+      gasUpdateStatus();
+      runGasDailyBackupOnAppOpen();
+    },500);
   });
 })();
 </script>
@@ -2339,6 +2361,19 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - その日のDriveバックアップ完了済みなら起動しても重複保存しない
 - 自動保存OFF・Apps Script設定未完了時は自動送信しない
 - TEST STORAGE_PREFIX='DEV_'、environment='DEV'、source='truck-log-test' で本番データと分離
+- 硫酸搭載を含む既存機能を維持
+-->
+
+
+<!--
+変更履歴 2026/09/20 TEST 修正版2
+- 起動時daily-autoで設定画面の空inputをlocalStorageへ上書きしないよう修正
+- 保存済みApps Script URL・合言葉をlocalStorageから直接使用して起動時バックアップ
+- 設定画面を開かなくても日次Driveバックアップを開始
+- TEST専用「今日のDrive完了判定をリセット」ボタンを追加
+- リセット対象はlastGasDailyBackupDateのみ。勤務記録・設定・Drive既存ファイルは削除しない
+- 同一起動中の二重送信防止を維持
+- UTF-8、日本語・絵文字、DEV_分離、truck-log-test送信先を維持
 - 硫酸搭載を含む既存機能を維持
 -->
 
