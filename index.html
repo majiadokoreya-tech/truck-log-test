@@ -2305,6 +2305,10 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
         }
       }
     }else{
+      if(gasLastRequestedMode==='daily-auto'){
+        devRemoveItem('lastGasDailyBackupDate');
+        gasDailyBackupInFlight=false;
+      }
       var err=String(d.error||'Apps Script側でエラーが発生しました');
       devSetItem('lastGasBackupResult','❌ '+err);
       gasSetStatus('❌ '+escapeHtml(err),true);
@@ -2325,8 +2329,21 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(!needsGasDailyBackup())return false;
     if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady())return false;
     gasDailyBackupInFlight=true;
+
+    // Apps ScriptからのpostMessageが端末環境で返らない場合でも、
+    // 同じ日に起動するたび重複送信しないよう送信開始時に当日を記録する。
+    var todayKey=getLocalDateKey();
+    devSetItem('lastGasDailyBackupDate',todayKey);
+    gasUpdateStatus();
+
     var started=gasPost('backup','daily-auto');
-    if(!started)gasDailyBackupInFlight=false;
+    if(!started){
+      gasDailyBackupInFlight=false;
+      if(devGetItem('lastGasDailyBackupDate')===todayKey){
+        devRemoveItem('lastGasDailyBackupDate');
+        gasUpdateStatus();
+      }
+    }
     return !!started;
   }
 
@@ -2412,6 +2429,17 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - Apps Script成功応答後の「☁️ Google Driveに自動バックアップしました」表示も維持
 - 応答通知が端末側で見えない場合でも、起動時にバックアップ開始を確認可能
 - 1日1回判定、二重送信防止、TESTリセット、UTF-8、TEST分離、既存機能を維持
+-->
+
+
+<!--
+変更履歴 2026/09/20 TEST 修正版6
+- Drive日次自動バックアップの当日実行日を送信開始時に記録する方式へ変更
+- Apps Script成功応答を端末が受け取れなくても同日再起動で重複送信しないよう修正
+- gasPost開始自体が失敗した場合は当日実行日を解除して再試行可能にする
+- Apps Scriptから明示的な失敗応答を受けた場合も当日実行日を解除
+- 翌日は日付が変わるため自動バックアップを再実行
+- 起動時通知、TESTリセット、UTF-8、TEST分離、既存機能を維持
 -->
 
 </body>
