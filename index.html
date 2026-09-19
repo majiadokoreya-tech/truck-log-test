@@ -2279,9 +2279,6 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(gasLastRequestedMode==='daily-auto')gasDailyBackupInFlight=false;
 
     if(d.ok){
-      if(d.action==='backup'&&gasLastRequestedMode==='daily-auto'){
-        showToast('☁️ Google Driveに自動バックアップしました');
-      }
       if(d.action==='ping'){
         devSetItem('lastGasBackupResult','✅ Apps Script接続OK');
         gasUpdateStatus();
@@ -2297,7 +2294,11 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
         if(parseInt(d.kept||0,10)>0)msg+='・現在'+parseInt(d.kept,10)+'件保持';
         devSetItem('lastGasBackupResult',msg);
         gasUpdateStatus();
-        showToast('☁️ '+msg.replace('✅ ',''));
+        if(gasLastRequestedMode==='daily-auto'){
+          showToast('☁️ Google Driveに自動バックアップしました');
+        }else{
+          showToast('☁️ '+msg.replace('✅ ',''));
+        }
       }
     }else{
       var err=String(d.error||'Apps Script側でエラーが発生しました');
@@ -2390,5 +2391,14 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
 - 硫酸搭載を含む既存機能を維持
 -->
 
+
+<!--
+変更履歴 2026/09/20 TEST 修正版4
+- Drive自動バックアップ成功通知の連続上書きを修正
+- daily-auto成功時の最終表示を「☁️ Google Driveに自動バックアップしました」に一本化
+- 手動Driveバックアップの従来通知は維持
+- 起動時自動バックアップ、1日1回判定、二重送信防止、TESTリセット機能を維持
+- UTF-8、日本語・絵文字、TEST分離、硫酸搭載を含む既存機能を維持
+-->
 </body>
 </html>
