@@ -108,7 +108,7 @@ input[type=number]{-moz-appearance:textfield}
 <body>
 <div class="header">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h1>🧪 運転日報 <span style="font-size:11px;color:#6c5ce7;border:1px solid #6c5ce7;border-radius:999px;padding:3px 8px;vertical-align:middle;">TEST</span></h1>
+    <h1>🧪 運転日報 <span style="font-size:12px;color:var(--red);letter-spacing:0;">TEST</span></h1>
     <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;">⚙️</button>
   </div>
   <div class="header-date" id="headerDate"></div>
@@ -2097,7 +2097,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     var retention=gasGetRetention();
     var line='<b>'+(enabled?'🟢 自動保存ON':'⚪ 自動保存OFF')+'</b> ／ 保持：'+retention+'個';
     var gasTodayDone=devGetItem('lastGasDailyBackupDate')===getLocalDateKey();
-    line+='<br>今日のDrive自動バックアップ：'+(gasTodayDone?'✅ 完了':'⏳ 次の操作時に実行');
+    line+='<br>今日のDrive自動バックアップ：'+(gasTodayDone?'✅ 完了':'⏳ アプリ起動時に実行');
     if(last)line+='<br>前回Driveバックアップ：'+escapeHtml(formatBackupDate(last));
     if(lastResult)line+='<br>'+escapeHtml(lastResult);
     gasSetStatus(line,false);
@@ -2135,7 +2135,6 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(k)k.value=devGetItem('gasBackupKey')||'';
     if(r)r.value=String(gasGetRetention());
     gasUpdateStatus();
-    setTimeout(armGasDailyBackup,100);
   };
 
   function gasBuildPayload(mode){
@@ -2256,6 +2255,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
       clearTimeout(gasPendingTimer);
       gasPendingTimer=null;
     }
+    if(gasLastRequestedMode==='daily-auto')gasDailyBackupInFlight=false;
 
     if(d.ok){
       if(d.action==='ping'){
@@ -2284,38 +2284,21 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   },false);
 
   // Drive日次自動バックアップは端末バックアップとは別の完了日で管理する。
-  var gasDailyArmed=false;
+  // 2026/09/20 TEST: 最初の操作待ちを廃止し、アプリ起動時に実行する。
+  var gasDailyBackupInFlight=false;
 
   function needsGasDailyBackup(){
     return devGetItem('lastGasDailyBackupDate')!==getLocalDateKey();
   }
 
-  function runGasDailyBackupOnFirstAction(){
-    if(!needsGasDailyBackup()){
-      gasDailyArmed=false;
-      return;
-    }
-    if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady()){
-      gasDailyArmed=false;
-      return;
-    }
-    gasDailyArmed=false;
-    gasPost('backup','daily-auto');
-  }
-
-  function armGasDailyBackup(){
-    if(gasDailyArmed||!needsGasDailyBackup())return;
-    if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady())return;
-    gasDailyArmed=true;
-
-    function onceGas(){
-      document.removeEventListener('pointerdown',onceGas,true);
-      document.removeEventListener('keydown',onceGas,true);
-      setTimeout(runGasDailyBackupOnFirstAction,50);
-    }
-
-    document.addEventListener('pointerdown',onceGas,true);
-    document.addEventListener('keydown',onceGas,true);
+  function runGasDailyBackupOnAppOpen(){
+    if(gasDailyBackupInFlight)return false;
+    if(!needsGasDailyBackup())return false;
+    if(devGetItem('gasBackupEnabled')!=='1'||!gasSettingsReady())return false;
+    gasDailyBackupInFlight=true;
+    var started=gasPost('backup','daily-auto');
+    if(!started)gasDailyBackupInFlight=false;
+    return !!started;
   }
 
   var originalOpenSettingsGas=window.openSettings;
@@ -2330,21 +2313,33 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   document.addEventListener('DOMContentLoaded',function(){
     setTimeout(function(){
       loadGasBackupSettings();
-      armGasDailyBackup();
+      setTimeout(runGasDailyBackupOnAppOpen,50);
     },300);
   });
 })();
 </script>
 
 <!--
-変更履歴 2026/09/17 TEST
-- 仕事内容メモに「硫酸搭載」を追加
+変更履歴 2026/09/17 PROD
+- TEST合格版の「硫酸搭載」機能を本番へ統合
 - 硫酸搭載ONで毒×1（2,500円）＋トレーラー手当（3,000円）を自動設定
-- 硫酸搭載を再タップでメモ選択・毒手当・トレーラー手当を解除
-- 2026/09/17 TEST修正：硫酸搭載の文字正規化競合を解消し、再タップ解除を修正
-- カネカ・PMとの併用時も毒手当を再計算して整合するよう修正
-- TESTはSTORAGE_PREFIX=DEV_、Driveバックアップenvironment=DEVで本番データと分離
+- 硫酸搭載を再タップでメモ選択・硫酸分の毒手当・トレーラー手当を解除
+- カネカ・PMとの併用時も毒手当を再計算して整合を維持
+- PROD STORAGE_PREFIX=''、Driveバックアップenvironment=PROD、source=truck-log-prod
+- TEST表示を削除し本番タイトルへ変更
 - 既存機能を維持
+-->
+
+
+<!--
+変更履歴 2026/09/20 TEST
+- Google Drive日次自動バックアップの開始条件を「その日の最初の操作」から「アプリ起動時」へ変更
+- 設定画面を開くことをバックアップ開始条件から除外
+- 同一起動中の二重送信を防ぐ gasDailyBackupInFlight ガードを追加
+- その日のDriveバックアップ完了済みなら起動しても重複保存しない
+- 自動保存OFF・Apps Script設定未完了時は自動送信しない
+- TEST STORAGE_PREFIX='DEV_'、environment='DEV'、source='truck-log-test' で本番データと分離
+- 硫酸搭載を含む既存機能を維持
 -->
 
 </body>
