@@ -2226,7 +2226,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
       entries.forEach(function(item){checking.add(item.id);});
     }
     document.body.appendChild(frame);document.body.appendChild(form);
-    var request={id:requestId,action:action,entries:entries,frame:frame,form:form,timer:null};requests.set(requestId,request);
+    var request={id:requestId,action:action,url:url,entries:entries,frame:frame,form:form,timer:null};requests.set(requestId,request);
     request.timer=setTimeout(function(){requestUnknown(request,'保存応答を確認できません。再確認に失敗した場合は次回起動時に再確認します。');},requestTimeout);
     try{form.submit();}catch(error){requestUnknown(request,'通信エラーで保存を確認できません。');}
     if(entry)scheduleVerification(entry);
@@ -2273,7 +2273,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
     if(!fromFrame(event.source,request.frame)||data.action!==request.action){verificationStatus('応答を受信しましたが、送信元または操作を照合できません。');return;}
     if(request.action==='ping'){
       var canVerify=data.ok===true&&data.protocolVersion===2&&Array.isArray(data.capabilities)&&data.capabilities.indexOf('verify-backups')>=0;
-      if(canVerify)verificationEndpoint=request.form.action;
+      if(canVerify)verificationEndpoint=request.url;
       var queued=request.entries.slice();
       release(request);
       if(queued.length){
