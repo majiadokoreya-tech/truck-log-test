@@ -2078,7 +2078,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
   'use strict';
   var messageType='TRUCKLOG_GAS_BACKUP_RESULT';
   var historyKey='gasBackupHistoryV2';
-  var requestTimeout=12000;
+  var requestTimeout=60000;
   var verificationDelay=5*60*1000;
   var retentionPeriod=7*24*60*60*1000;
   var requests=new Map();
@@ -2278,7 +2278,7 @@ var hist=jget('backupHistory',[]), gl=document.getElementById('backupGenerationL
       release(request);
       if(queued.length){
         if(canVerify){verifyEntries(queued,false);return;}
-        queued.forEach(function(entry){markUnknown(entry,'現在のApps ScriptではID照会の対応を確認できません。手動バックアップを実行してください。');});saveHistory();
+        queued.forEach(function(entry){markUnknown(entry,data.ok===false?String(data.error||'接続確認に失敗しました。設定を確認してください。'):'現在のApps ScriptではID照会の対応を確認できません。手動バックアップを実行してください。');});saveHistory();
       }
       render();verificationStatus(canVerify?'✅ 接続・ID照会対応を確認しました。':data.ok===true?'接続応答を確認しました。ID照会にはApps Script側の更新が必要です。':'接続を確認できませんでした。手動バックアップを実行してください。');return;
     }
